@@ -1,0 +1,30 @@
+﻿@model InjectCC.Model.Injection
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<fieldset>
+    <legend>Injection</legend>
+
+    <div class="display-label">Date</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Date)
+    </div>
+
+    <div class="display-label">User</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.User.Email)
+    </div>
+
+    <div class="display-label">LocationId</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.LocationId)
+    </div>
+</fieldset>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id=Model.InjectionId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

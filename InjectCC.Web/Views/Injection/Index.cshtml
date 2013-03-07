@@ -1,0 +1,45 @@
+﻿@model IEnumerable<InjectCC.Model.Injection>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table>
+    <tr>
+        <th>
+            Date
+        </th>
+        <th>
+            User
+        </th>
+        <th>
+            LocationId
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Date)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.User.Email)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.LocationId)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.InjectionId }) |
+            @Html.ActionLink("Details", "Details", new { id=item.InjectionId }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.InjectionId })
+        </td>
+    </tr>
+}
+
+</table>
