@@ -11,8 +11,7 @@ namespace InjectCC.Model
         [Key]
         public int LocationId { get; set; }
 
-        [Required]
-        [MaxLength(100)]
+        [Required, MaxLength(100)]
         public string Name { get; set; }
 
         /// <summary>
@@ -20,6 +19,18 @@ namespace InjectCC.Model
         /// </summary>
         [Required]
         public int Ordinal { get; set; }
+
+        [Required]
+        public TimeSpan TimeUntilNextInjection { get; set; }
+
+        [Required]
+        public string ReferenceImageName { get; set; }
+
+        [Required, Range(0, 1000)]
+        public int InjectionPointX { get; set; }
+
+        [Required, Range(0, 1000)]
+        public int InjectionPointY { get; set; }
 
         /// <summary>
         /// The location set to which this Location belongs.

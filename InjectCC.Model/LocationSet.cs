@@ -18,11 +18,17 @@ namespace InjectCC.Model
 
         /// <summary>
         /// Optionally, the user that owns this LocationSet.  If not set, then
-        /// the set is public.
+        /// this location set is public.
         /// </summary>
         public virtual User User { get; set; }
         public int UserId { get; set; }
 
         public virtual List<Location> Locations { get; set; }
+
+        public LocationSet CopyToUser(User user)
+        {
+            throw new NotImplementedException();
+            return new LocationSet();
+        }
     }
 }

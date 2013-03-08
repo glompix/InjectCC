@@ -1,0 +1,35 @@
+﻿@model InjectCC.Model.Location
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<fieldset>
+    <legend>Location</legend>
+
+    <div class="display-label">Name</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Name)
+    </div>
+
+    <div class="display-label">Ordinal</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Ordinal)
+    </div>
+
+    <div class="display-label">TimeUntilNextInjection</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.TimeUntilNextInjection)
+    </div>
+
+    <div class="display-label">LocationSet</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.LocationSet.Name)
+    </div>
+</fieldset>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id=Model.LocationId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

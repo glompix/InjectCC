@@ -21,6 +21,15 @@ namespace InjectCC.Model
 
         [Required]
         public int LocationId { get; set; }
-        // public virtual Location Location { get; set; }
+        public virtual Location Location { get; set; }
+
+        public Injection CalculateNext()
+        {
+            var next = new Injection();
+            next.Date = this.Date.AddDays(2);
+            next.User = this.User;
+            next.Location = this.Location;
+            return next;
+        }
     }
 }

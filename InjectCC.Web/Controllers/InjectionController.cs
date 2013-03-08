@@ -18,8 +18,8 @@ namespace InjectCC.Web.Controllers
 
         public ViewResult Index()
         {
-            var injection = db.Injection.Include(i => i.User);
-            return View(injection.ToList());
+            var injections = db.Injection.ToList();
+            return View(injections);
         }
 
         //
@@ -36,8 +36,22 @@ namespace InjectCC.Web.Controllers
 
         public ActionResult Create()
         {
+            var latestInjection = (from i in db.Injection
+                                   orderby i.Date descending
+                                   select i).FirstOrDefault();
+
+            var targetInjection = latestInjection;
+            if (latestInjection != null)
+            {
+                var nextInjection = latestInjection.CalculateNext();
+                if (DateTime.Now > targetInjection.Date.AddHours(-12))
+                {
+                    targetInjection = nextInjection;
+                }
+            }
+
             ViewBag.UserId = new SelectList(db.Users, "UserId", "Email");
-            return View();
+            return View(targetInjection);
         } 
 
         //

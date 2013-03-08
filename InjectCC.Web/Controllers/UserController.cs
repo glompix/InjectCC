@@ -13,6 +13,23 @@ namespace InjectCC.Web.Controllers
     {
         private InjectionContext db = new InjectionContext();
 
+        private bool isLoggedIn()
+        {
+            return true;
+        }
+
+
+        public ViewResult Home()
+        {
+            return View();
+        }
+
+        public ViewResult Login()
+        {
+            return View();
+        }
+
+
         //
         // GET: /User/
 

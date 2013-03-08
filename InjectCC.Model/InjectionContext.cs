@@ -12,5 +12,11 @@ namespace InjectCC.Model
         public DbSet<Injection> Injection { get; set; }
         public DbSet<LocationSet> LocationSets { get; set; }
         public DbSet<User> Users { get; set; }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Injection>().HasRequired(i => i.Location).WithMany().WillCascadeOnDelete(false);
+            base.OnModelCreating(modelBuilder);
+        }  
     }
 }
