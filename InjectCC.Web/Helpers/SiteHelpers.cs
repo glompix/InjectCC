@@ -1,17 +1,40 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices;
+using System.Text;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
-using System.Runtime.InteropServices;
-using System.IO;
-using System.Text.RegularExpressions;
-using System.Linq;
+using System.Web.Mvc.Html;
 using System.Web.Routing;
 
 namespace InjectCC.Web.Helpers
 {
     public static class SiteHelpers
     {
+        public static IHtmlString NavActionLink(this HtmlHelper Html, string linkText, string action, string controller,
+            object attributes = null)
+        {
+            if (action == null)
+                throw new ArgumentNullException("action");
+            if (controller == null)
+                throw new ArgumentNullException("controller");
+
+            var htmlAttributes = GetHtmlAttributes(attributes);
+            var actionMatches = action.Equals(Html.ViewContext.RequestContext.RouteData.Values["Action"]);
+            var controllerMatches = controller.Equals(Html.ViewContext.RequestContext.RouteData.Values["Controller"]);
+            if (actionMatches && controllerMatches)
+                htmlAttributes["class"] = htmlAttributes.ContainsKey("class")
+                    ? htmlAttributes["class"] + " active"
+                    : "active";
+
+            var link = Html.ActionLink(linkText, action, controller).ToString();
+            return new HtmlString(string.Format("<li{1}>{0}</li>", link, ToAttributesString(htmlAttributes)));
+        }
+
         /// <summary>
         /// Renders an image to the page.
         /// </summary>
@@ -19,14 +42,13 @@ namespace InjectCC.Web.Helpers
         /// <param name="alt">The alt text for the image.</param>
         /// <param name="class_">A CSS class to be applied to the image.</param>
         /// <returns>HTML markup which displays the image.</returns>
-        public static IHtmlString Image(this HtmlHelper Html, string url, string alt = "", string class_ = "")
+        public static IHtmlString Image(this HtmlHelper Html, string url, object attributes = null)
         {
-            url = Html.FixProtocolForHref(url);
-            if (!string.IsNullOrEmpty(class_))
-                class_ = "class=\"" + class_ + "\"";
+            var htmlAttributes = GetHtmlAttributes(attributes);
+            htmlAttributes.Remove("src"); // Remove attributes that we will provide.
 
-            string html = "<img src=\"{0}\" alt=\"{1}\" {2}/>";
-            return new HtmlString(string.Format(html, Html.Content(url), alt, class_));
+            string html = "<img src=\"{0}\"{1} />";
+            return new HtmlString(string.Format(html, Html.Content(url), ToAttributesString(htmlAttributes)));
         }
 
         /// <summary>
@@ -109,6 +131,51 @@ namespace InjectCC.Web.Helpers
         {
             UrlHelper Url = new UrlHelper(new RequestContext(Html.ViewContext.HttpContext, Html.ViewContext.RouteData));
             return Url.Content(url);
+        }
+
+        private static IDictionary<string, string> GetHtmlAttributes(object attrs)
+        {
+            if (attrs is IDictionary<string, string>)
+                return (IDictionary<string, string>)attrs;
+            else
+            {
+                var htmlAttrs = new Dictionary<string, string>();
+                foreach (var prop in GetProperties(attrs))
+                {
+                    var normalizedName = prop.Key.Trim('@', '_').ToLower(); // HTML attribute names should be lowercase.
+                    var normalizedValue = Convert.ToString(prop.Value) ?? "";
+                    htmlAttrs[normalizedName] = normalizedValue;
+                }
+                return htmlAttrs;
+            }
+        }
+
+        private const string _attrFormat = " {0}=\"{1}\"";
+        private static string ToAttributesString(IDictionary<string, string> d)
+        {
+            var attrsb = new StringBuilder();
+            foreach (var entry in d)
+                attrsb.AppendFormat(_attrFormat, entry.Key, entry.Value);
+            return attrsb.ToString();
+        }
+
+        /// <summary>
+        /// Inspects the given object and returns a sequence of properties existing on the object.
+        /// </summary>
+        private static IEnumerable<KeyValuePair<string, object>> GetProperties(object o)
+        {
+            if (o != null)
+            {
+                PropertyDescriptorCollection props = TypeDescriptor.GetProperties(o);
+                foreach (PropertyDescriptor prop in props)
+                {
+                    object val = prop.GetValue(o);
+                    if (val != null)
+                    {
+                        yield return new KeyValuePair<string, object>(prop.Name, val);
+                    }
+                }
+            }
         }
 
         public static string Version()

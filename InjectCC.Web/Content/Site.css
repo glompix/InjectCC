@@ -5,16 +5,21 @@ body
     padding-bottom: 40px;
 }
 
-/* Custom container */
-.container-narrow 
+/* Injection styles
+-----------------------------------------------------------*/
+
+.injection-diagram-big
 {
-    margin: 0 auto;
-    max-width: 700px;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center middle;
+    height: 200px;
 }
-.container-narrow > hr 
-{
-    margin: 30px 0;
-}
+
+
+/* Marketing styles
+-----------------------------------------------------------*/
+
 
 /* Main marketing message and sign up button */
 .jumbotron 
@@ -42,6 +47,7 @@ body
 {
     margin-top: 28px;
 }
+
 
 
 /* Styles for basic forms

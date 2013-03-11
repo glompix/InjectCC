@@ -6,6 +6,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using InjectCC.Model;
+using InjectCC.Web.ViewModels.Injection;
 
 namespace InjectCC.Web.Controllers
 { 
@@ -13,46 +14,44 @@ namespace InjectCC.Web.Controllers
     {
         private InjectionContext db = new InjectionContext();
 
-        //
-        // GET: /Injection/
-
-        public ViewResult Index()
+        public ActionResult Index(int? id = null)
         {
-            var injections = db.Injection.ToList();
-            return View(injections);
-        }
+            var locationSet = (from l in db.LocationSets
+                               where l.UserId != null && (id == null || id == l.LocationSetId) // TODO: UserId == loggedInUser
+                               select l).FirstOrDefault();
 
-        //
-        // GET: /Injection/Details/5
+            if (locationSet == null)
+            {
+                TempData["Error"] = "You haven't set up any medications yet.";
+                return RedirectToAction("Settings", "User");
+            }
 
-        public ViewResult Details(Guid id)
-        {
-            Injection injection = db.Injection.Find(id);
-            return View(injection);
-        }
-
-        //
-        // GET: /Injection/Create
-
-        public ActionResult Create()
-        {
-            var latestInjection = (from i in db.Injection
+            var latestInjection = (from i in db.Injections
+                                   join l in db.Locations on i.LocationId equals l.LocationId into joined
+                                   where locationSet.LocationSetId == joined.Single().LocationSetId
                                    orderby i.Date descending
                                    select i).FirstOrDefault();
 
-            var targetInjection = latestInjection;
-            if (latestInjection != null)
+            Injection nextInjection;
+            if (latestInjection == null)
             {
-                var nextInjection = latestInjection.CalculateNext();
-                if (DateTime.Now > targetInjection.Date.AddHours(-12))
-                {
-                    targetInjection = nextInjection;
-                }
+                nextInjection = new Injection();
             }
+            else
+            {
+                nextInjection = latestInjection.CalculateNext();
+            }
+            var model = new IndexModel
+            {
+                NextInjection = nextInjection,
+                Locations = locationSet.Locations,
+                LocationModifiers = locationSet.LocationModifiers,
+                Last30DaysRating = 80, // TODO
+                Last90DaysRating = 90
+            };
 
-            ViewBag.UserId = new SelectList(db.Users, "UserId", "Email");
-            return View(targetInjection);
-        } 
+            return View(model);
+        }
 
         //
         // POST: /Injection/Create
@@ -62,8 +61,7 @@ namespace InjectCC.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                injection.InjectionId = Guid.NewGuid();
-                db.Injection.Add(injection);
+                db.Injections.Add(injection);
                 db.SaveChanges();
                 return RedirectToAction("Index");  
             }
@@ -77,7 +75,7 @@ namespace InjectCC.Web.Controllers
  
         public ActionResult Edit(Guid id)
         {
-            Injection injection = db.Injection.Find(id);
+            Injection injection = db.Injections.Find(id);
             ViewBag.UserId = new SelectList(db.Users, "UserId", "Email", injection.UserId);
             return View(injection);
         }
@@ -103,7 +101,7 @@ namespace InjectCC.Web.Controllers
  
         public ActionResult Delete(Guid id)
         {
-            Injection injection = db.Injection.Find(id);
+            Injection injection = db.Injections.Find(id);
             return View(injection);
         }
 
@@ -113,8 +111,8 @@ namespace InjectCC.Web.Controllers
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(Guid id)
         {            
-            Injection injection = db.Injection.Find(id);
-            db.Injection.Remove(injection);
+            Injection injection = db.Injections.Find(id);
+            db.Injections.Remove(injection);
             db.SaveChanges();
             return RedirectToAction("Index");
         }

@@ -12,71 +12,23 @@ namespace InjectCC.Web.Controllers
     public class UserController : Controller
     {
         private InjectionContext db = new InjectionContext();
-
-        private bool isLoggedIn()
-        {
-            return true;
-        }
-
-
-        public ViewResult Home()
-        {
-            return View();
-        }
-
+        
         public ViewResult Login()
         {
             return View();
         }
 
-
-        //
-        // GET: /User/
-
-        public ViewResult Index()
+        public ActionResult Logout()
         {
-            return View(db.Users.ToList());
+           return RedirectToAction("Index", "Home");
         }
-
-        //
-        // GET: /User/Details/5
-
-        public ViewResult Details(int id)
-        {
-            User user = db.Users.Find(id);
-            return View(user);
-        }
-
-        //
-        // GET: /User/Create
-
-        public ActionResult Create()
-        {
-            return View();
-        } 
-
-        //
-        // POST: /User/Create
-
-        [HttpPost]
-        public ActionResult Create(User user)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Users.Add(user);
-                db.SaveChanges();
-                return RedirectToAction("Index");  
-            }
-
-            return View(user);
-        }
-        
+                
         //
         // GET: /User/Edit/5
  
-        public ActionResult Edit(int id)
+        public ActionResult Settings()
         {
-            User user = db.Users.Find(id);
+            User user = db.Users.Find(1);
             return View(user);
         }
 

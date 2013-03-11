@@ -9,7 +9,7 @@ namespace InjectCC.Model
     public class InjectionContext : DbContext
     {
         public DbSet<Location> Locations { get; set; }
-        public DbSet<Injection> Injection { get; set; }
+        public DbSet<Injection> Injections { get; set; }
         public DbSet<LocationSet> LocationSets { get; set; }
         public DbSet<User> Users { get; set; }
 

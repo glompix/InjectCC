@@ -1,13 +1,19 @@
 ﻿using System;
 using System.Linq;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace InjectCC.Model
 {
     public class Injection
     {
+        public Injection()
+        {
+            InjectionId = Utilities.NewSequentialGUID();
+        }
+
         [Key]
-        public Guid InjectionId { get; set; }
+        public Guid InjectionId { get; private set; }
         
         [Required]
         public DateTime Date { get; set; }
@@ -26,9 +32,10 @@ namespace InjectCC.Model
         public Injection CalculateNext()
         {
             var next = new Injection();
-            next.Date = this.Date.AddDays(2);
+            next.Date = this.Date + Location.TimeUntilNextInjection;
             next.User = this.User;
-            next.Location = this.Location;
+            next.Location = this.Location.LocationSet.Locations.FirstOrDefault(l => l.Ordinal > this.Location.Ordinal)
+                ?? this.Location.LocationSet.Locations.First();
             return next;
         }
     }

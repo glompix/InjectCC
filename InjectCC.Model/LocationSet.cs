@@ -14,7 +14,7 @@ namespace InjectCC.Model
         public int LocationSetId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public string Medication { get; set; }
+        public string MedicationName { get; set; }
 
         /// <summary>
         /// Optionally, the user that owns this LocationSet.  If not set, then
@@ -24,6 +24,7 @@ namespace InjectCC.Model
         public int UserId { get; set; }
 
         public virtual List<Location> Locations { get; set; }
+        public virtual List<LocationModifier> LocationModifiers { get; set; }
 
         public LocationSet CopyToUser(User user)
         {
