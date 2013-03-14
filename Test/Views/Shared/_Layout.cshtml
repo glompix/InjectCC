@@ -1,0 +1,65 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+
+        @Styles.Render("~/Content/css", "~/Content/bootstrap")
+        @Scripts.Render("~/bundles/modernizr")
+
+        @RenderSection("head", required: false)
+    </head>
+    <body>
+        <div class="container">
+            <div class="masthead">
+                @if (Html.ViewContext.HttpContext.User.Identity.IsAuthenticated)
+                {
+                    <div class="pull-right hidden-phone">
+                        <ul class="nav nav-pills">
+                            @Html.NavActionLink("Injections", "Index", "Injection")
+                            @Html.NavActionLink("History", "History", "Injection")
+                            @Html.NavActionLink("Settings", "Settings", "User")
+                            @Html.NavActionLink("Sign out", "Logout", "User")
+                        </ul>
+                    </div>
+                    <div class="visible-phone">
+                        <h3 class="muted">inject.cc</h3>
+                        <ul class="nav nav-pills nav-stacked">
+                            @Html.NavActionLink("Injections", "Index", "Injection")
+                            @Html.NavActionLink("History", "Index1", "Injection")
+                            @Html.NavActionLink("Settings", "Settings", "User")
+                            @Html.NavActionLink("Sign out", "Logout", "User")
+                        </ul>
+                    </div>
+                }
+                else
+                {
+                    <form class="navbar-form pull-right">
+                        <fieldset>
+                            <input class="span2" type="text" placeholder="Email" />
+                            <input class="span2" type="password" placeholder="Password" />
+                            <button type="submit" class="btn">Sign in</button>
+                        </fieldset>
+                    </form>
+                }
+                <h3 class="muted hidden-phone">inject.cc</h3>
+            </div>
+
+            <hr />
+
+            @RenderBody()
+            
+            <div style="clear: both;"></div>
+
+            <hr />
+
+            <div class="span12">
+                <p>&copy; Company 2013</p>
+            </div>
+        </div>
+
+        @Scripts.Render("~/bundles/jquery")
+        @RenderSection("scripts", required: false)
+    </body>
+</html>

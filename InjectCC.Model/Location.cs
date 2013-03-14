@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace InjectCC.Model
 {
@@ -13,6 +14,7 @@ namespace InjectCC.Model
     public class Location
     {
         [Key]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
         public int LocationId { get; set; }
 
         /// <summary>

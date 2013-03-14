@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InjectCC.Web", "InjectCC.Web\InjectCC.Web.csproj", "{E4C12FCB-3071-4F5A-B25D-66826D2E85D5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InjectCC.Web.Old", "InjectCC.Web\InjectCC.Web.Old.csproj", "{E4C12FCB-3071-4F5A-B25D-66826D2E85D5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InjectCC.Model", "InjectCC.Model\InjectCC.Model.csproj", "{DEE48A58-9156-41F7-B54F-4E22B14EF66E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InjectCC.Web", "Test\InjectCC.Web.csproj", "{F9DB0EF6-F5CB-450C-ACF2-F117D17D6610}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,6 +21,10 @@ Global
 		{DEE48A58-9156-41F7-B54F-4E22B14EF66E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DEE48A58-9156-41F7-B54F-4E22B14EF66E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DEE48A58-9156-41F7-B54F-4E22B14EF66E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F9DB0EF6-F5CB-450C-ACF2-F117D17D6610}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9DB0EF6-F5CB-450C-ACF2-F117D17D6610}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F9DB0EF6-F5CB-450C-ACF2-F117D17D6610}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9DB0EF6-F5CB-450C-ACF2-F117D17D6610}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

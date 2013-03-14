@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace InjectCC.Model
 {
@@ -11,9 +12,16 @@ namespace InjectCC.Model
     /// </summary>
     public class LocationSet
     {
+        [Key]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
         public int LocationSetId { get; set; }
+
+        [Required]
         public string Name { get; set; }
+        
         public string Description { get; set; }
+
+        [Required]
         public string MedicationName { get; set; }
 
         /// <summary>
@@ -21,6 +29,7 @@ namespace InjectCC.Model
         /// this location set is public.
         /// </summary>
         public virtual User User { get; set; }
+        [Required]
         public int UserId { get; set; }
 
         public virtual List<Location> Locations { get; set; }
@@ -29,7 +38,9 @@ namespace InjectCC.Model
         public LocationSet CopyToUser(User user)
         {
             throw new NotImplementedException();
-            return new LocationSet();
+            /*var set = new LocationSet(this);
+            set.User = user;
+            return set;*/
         }
     }
 }

@@ -1,0 +1,112 @@
+body
+{
+    background: #eee;
+    padding-top: 20px;
+    padding-bottom: 40px;
+}
+
+/* Injection styles
+-----------------------------------------------------------*/
+
+.injection-diagram-big
+{
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center middle;
+    height: 200px;
+}
+
+
+/* Marketing styles
+-----------------------------------------------------------*/
+
+
+/* Main marketing message and sign up button */
+.jumbotron 
+{
+    margin: 60px 0;
+    text-align: center;
+}
+.jumbotron h1 
+{
+    font-size: 72px;
+    line-height: 1;
+}
+.jumbotron .btn 
+{
+    font-size: 21px;
+    padding: 14px 24px;
+}
+
+/* Supporting marketing content */
+.marketing
+{
+    margin: 60px 0;
+}
+.marketing p + h4
+{
+    margin-top: 28px;
+}
+
+
+
+/* Styles for basic forms
+-----------------------------------------------------------*/
+
+fieldset 
+{
+    border:1px solid #ddd;
+    padding:0 1.4em 1.4em 1.4em;
+    margin:0 0 1.5em 0;
+}
+
+legend 
+{
+    font-size:1.2em;
+    font-weight: bold;
+}
+
+textarea 
+{
+    min-height: 75px;
+}
+
+.editor-label 
+{
+    margin: 1em 0 0 0;
+}
+
+.editor-field 
+{
+    margin:0.5em 0 0 0;
+}
+
+
+/* Styles for validation helpers
+-----------------------------------------------------------*/
+.field-validation-error
+{
+    color: #ff0000;
+}
+
+.field-validation-valid
+{
+    display: none;
+}
+
+.input-validation-error
+{
+    border: 1px solid #ff0000;
+    background-color: #ffeeee;
+}
+
+.validation-summary-errors
+{
+    font-weight: bold;
+    color: #ff0000;
+}
+
+.validation-summary-valid
+{
+    display: none;
+}
