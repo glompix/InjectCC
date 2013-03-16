@@ -1,23 +1,28 @@
 ﻿@model InjectCC.Web.ViewModels.User.SettingsModel
 
-<h2>Settings</h2>
-
-@using (Html.BeginForm()) {
-    @Html.ValidationSummary(true)
-
-    <fieldset>
-        <legend>SettingsModel</legend>
-
-        <p>
-            <input type="submit" value="Save" />
-        </p>
-    </fieldset>
-}
-
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>
-
-@section Scripts {
+@section scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }
+
+<h2>Settings</h2>
+
+<form class="form-horizontal">
+    @Html.ValidationSummary(true)
+    @Html.HiddenFor(m => m.UserId);
+    @Html.HiddenFor(m => m.Timestamp);
+    <fieldset>
+        <legend>Profile</legend>
+
+        <div class="control-group">
+            @Html.LabelFor(m => m.Email, new { @class = "control-label", @for = "EmailTextBox" })
+            <div class="controls">
+                @Html.TextBoxFor(m => m.Email, new { placeholder = "you@domain.com", id = "EmailTextBox" })
+            </div>
+        </div>
+        <div class="control-group">
+            <div class="controls">
+                <button type="submit" class="btn">Save changes</button>
+            </div>
+        </div>
+    </fieldset>
+</form>

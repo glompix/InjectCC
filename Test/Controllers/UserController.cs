@@ -19,47 +19,25 @@ namespace InjectCC.Web.Controllers
     [InitializeSimpleMembership]
     public class UserController : Controller
     {
-        private User _userStub = new User
-        {
-            Email = "glompix@gmail.com",
-            RegistrationDate = DateTime.Now,
-            LocationSets = new List<LocationSet>
-            {
-                new LocationSet
-                {
-                    Name = "My Betaseron Injections",
-                    Locations = new List<Location>
-                    {
-                        new Location { Name = "Right Abdomen", Ordinal = 1 },
-                        new Location { Name = "Left Abdomen", Ordinal = 2 },
-                        new Location { Name = "Right Thigh", Ordinal = 3 },
-                        new Location { Name = "Left Thigh", Ordinal = 4 },
-                        new Location { Name = "Right Buttock", Ordinal = 5 },
-                        new Location { Name = "Left Buttock", Ordinal = 6 }
-                    },
-                    LocationModifiers = new List<LocationModifier>
-                    {
-                        new LocationModifier { Name = "High", Ordinal = 1 },
-                        new LocationModifier { Name = "Middle", Ordinal = 2 },
-                        new LocationModifier { Name = "Low", Ordinal = 3 }
-                    }
-                }
-            }
-        };
-
         //
         // GET: /User/Settings
         public ActionResult Settings()
         {
-            var model = new SettingsModel { User = _userStub };
-            return View(model);
+            using (var db = new InjectionContext())
+            {
+                var user = db.Users.Single(u => u.UserId == WebSecurity.CurrentUserId);
+                var model = new SettingsModel(user);
+                return View(model);
+            }
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Settings(SettingsModel model)
         {
             if (ModelState.IsValid)
             {
+                ViewBag.Message = "Settings saved.";
             }
 
             return View(model);
@@ -83,7 +61,7 @@ namespace InjectCC.Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Login(LoginModel model, string returnUrl)
         {
-            if (ModelState.IsValid && WebSecurity.Login(model.UserName, model.Password, persistCookie: model.RememberMe))
+            if (ModelState.IsValid && WebSecurity.Login(model.Email, model.Password, persistCookie: model.RememberMe))
             {
                 return RedirectToLocal(returnUrl);
             }
@@ -125,9 +103,9 @@ namespace InjectCC.Web.Controllers
                 // Attempt to register the user
                 try
                 {
-                    WebSecurity.CreateUserAndAccount(model.UserName, model.Password);
-                    WebSecurity.Login(model.UserName, model.Password);
-                    return RedirectToAction("Index", "Home");
+                    WebSecurity.CreateUserAndAccount(model.Email, model.Password);
+                    WebSecurity.Login(model.Email, model.Password);
+                    return RedirectToAction("Index", "Injection");
                 }
                 catch (MembershipCreateUserException e)
                 {
@@ -286,7 +264,7 @@ namespace InjectCC.Web.Controllers
                 string loginData = OAuthWebSecurity.SerializeProviderUserId(result.Provider, result.ProviderUserId);
                 ViewBag.ProviderDisplayName = OAuthWebSecurity.GetOAuthClientData(result.Provider).DisplayName;
                 ViewBag.ReturnUrl = returnUrl;
-                return View("ExternalLoginConfirmation", new RegisterExternalLoginModel { UserName = result.UserName, ExternalLoginData = loginData });
+                return View("ExternalLoginConfirmation", new RegisterExternalLoginModel { Email = result.UserName, ExternalLoginData = loginData });
             }
         }
 
@@ -309,17 +287,17 @@ namespace InjectCC.Web.Controllers
             if (ModelState.IsValid)
             {
                 // Insert a new user into the database
-                using (UsersContext db = new UsersContext())
+                using (var db = new InjectionContext())
                 {
-                    UserProfile user = db.UserProfiles.FirstOrDefault(u => u.UserName.ToLower() == model.UserName.ToLower());
+                    User user = db.Users.FirstOrDefault(u => u.Email.ToLower() == model.Email.ToLower());
                     // Check if user already exists
                     if (user == null)
                     {
                         // Insert name into the profile table
-                        db.UserProfiles.Add(new UserProfile { UserName = model.UserName });
+                        db.Users.Add(new User { Email = model.Email, RegistrationDate = DateTime.Now });
                         db.SaveChanges();
 
-                        OAuthWebSecurity.CreateOrUpdateAccount(provider, providerUserId, model.UserName);
+                        OAuthWebSecurity.CreateOrUpdateAccount(provider, providerUserId, model.Email);
                         OAuthWebSecurity.Login(provider, providerUserId, createPersistentCookie: false);
 
                         return RedirectToLocal(returnUrl);

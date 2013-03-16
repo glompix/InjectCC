@@ -1,4 +1,4 @@
-﻿@model InjectCC.Web.Models.LocalPasswordModel
+﻿@model InjectCC.Web.ViewModels.User.LocalPasswordModel
 @{
     ViewBag.Title = "Manage Account";
 }
@@ -27,6 +27,6 @@ else
     @Html.Action("ExternalLoginsList", new { ReturnUrl = ViewBag.ReturnUrl })
 </section>
 
-@section Scripts {
+@section scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }

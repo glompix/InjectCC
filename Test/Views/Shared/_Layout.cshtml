@@ -6,8 +6,7 @@
         <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
 
         @Styles.Render("~/Content/css", "~/Content/bootstrap")
-        @Scripts.Render("~/bundles/modernizr")
-
+        @RenderSection("styles", required: false)
         @RenderSection("head", required: false)
     </head>
     <body>
@@ -35,13 +34,7 @@
                 }
                 else
                 {
-                    <form class="navbar-form pull-right">
-                        <fieldset>
-                            <input class="span2" type="text" placeholder="Email" />
-                            <input class="span2" type="password" placeholder="Password" />
-                            <button type="submit" class="btn">Sign in</button>
-                        </fieldset>
-                    </form>
+                    @Html.Partial("_LoginForm");
                 }
                 <h3 class="muted hidden-phone">inject.cc</h3>
             </div>
@@ -58,7 +51,8 @@
                 <p>&copy; Company 2013</p>
             </div>
         </div>
-
+        
+        @Scripts.Render("~/bundles/modernizr")
         @Scripts.Render("~/bundles/jquery")
         @RenderSection("scripts", required: false)
     </body>
