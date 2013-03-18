@@ -1,28 +1,91 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
 using System.Linq;
+using System.Transactions;
 using System.Web;
 using System.Web.Mvc;
-using InjectCC.Model;
-using InjectCC.Web.Filters;
+using System.Web.Security;
+using DotNetOpenAuth.AspNet;
 using Microsoft.Web.WebPages.OAuth;
 using WebMatrix.WebData;
+using InjectCC.Web.Filters;
+using InjectCC.Web.ViewModels;
 using InjectCC.Web.ViewModels.User;
-using System.Web.Security;
-using System.Transactions;
-using DotNetOpenAuth.AspNet;
+using InjectCC.Model;
 
 namespace InjectCC.Web.Controllers
 {
+    [Authorize]
     [InitializeSimpleMembership]
-    public class UserController : Controller
+    public class UserController : InjectionController
     {
-        private InjectionContext db = new InjectionContext();
+        //
+        // GET: /User/Settings
+        public ActionResult Settings()
+        {
+            using (var db = new Context())
+            {
+                var user = db.Users.Single(u => u.UserId == WebSecurity.CurrentUserId);
+                var medications = db.Medications.Where(m => m.UserId == WebSecurity.CurrentUserId).ToList();
+                var model = SettingsModel.FromEntities(user, medications);
+                ViewBag.HasLocalPassword = OAuthWebSecurity.HasLocalAccount(WebSecurity.GetUserId(User.Identity.Name));
+                return View(model);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Settings(SettingsModel model)
+        {
+            bool hasLocalAccount = OAuthWebSecurity.HasLocalAccount(WebSecurity.GetUserId(User.Identity.Name));
+            ViewBag.HasLocalPassword = hasLocalAccount;
+            if (hasLocalAccount)
+            {
+                if (ModelState.IsValid)
+                {
+                    // ChangePassword will throw an exception rather than return false in certain failure scenarios.
+                    bool changePasswordSucceeded;
+                    try
+                    {
+                        changePasswordSucceeded = WebSecurity.ChangePassword(User.Identity.Name, model.OldPassword, model.NewPassword);
+                    }
+                    catch (Exception)
+                    {
+                        changePasswordSucceeded = false;
+                    }
+
+                    if (changePasswordSucceeded)
+                    {
+                        return RedirectToAction("Manage", new { Message = ManageMessageId.ChangePasswordSuccess });
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("", "The current password is incorrect or the new password is invalid.");
+                    }
+                }
+            }
+            else
+            {
+                if (ModelState.IsValid)
+                {
+                    try
+                    {
+                        WebSecurity.CreateAccount(User.Identity.Name, model.NewPassword);
+                        return RedirectToAction("Settings", new { Message = ManageMessageId.SetPasswordSuccess });
+                    }
+                    catch (Exception e)
+                    {
+                        ModelState.AddModelError("", e);
+                    }
+                }
+            }
+
+            // If we got this far, something failed, redisplay form
+            return View(model);
+        }
 
         //
-        // GET: /Account/Login
+        // GET: /User/Login
 
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
@@ -32,14 +95,14 @@ namespace InjectCC.Web.Controllers
         }
 
         //
-        // POST: /Account/Login
+        // POST: /User/Login
 
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public ActionResult Login(LoginModel model, string returnUrl)
         {
-            if (ModelState.IsValid && WebSecurity.Login(model.UserName, model.Password, persistCookie: model.RememberMe))
+            if (ModelState.IsValid && WebSecurity.Login(model.Email, model.Password, persistCookie: model.RememberMe))
             {
                 return RedirectToLocal(returnUrl);
             }
@@ -50,11 +113,9 @@ namespace InjectCC.Web.Controllers
         }
 
         //
-        // POST: /Account/LogOff
+        // GET: /User/Logout
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult LogOff()
+        public ActionResult Logout()
         {
             WebSecurity.Logout();
 
@@ -62,7 +123,7 @@ namespace InjectCC.Web.Controllers
         }
 
         //
-        // GET: /Account/Register
+        // GET: /User/Register
 
         [AllowAnonymous]
         public ActionResult Register()
@@ -71,7 +132,7 @@ namespace InjectCC.Web.Controllers
         }
 
         //
-        // POST: /Account/Register
+        // POST: /User/Register
 
         [HttpPost]
         [AllowAnonymous]
@@ -83,9 +144,9 @@ namespace InjectCC.Web.Controllers
                 // Attempt to register the user
                 try
                 {
-                    WebSecurity.CreateUserAndAccount(model.UserName, model.Password);
-                    WebSecurity.Login(model.UserName, model.Password);
-                    return RedirectToAction("Index", "Home");
+                    WebSecurity.CreateUserAndAccount(model.Email, model.Password, propertyValues: new { RegistrationDate = DateTime.Now });
+                    WebSecurity.Login(model.Email, model.Password);
+                    return RedirectToAction("Index", "Injection");
                 }
                 catch (MembershipCreateUserException e)
                 {
@@ -98,7 +159,7 @@ namespace InjectCC.Web.Controllers
         }
 
         //
-        // POST: /Account/Disassociate
+        // POST: /User/Disassociate
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -111,7 +172,7 @@ namespace InjectCC.Web.Controllers
             if (ownerAccount == User.Identity.Name)
             {
                 // Use a transaction to prevent the user from deleting their last login credential
-                using (var scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = System.Transactions.IsolationLevel.Serializable }))
+                using (var scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.Serializable }))
                 {
                     bool hasLocalAccount = OAuthWebSecurity.HasLocalAccount(WebSecurity.GetUserId(User.Identity.Name));
                     if (hasLocalAccount || OAuthWebSecurity.GetAccountsFromUserName(User.Identity.Name).Count > 1)
@@ -127,7 +188,7 @@ namespace InjectCC.Web.Controllers
         }
 
         //
-        // GET: /Account/Manage
+        // GET: /User/Manage
 
         public ActionResult Manage(ManageMessageId? message)
         {
@@ -267,14 +328,14 @@ namespace InjectCC.Web.Controllers
             if (ModelState.IsValid)
             {
                 // Insert a new user into the database
-                using (InjectionContext db = new InjectionContext())
+                using (var db = new Context())
                 {
                     User user = db.Users.FirstOrDefault(u => u.Email.ToLower() == model.Email.ToLower());
                     // Check if user already exists
                     if (user == null)
                     {
                         // Insert name into the profile table
-                        db.Users.Add(new User { Email = model.Email });
+                        db.Users.Add(new User { Email = model.Email, RegistrationDate = DateTime.Now });
                         db.SaveChanges();
 
                         OAuthWebSecurity.CreateOrUpdateAccount(provider, providerUserId, model.Email);
@@ -407,11 +468,5 @@ namespace InjectCC.Web.Controllers
             }
         }
         #endregion
-
-        protected override void Dispose(bool disposing)
-        {
-            db.Dispose();
-            base.Dispose(disposing);
-        }
     }
 }

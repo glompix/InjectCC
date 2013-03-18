@@ -1,0 +1,14 @@
+﻿@model InjectCC.Web.ViewModels.User.LoginModel
+
+<form action="@Url.Action("Login", "User")" method="post" class="pull-right form-inline">
+    @Html.AntiForgeryToken()
+    <fieldset>
+        @Html.TextBoxFor(m => m.Email, new { @class = "input-large", placeholder = "your@email.com" })
+        @Html.PasswordFor(m => m.Password, new { @class = "input-medium", placeholder = "password" })
+        <button type="submit" class="btn">Sign in</button>
+        <label class="checkbox">
+            @Html.CheckBoxFor(m => m.RememberMe)
+            Remember me
+        </label>
+    </fieldset>
+</form>

@@ -1,35 +1,68 @@
-﻿@model InjectCC.Model.User
+﻿@model InjectCC.Web.ViewModels.User.SettingsModel
 
-@{
-    ViewBag.Title = "Edit";
+@section scripts {
+    @Scripts.Render("~/bundles/jqueryval")
 }
 
-<h2>Edit</h2>
-
-<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
-<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
-
-@using (Html.BeginForm()) {
-    @Html.ValidationSummary(true)
-    <fieldset>
-        <legend>User</legend>
-
-        @Html.HiddenFor(model => model.UserId)
-
-        <div class="editor-label">
-            @Html.LabelFor(model => model.Email)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.Email)
-            @Html.ValidationMessageFor(model => model.Email)
-        </div>
-
-        <p>
-            <input type="submit" value="Save" />
-        </p>
-    </fieldset>
+@section head {
+    <title>inject.cc - Account Settings</title>
 }
 
-<div>
-    @Html.ActionLink("Back to List", "Index")
+<p class="message-success">@ViewBag.StatusMessage</p>
+<div class="row">
+    <div class="tabbable tabs-left">
+        @Html.Partial("_SettingsMenu")
+        <div class="container-fluid tab-content">
+            <div class="row-fluid">
+                <form action="@Url.Action("Settings", "User")" method="post">
+                    <div class="row-fluid">
+                        @Html.ValidationSummary(true)
+                        @Html.AntiForgeryToken()
+                        @Html.HiddenFor(m => m.UserId)
+                        @Html.HiddenFor(m => m.Timestamp)
+                    </div>
+                    <div class="row-fluid">
+                        <fieldset class="form-horizontal span6">
+                            <legend>Profile</legend>
+                            <div class="control-group">
+                                @Html.LabelFor(m => m.Email, new { @class = "control-label", @for = "EmailTextBox" })
+                                <div class="controls">
+                                    @Html.TextBoxFor(m => m.Email, new { placeholder = "you@domain.com", id = "EmailTextBox" })
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">Registered on</label>
+                                <div class="controls">
+                                    <span class="uneditable-input">@Model.RegistrationDate.ToString("D")</span>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <div class="controls">
+                                    <button type="submit" class="btn">Save changes</button>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <div class="span6">
+                            @if (ViewBag.HasLocalPassword)
+                            {
+                                @Html.Partial("_ChangePasswordPartial")
+                            }
+                            else
+                            { 
+                                @Html.Partial("_SetPasswordPartial")
+                            }
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="row-fluid">
+                <div id="externalLogins" class="span6">
+                    @Html.Action("RemoveExternalLogins")
+                </div>
+                <div class="span6">
+                    @Html.Action("ExternalLoginsList", new { ReturnUrl = ViewBag.ReturnUrl })
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

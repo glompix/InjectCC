@@ -1,6 +1,7 @@
-﻿@model Test.Models.RegisterExternalLoginModel
-@{
-    ViewBag.Title = "Register";
+﻿@model InjectCC.Web.ViewModels.User.RegisterExternalLoginModel
+
+@section scripts {
+    @Scripts.Render("~/bundles/jqueryval")
 }
 
 <hgroup class="title">
@@ -29,8 +30,4 @@
         @Html.HiddenFor(m => m.ExternalLoginData)
         <input type="submit" value="Register" />
     </fieldset>
-}
-
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
 }

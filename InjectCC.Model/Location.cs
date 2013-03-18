@@ -9,7 +9,7 @@ namespace InjectCC.Model
 {
     /// <summary>
     /// Indicates a location on the body at which to inject medication.  Must
-    /// be a part of a LocationSet.
+    /// be a part of a Medication.
     /// </summary>
     public class Location
     {
@@ -24,7 +24,7 @@ namespace InjectCC.Model
         public string Name { get; set; }
 
         /// <summary>
-        /// The ordinal within the associated LocationSet. (for ordering)
+        /// The ordinal within the associated Medication. (for ordering)
         /// </summary>
         [Required]
         public int Ordinal { get; set; }
@@ -38,7 +38,7 @@ namespace InjectCC.Model
         /// <summary>
         /// The 
         /// </summary>
-        [Required]
+        [Required, MaxLength(250)]
         public string ReferenceImageUrl { get; set; }
 
         [Required, Range(0, 1000)]
@@ -50,8 +50,9 @@ namespace InjectCC.Model
         /// <summary>
         /// The location set to which this Location belongs.
         /// </summary>
+        public virtual Medication Medication { get; set; }
+
         [Required]
-        public virtual LocationSet LocationSet { get; set; }
-        public int LocationSetId { get; set; }
+        public int MedicationId { get; set; }
     }
 }

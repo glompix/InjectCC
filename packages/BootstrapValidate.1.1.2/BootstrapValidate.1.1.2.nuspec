@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>BootstrapValidate</id>
+    <version>1.1.2</version>
+    <title>Bootstrap Validate</title>
+    <authors>David Nguyen</authors>
+    <owners>David Nguyen</owners>
+    <projectUrl>https://github.com/davidnguyen/bootstrap-validate</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Enables Twitter Bootstrap Framework to work with Microsoft jQuery Unobtrusive Validation in ASP.NET MVC4 projects. 
+
+Source: https://github.com/davidnguyen/bootstrap-validate</description>
+    <summary>Enables Twitter Bootstrap Framework to work with Microsoft jQuery Unobtrusive Validation in ASP.NET MVC4 projects</summary>
+    <releaseNotes />
+    <copyright />
+    <language />
+    <tags>JavaScript, Bootstrap, jQuery, Validate</tags>
+    <dependencies>
+      <dependency id="Twitter.Bootstrap" version="2.3.1" />
+      <dependency id="Microsoft.jQuery.Unobtrusive.Validation" version="2.0.30116.0" />
+    </dependencies>
+    <references />
+  </metadata>
+</package>

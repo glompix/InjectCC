@@ -25,11 +25,11 @@ namespace InjectCC.Web.Filters
         {
             public SimpleMembershipInitializer()
             {
-                Database.SetInitializer<InjectionContext>(null);
+                Database.SetInitializer<Context>(null);
 
                 try
                 {
-                    using (var context = new InjectionContext())
+                    using (var context = new Context())
                     {
                         if (!context.Database.Exists())
                         {

@@ -7,28 +7,30 @@ using System.Web;
 using System.Web.Mvc;
 using InjectCC.Model;
 using InjectCC.Web.ViewModels.Injection;
+using InjectCC.Web.Filters;
+using WebMatrix.WebData;
 
 namespace InjectCC.Web.Controllers
 { 
-    public class InjectionController : Controller
+    [Authorize]
+    [InitializeSimpleMembership]
+    public class InjectionController : InjectCcController
     {
-        private InjectionContext db = new InjectionContext();
+        private Context db = new Context();
 
         public ActionResult Index(int? id = null)
         {
-            var locationSet = (from l in db.LocationSets
-                               where l.UserId != null && (id == null || id == l.LocationSetId) // TODO: UserId == loggedInUser
+            var medication = (from l in db.Medications
+                               where l.UserId == WebSecurity.CurrentUserId && (id == null || id == l.MedicationId) // TODO: UserId == loggedInUser
                                select l).FirstOrDefault();
 
-            if (locationSet == null)
+            if (medication == null)
             {
-                TempData["Error"] = "You haven't set up any medications yet.";
-                return RedirectToAction("Settings", "User");
+                return RedirectErrorToAction("You haven't set up any medications yet.", "New", "Medication");
             }
 
             var latestInjection = (from i in db.Injections
-                                   join l in db.Locations on i.LocationId equals l.LocationId into joined
-                                   where locationSet.LocationSetId == joined.Single().LocationSetId
+                                   where i.UserId == WebSecurity.CurrentUserId
                                    orderby i.Date descending
                                    select i).FirstOrDefault();
 
@@ -41,17 +43,34 @@ namespace InjectCC.Web.Controllers
             {
                 nextInjection = latestInjection.CalculateNext();
             }
+
+            var locations = db.Locations.Where(l => l.MedicationId == medication.MedicationId).ToList();
+            var locationModifiers = new List<LocationModifier>();
             var model = new IndexModel
             {
                 NextInjection = nextInjection,
-                Locations = locationSet.Locations,
-                LocationModifiers = locationSet.LocationModifiers,
+                Locations = locations,
+                LocationModifiers = locationModifiers,
                 Last30DaysRating = 80, // TODO
                 Last90DaysRating = 90
             };
 
             return View(model);
         }
+
+        public ActionResult History()
+        {
+            return View();
+        }
+
+
+
+
+
+
+
+
+
 
         //
         // POST: /Injection/Create

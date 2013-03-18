@@ -1,34 +1,30 @@
-﻿@model ICollection<Test.Models.ExternalLogin>
+﻿@model ICollection<InjectCC.Web.ViewModels.User.ExternalLogin>
 
 @if (Model.Count > 0)
 {
-    <h3>Registered external logins</h3>
-    <table>
-        <tbody>
-        @foreach (Test.Models.ExternalLogin externalLogin in Model)
+    <div class="well clear-well">
+        <h3>Registered External Logins</h3>
+
+        @foreach (InjectCC.Web.ViewModels.User.ExternalLogin externalLogin in Model)
         {
-            <tr>
-                <td>@externalLogin.ProviderDisplayName</td>
-                <td>
-                    @if (ViewBag.ShowRemoveButton)
-                    {
-                        using (Html.BeginForm("Disassociate", "Account"))
+            <form action="@Url.Action("Disassociate", "Account")" method="post" class="form-horiztonal">
+                <div class="control-group">
+                    <label class="control-label">@externalLogin.ProviderDisplayName</label>
+                    <div class="controls">
+                        @if (ViewBag.ShowRemoveButton)
                         {
                             @Html.AntiForgeryToken()
-                            <fieldset>
-                                @Html.Hidden("provider", externalLogin.Provider)
-                                @Html.Hidden("providerUserId", externalLogin.ProviderUserId)
-                                <input type="submit" value="Remove" title="Remove this @externalLogin.ProviderDisplayName credential from your account" />
-                            </fieldset>
+                            @Html.Hidden("provider", externalLogin.Provider)
+                            @Html.Hidden("providerUserId", externalLogin.ProviderUserId)
+                            <button type="submit" class="btn btn-danger" title="Remove this @externalLogin.ProviderDisplayName credential from your account">Remove</button>
                         }
-                    }
-                    else
-                    {
-                        @: &nbsp;
-                    }
-                </td>
-            </tr>
+                        else
+                        {
+                            @: Registered
+                        }
+                    </div>
+                </div>
+            </form>
         }
-        </tbody>
-    </table>
+    </div>
 }

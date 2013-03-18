@@ -1,0 +1,49 @@
+﻿@model InjectCC.Web.ViewModels.Medication.NewModel
+
+@section scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+@section head {
+    <title>inject.cc - New Medication</title>
+}
+
+<div class="row">
+    <div class="tabbable tabs-left">
+        @Html.Partial("_SettingsMenu")
+        <div class="container-fluid tab-content">
+            <div class="row-fluid">
+                <form action="" method="post" class="form-horizontal">
+                    @Html.ValidationSummary(true)
+                    @Html.AntiForgeryToken()
+
+                    <fieldset class="span6">
+                        <legend>NewModel</legend>
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.Name, new { @class = "control-label", @for = "NameTextBox" })
+                            <div class="controls">
+                                @Html.EditorFor(model => model.Name)
+                                @Html.ValidationMessageFor(model => model.Name)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.Description, new { @class = "control-label", @for = "DescriptionTextBox" })
+                            <div class="controls">
+                                @Html.TextAreaFor(model => model.Description)
+                                @Html.ValidationMessageFor(model => model.Description)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <div class="controls">
+                                <button class="btn" type="submit">Create Medication</button>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

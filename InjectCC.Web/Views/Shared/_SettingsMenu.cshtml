@@ -1,0 +1,25 @@
+﻿@model InjectCC.Web.ViewModels.ISettingsModel
+
+@{
+    var links = new Dictionary<string, string>();
+    links.Add("Account", Url.Action("Settings", "User"));
+    foreach (var medication in Model.Medications)
+    {
+        links.Add(medication.Name, Url.Action("Edit", "Medication", new { id = medication.MedicationId }));
+    }
+    links.Add("New Medication", Url.Action("New", "Medication"));
+}
+
+<ul class="nav nav-tabs">
+    @foreach (var link in links)
+    {
+        if (Request.RawUrl.Contains(link.Value))
+        {
+            <li class="active"><a href="@link.Value">@link.Key</a></li>
+        }
+        else
+        {
+            <li><a href="@link.Value">@link.Key</a></li>
+        }
+    }
+</ul>

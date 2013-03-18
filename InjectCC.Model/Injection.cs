@@ -34,8 +34,8 @@ namespace InjectCC.Model
             var next = new Injection();
             next.Date = this.Date + Location.TimeUntilNextInjection;
             next.User = this.User;
-            next.Location = this.Location.LocationSet.Locations.FirstOrDefault(l => l.Ordinal > this.Location.Ordinal)
-                ?? this.Location.LocationSet.Locations.First();
+            next.Location = this.Location.Medication.Locations.FirstOrDefault(l => l.Ordinal > this.Location.Ordinal)
+                ?? this.Location.Medication.Locations.First();
             return next;
         }
     }

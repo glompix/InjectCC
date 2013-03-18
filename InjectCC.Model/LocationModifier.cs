@@ -23,7 +23,7 @@ namespace InjectCC.Model
         public int Ordinal { get; set; }
 
         [Required]
-        public int LocationSetId { get; set; }
-        public virtual LocationSet LocationSet { get; set; }
+        public int MedicationId { get; set; }
+        public virtual Medication Medication { get; set; }
     }
 }

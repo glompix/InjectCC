@@ -10,10 +10,18 @@ namespace InjectCC.Web.Controllers
     {
         public ActionResult Index()
         {
-            return View();
+            if (User.Identity.IsAuthenticated)
+                return RedirectToAction("Index", "Injection");
+            else
+                return View();
         }
 
         public ActionResult About()
+        {
+            return View();
+        }
+
+        public ActionResult Contact()
         {
             return View();
         }

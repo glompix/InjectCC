@@ -3,53 +3,13 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
 
-        @Html.Stylesheet("~/Content/Site.css")
-        @Html.Stylesheet("~/Content/bootstrap.min.css")
-        @Html.Stylesheet("~/Content/bootstrap-responsive.min.css")
-
-        @RenderSection("head", false)
+        @Styles.Render("~/Content/css", "~/Content/bootstrap")
+        @RenderSection("styles", required: false)
+        @RenderSection("head", required: false)
     </head>
     <body>
-        @*<div id="fb-root"></div>
-        <script>
-            // Additional JS functions here
-            window.fbAsyncInit = function () {
-                FB.init({
-                    appId: '339264949506995', // App ID
-                    channelUrl: '//inject.cc/Content/channel.html', // Channel File
-                    status: true, // check login status
-                    cookie: true, // enable cookies to allow the server to access the session
-                    xfbml: true  // parse XFBML
-                });
-
-                FB.getLoginStatus(function (response) {
-                    if (response.status === 'connected') {
-                        // connected
-                        console.log('Welcome!  Fetching your information.... ');
-                        FB.api('/me', function (response) {
-                            console.log('Good to see you, ' + response.name + '.');
-                        });
-                    } else if (response.status === 'not_authorized') {
-                        // not_authorized
-                        login();
-                    } else {
-                        // not_logged_in
-                        login();
-                    }
-                });
-            };
-
-            function login() {
-                FB.login(function (response) {
-                    if (response.authResponse) {
-                        // connected
-                    } else {
-                        // cancelled
-                    }
-                });
-            }
-        </script>*@
         <div class="container">
             <div class="masthead">
                 @if (Html.ViewContext.HttpContext.User.Identity.IsAuthenticated)
@@ -63,7 +23,7 @@
                         </ul>
                     </div>
                     <div class="visible-phone">
-                        <h3 class="muted">inject.cc</h3>
+                        <a href="@Url.Action("Index", "Home")" class="muted"><h3>inject.cc</h3></a>
                         <ul class="nav nav-pills nav-stacked">
                             @Html.NavActionLink("Injections", "Index", "Injection")
                             @Html.NavActionLink("History", "Index1", "Injection")
@@ -74,15 +34,10 @@
                 }
                 else
                 {
-                    <form class="navbar-form pull-right">
-                        <fieldset>
-                            <input class="span2" type="text" placeholder="Email" />
-                            <input class="span2" type="password" placeholder="Password" />
-                            <button type="submit" class="btn">Sign in</button>
-                        </fieldset>
-                    </form>
+                    <a href="@Url.Action("Index", "Home")" class="visible-phone muted"><h3>inject.cc</h3></a>
+                    @Html.Partial("_LoginForm");
                 }
-                <h3 class="muted hidden-phone">inject.cc</h3>
+                <a href="@Url.Action("Index", "Home")" class="hidden-phone muted"><h3>inject.cc</h3></a>
             </div>
 
             <hr />
@@ -97,10 +52,9 @@
                 <p>&copy; Company 2013</p>
             </div>
         </div>
-
-        @Html.Script("~/Scripts/jquery-1.9.1.min.js")
-        @Html.Script("~/Scripts/modernizr-1.7.min.js")
-        @Html.Script("~/Scripts/bootstrap.min.js")
-        @*Html.Script("//connect.facebook.net/en_US/all.js")*@
+        
+        @Scripts.Render("~/bundles/modernizr")
+        @Scripts.Render("~/bundles/jquery")
+        @RenderSection("scripts", required: false)
     </body>
 </html>

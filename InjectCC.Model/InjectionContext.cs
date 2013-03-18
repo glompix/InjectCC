@@ -6,11 +6,12 @@ using System.Data.Entity;
 
 namespace InjectCC.Model
 {
-    public class InjectionContext : DbContext
+    public class Context : DbContext
     {
         public DbSet<Location> Locations { get; set; }
+        public DbSet<LocationModifier> LocationModifiers { get; set; }
         public DbSet<Injection> Injections { get; set; }
-        public DbSet<LocationSet> LocationSets { get; set; }
+        public DbSet<Medication> Medications { get; set; }
         public DbSet<User> Users { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
