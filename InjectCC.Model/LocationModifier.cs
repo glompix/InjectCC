@@ -12,6 +12,10 @@ namespace InjectCC.Model
     /// </summary>
     public class LocationModifier
     {
+        // HIGHDEA: Maybe instead of modifiers, it would be better to have locations that
+        // are anchored to other locations.  Then, just store radians and distance from anchor
+        // and bam!  The UI becomes a little less list/text-y that way too.
+
         [Key]
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
         public int LocationModifierId { get; set; }

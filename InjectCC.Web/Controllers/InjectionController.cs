@@ -18,10 +18,10 @@ namespace InjectCC.Web.Controllers
     {
         private Context db = new Context();
 
-        public ActionResult Index(int? id = null)
+        public ActionResult Index(int? medicationId = null)
         {
             var medication = (from l in db.Medications
-                               where l.UserId == WebSecurity.CurrentUserId && (id == null || id == l.MedicationId) // TODO: UserId == loggedInUser
+                               where l.UserId == WebSecurity.CurrentUserId && (medicationId == null || medicationId == l.MedicationId)
                                select l).FirstOrDefault();
 
             if (medication == null)
@@ -30,7 +30,7 @@ namespace InjectCC.Web.Controllers
             }
 
             var latestInjection = (from i in db.Injections
-                                   where i.UserId == WebSecurity.CurrentUserId
+                                   where i.MedicationId == medication.MedicationId
                                    orderby i.Date descending
                                    select i).FirstOrDefault();
 
@@ -62,16 +62,7 @@ namespace InjectCC.Web.Controllers
         {
             return View();
         }
-
-
-
-
-
-
-
-
-
-
+        
         //
         // POST: /Injection/Create
 
@@ -84,8 +75,6 @@ namespace InjectCC.Web.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");  
             }
-
-            ViewBag.UserId = new SelectList(db.Users, "UserId", "Email", injection.UserId);
             return View(injection);
         }
         
@@ -95,7 +84,6 @@ namespace InjectCC.Web.Controllers
         public ActionResult Edit(Guid id)
         {
             Injection injection = db.Injections.Find(id);
-            ViewBag.UserId = new SelectList(db.Users, "UserId", "Email", injection.UserId);
             return View(injection);
         }
 
@@ -111,7 +99,6 @@ namespace InjectCC.Web.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.UserId = new SelectList(db.Users, "UserId", "Email", injection.UserId);
             return View(injection);
         }
 

@@ -13,6 +13,27 @@ namespace InjectCC.Model
     /// </summary>
     public class Location
     {
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        public Location()
+        {
+        }
+
+        /// <summary>
+        /// Copy constructor.
+        /// </summary>
+        public Location(Location loc, int? medicationId = null)
+        {
+            Name = loc.Name;
+            Ordinal = loc.Ordinal;
+            MinutesUntilNextInjection = loc.MinutesUntilNextInjection;
+            ReferenceImageUrl = loc.ReferenceImageUrl;
+            InjectionPointX = loc.InjectionPointX;
+            InjectionPointY = loc.InjectionPointY;
+            MedicationId = medicationId ?? loc.MedicationId;
+        }
+
         [Key]
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
         public int LocationId { get; set; }
@@ -25,6 +46,7 @@ namespace InjectCC.Model
 
         /// <summary>
         /// The ordinal within the associated Medication. (for ordering)
+        /// Doesn't really matter if not in unbroken int sequence.
         /// </summary>
         [Required]
         public int Ordinal { get; set; }
@@ -33,7 +55,7 @@ namespace InjectCC.Model
         /// After injecting at this site, the time until the next injection is this value.
         /// </summary>
         [Required]
-        public TimeSpan TimeUntilNextInjection { get; set; }
+        public int MinutesUntilNextInjection { get; set; }
 
         /// <summary>
         /// The 

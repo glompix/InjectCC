@@ -1,50 +1,54 @@
 ﻿@model InjectCC.Web.ViewModels.Injection.IndexModel
 
 <div class="row">
-    <form class="span8 form-horizontal">
-        <div class="control-group">
-            <label class="control-label" for="LocationDropDown">Location</label>
-            <div class="controls">
-                <select name="Location">
-                    @foreach (var location in Model.Locations.OrderBy(m => m.Ordinal))
-                    {
-                        <option value="@location.LocationId">@location.Name</option>
-                    }
-                </select>
-                <div>
-                    @foreach (var locationModifier in Model.LocationModifiers.OrderBy(m => m.Ordinal))
-                    {
-                        <label class="radio inline">
-                            <input type="radio" name="LocationModifier" value="@locationModifier.LocationModifierId" checked="checked" />
-                            @locationModifier.Name
-                        </label>
-                    }
+    <div class="span8">
+        <form class="form-horizontal">
+            <div class="control-group">
+                <label class="control-label" for="LocationDropDown">Location</label>
+                <div class="controls">
+                    <select name="Location">
+                        @foreach (var location in Model.Locations.OrderBy(m => m.Ordinal))
+                        {
+                            <option value="@location.LocationId">@location.Name</option>
+                        }
+                    </select>
+                    <div>
+                        @foreach (var locationModifier in Model.LocationModifiers.OrderBy(m => m.Ordinal))
+                        {
+                            <label class="radio inline">
+                                <input type="radio" name="LocationModifier" value="@locationModifier.LocationModifierId" checked="checked" />
+                                @locationModifier.Name
+                            </label>
+                        }
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="control-group">
-            <label class="control-label" for="LocationDropDown">Date</label>
-            <div class="controls">
-                <div class="input-append">
-                    <input type="date" class="input-small" id="DateTextBox" />
-                    <span class="add-on">
-                        <i class="icon-calendar"></i>
-                    </span>
-                </div>
-                <div class="input-append">
-                    <input type="time" class="input-small" id="TimeTextBox" />
-                    <span class="add-on">
-                        <i class="icon-time"></i>
-                    </span>
+            <div class="control-group">
+                <label class="control-label" for="LocationDropDown">Date</label>
+                <div class="controls">
+                    <div class="input-append">
+                        @Html.TextBoxFor(m => m.NextInjection.Date.Date, new { @class = "input-small" })
+                        <span class="add-on">
+                            <i class="icon-calendar"></i>
+                        </span>
+                    </div>
+                    <div class="input-append">
+                        @Html.TextBoxFor(m => m.NextInjection.Date.TimeOfDay, new { @class = "input-small" })
+                        <span class="add-on">
+                            <i class="icon-time"></i>
+                        </span>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="form-actions">
-            <button type="submit" class="btn btn-primary">Record Injection</button>
-            <button type="button" class="btn">Delay</button>
-        </div>
-    </form>
-    @Html.Image("~/Content/images/injection-diagrams/betaseron-08.jpg", attributes: new { @class = "span4 img-polaroid" })
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Record Injection</button>
+                <button type="button" class="btn">Delay</button>
+            </div>
+        </form>
+    </div>
+    <div class="span4">
+        @Html.Image("~/Content/images/injection-diagrams/betaseron-08.jpg", attributes: new { @class = "img-polaroid" })
+    </div>
 </div>
 
 <div class="row">

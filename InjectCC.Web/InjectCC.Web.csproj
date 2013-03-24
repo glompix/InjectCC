@@ -177,6 +177,8 @@
     <Compile Include="Helpers\SiteHelpers.cs" />
     <Compile Include="ViewModels\Injection\IndexModel.cs" />
     <Compile Include="ViewModels\ISettingsModel.cs" />
+    <Compile Include="ViewModels\Medication\EditModel.cs" />
+    <Compile Include="ViewModels\Medication\MedicationModel.cs" />
     <Compile Include="ViewModels\Medication\NewModel.cs" />
     <Compile Include="ViewModels\User\LocalPasswordModel.cs" />
     <Compile Include="ViewModels\User\LoginModel.cs" />
@@ -261,6 +263,7 @@
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\bootstrap.validate.js" />
+    <Content Include="Scripts\inject.cc.medication.js" />
     <Content Include="Scripts\jquery-1.9.1-vsdoc.js" />
     <Content Include="Scripts\jquery-1.9.1.js" />
     <Content Include="Scripts\jquery-1.9.1.min.js" />
@@ -276,7 +279,9 @@
     <Content Include="Scripts\knockout-2.1.0.debug.js" />
     <Content Include="Scripts\knockout-2.1.0.js" />
     <Content Include="Scripts\modernizr-2.5.3.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -315,14 +320,13 @@
   <ItemGroup>
     <None Include="Scripts\jquery-1.9.1.min.map" />
     <Content Include="Views\User\Settings.cshtml" />
-    <Content Include="Views\Injection\Create.cshtml" />
-    <Content Include="Views\Injection\Delete.cshtml" />
-    <Content Include="Views\Injection\Details.cshtml" />
-    <Content Include="Views\Injection\Edit.cshtml" />
     <Content Include="Views\Injection\Index.cshtml" />
     <Content Include="Views\Injection\History.cshtml" />
     <Content Include="Views\Medication\New.cshtml" />
     <Content Include="Views\Shared\_SettingsMenu.cshtml" />
+    <Content Include="Views\Medication\_Form.cshtml" />
+    <Content Include="Views\Medication\Edit.cshtml" />
+    <Content Include="Views\Injection\Calendar.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\InjectCC.Model\InjectCC.Model.csproj">

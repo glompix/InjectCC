@@ -1,0 +1,91 @@
+﻿@model InjectCC.Web.ViewModels.Medication.MedicationModel
+
+<fieldset class="span6 form-horizontal" id="LocationForm">
+    <legend>Injection Sites</legend>
+    <p>
+        <small class="muted">
+            Add injection sites using the form below.  The order of injection sites below determines injection order.
+        </small>
+    </p>
+    <div class="control-group">
+        <label class="control-label">Location Name</label>
+        <div class="controls">
+            <input type="text" class="input-medium" name="locationName" id="LocationNameField" />
+            @Html.ValidationMessageFor(m => m.Locations)
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label">Next Injection in:</label>
+        <div class="controls">
+            <input type="text" class="input-mini" name="timeUntilNext" id="ValueUntilNextInjectionField" />
+            <select class="input-small" id="UnitUntilNextInjectionField">
+                <option>days</option>
+                <option>hours</option>
+                <option>minutes</option>
+            </select>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label">Reference Image</label>
+        <div class="controls">
+            <select id="ReferenceImageSelector">
+            @foreach (var image in Model.ReferenceImages)
+            {
+                
+            }
+            </select>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label"></label>
+        <div class="controls">
+            <button class="btn" type="button" id="AddLocationButton"><i class="icon-plus-sign"></i> Add Location</button>
+        </div>
+    </div>
+    <div class="control-group">
+        <div class="controls">
+            <ul id="LocationList">
+                @foreach (var location in Model.Locations)
+                {
+                    <li>
+                        <div class="well well-small">
+                            <button type="button" class="close">×</button>
+                            <b>@location.Name</b>
+                            <small>Next injection - @TimeSpan.FromMinutes(location.MinutesUntilNextInjection).ToFuzzyEnglish()</small>
+                            <input type="hidden" name="Locations[@location.Ordinal].Name" value="@location.Name" />
+                            <input type="hidden" name="Locations[@location.Ordinal].Ordinal" value="@location.Ordinal" />
+                            <input type="hidden" name="Locations[@location.Ordinal].InjectionPointX" value="@location.InjectionPointX" />
+                            <input type="hidden" name="Locations[@location.Ordinal].InjectionPointY" value="@location.InjectionPointY" />
+                            <input type="hidden" name="Locations[@location.Ordinal].ReferenceImageUrl" value="@location.ReferenceImageUrl" />
+                            <input type="hidden" name="Locations[@location.Ordinal].MinutesUntilNextInjection" value="@location.MinutesUntilNextInjection" />
+                        </div>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+</fieldset>
+<fieldset class="span5 form-horizontal">
+    <legend>Medication Info</legend>
+
+    <div class="control-group">
+        @Html.LabelFor(model => model.Name, new { @class = "control-label", @for = "NameTextBox" })
+        <div class="controls">
+            @Html.EditorFor(model => model.Name)
+            @Html.ValidationMessageFor(model => model.Name)
+        </div>
+    </div>
+    <div class="control-group">
+        @Html.LabelFor(model => model.Description, new { @class = "control-label", @for = "DescriptionField" })
+        <div class="controls">
+            @Html.TextAreaFor(model => model.Description)
+            @Html.ValidationMessageFor(model => model.Description)
+        </div>
+    </div>
+    <div class="control-group">
+        <div class="controls">
+            <button class="btn" type="submit">@ViewBag.ModelVerb Medication</button>
+        </div>
+    </div>
+</fieldset>
+

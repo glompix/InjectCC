@@ -26,7 +26,7 @@
 <div class="row">
     <form action="" class="form-horizontal span6" method="post" id="RegistrationForm">
         @Html.AntiForgeryToken()
-        @Html.ValidationSummary()
+        @Html.RenderAlerts()
 
         <div class="well clear-well">
             <fieldset>        
@@ -51,7 +51,6 @@
                     </div>
                 </div>
                 <div class="control-group">
-                    <label class="control-label">Test</label>
                     <div class="controls">
                         <button type="submit" class="btn">Come on in!</button>
                     </div>

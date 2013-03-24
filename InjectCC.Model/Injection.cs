@@ -22,20 +22,20 @@ namespace InjectCC.Model
         public byte[] Timestamp { get; set; }
 
         [Required]
-        public int UserId { get; set; }
-        public virtual User User { get; set; }
-
-        [Required]
         public int LocationId { get; set; }
         public virtual Location Location { get; set; }
 
+        [Required]
+        public int MedicationId { get; set; }
+        public virtual Medication Medication { get; set; }
+        
         public Injection CalculateNext()
         {
             var next = new Injection();
-            next.Date = this.Date + Location.TimeUntilNextInjection;
-            next.User = this.User;
-            next.Location = this.Location.Medication.Locations.FirstOrDefault(l => l.Ordinal > this.Location.Ordinal)
-                ?? this.Location.Medication.Locations.First();
+            next.MedicationId = this.MedicationId;
+            next.Date = this.Date + TimeSpan.FromMinutes(Location.MinutesUntilNextInjection);
+            next.Location = this.Medication.Locations.FirstOrDefault(l => l.Ordinal > this.Location.Ordinal)
+                ?? this.Medication.Locations.First();
             return next;
         }
     }

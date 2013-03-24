@@ -50,7 +50,7 @@
     <Compile Include="Injection.cs" />
     <Compile Include="Location.cs" />
     <Compile Include="LocationModifier.cs" />
-    <Compile Include="LocationSet.cs" />
+    <Compile Include="Medication.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="User.cs" />
     <Compile Include="Utilities.cs" />

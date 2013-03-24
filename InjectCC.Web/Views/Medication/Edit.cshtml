@@ -1,4 +1,4 @@
-﻿@model InjectCC.Web.ViewModels.Medication.NewModel
+﻿@model InjectCC.Web.ViewModels.Medication.EditModel
 
 @section scripts {
     @Scripts.Render("~/bundles/jqueryval", "~/bundles/jqueryui", "~/Scripts/inject.cc.medication.js")
@@ -15,7 +15,7 @@
     <title>inject.cc - New Medication</title>
 }
 
-@{ ViewBag.ModelVerb = "Create"; }
+@{ ViewBag.ModelVerb = "Update"; }
 
 <div class="row">
     <div class="tabbable tabs-left">
@@ -25,6 +25,8 @@
                 <form action="" method="post">
                     @Html.RenderAlerts()
                     @Html.AntiForgeryToken()
+
+                    @Html.HiddenFor(m => m.MedicationId)
 
                     @Html.Partial("_Form")
                 </form>

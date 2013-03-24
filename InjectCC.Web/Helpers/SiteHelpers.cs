@@ -16,7 +16,7 @@ namespace InjectCC.Web.Helpers
     public static class SiteHelpers
     {
         public static IHtmlString NavActionLink(this HtmlHelper Html, string linkText, string action, string controller,
-            object attributes = null)
+            object attributes = null, Func<bool> isActive = null)
         {
             if (action == null)
                 throw new ArgumentNullException("action");
@@ -24,15 +24,55 @@ namespace InjectCC.Web.Helpers
                 throw new ArgumentNullException("controller");
 
             var htmlAttributes = GetHtmlAttributes(attributes);
-            var actionMatches = action.Equals(Html.ViewContext.RequestContext.RouteData.Values["Action"]);
-            var controllerMatches = controller.Equals(Html.ViewContext.RequestContext.RouteData.Values["Controller"]);
-            if (actionMatches && controllerMatches)
-                htmlAttributes["class"] = htmlAttributes.ContainsKey("class")
-                    ? htmlAttributes["class"] + " active"
-                    : "active";
+
+            bool isActiveLink;
+            if (isActive == null)
+            {
+                var actionMatches = action.Equals(Html.ViewContext.RequestContext.RouteData.Values["Action"]);
+                var controllerMatches = controller.Equals(Html.ViewContext.RequestContext.RouteData.Values["Controller"]);
+                isActiveLink = actionMatches && controllerMatches;
+            }
+            else
+            {
+                isActiveLink = isActive();
+            }
 
             var link = Html.ActionLink(linkText, action, controller).ToString();
             return new HtmlString(string.Format("<li{1}>{0}</li>", link, ToAttributesString(htmlAttributes)));
+        }
+
+        public static IHtmlString RenderAlerts(this HtmlHelper Html, bool excludePropertyErrors = false, string message = "Please fix the following issues:")
+        {
+            // TODO: I've written this method weird.  Review it later.
+            if (Html.ViewData.ModelState[""] != null && Html.ViewData.ModelState[""].Errors.Count() > 0)
+            {
+                var markup = @"<div class=""alert alert-error""><button type=""button"" class=""close"" data-dismiss=""alert"">×</button>{0}{1}</div>";
+
+                // THAT'S what the frontspiece is?!
+                string frontspiece = "";
+                if (message != "")
+                    frontspiece = string.Format(@"<h4>Error!</h4><p>{0}</p>", message);
+
+                markup = string.Format(markup, frontspiece, Html.ValidationSummary(excludePropertyErrors));
+                return new HtmlString(markup);
+            }
+            return MvcHtmlString.Empty;
+        }
+
+        public static string ToFuzzyEnglish(this TimeSpan ts)
+        {
+            if (ts.TotalDays > 1)
+            {
+                return string.Format("{0} days", Math.Round(ts.TotalDays));
+            }
+            else if (ts.TotalHours > 3)
+            {
+                return string.Format("{0} hours", Math.Round(ts.TotalHours));
+            }
+            else
+            {
+                return string.Format("{0} minutes", Math.Round(ts.TotalMinutes));
+            }
         }
 
         /// <summary>
@@ -49,49 +89,6 @@ namespace InjectCC.Web.Helpers
 
             string html = "<img src=\"{0}\"{1} />";
             return new HtmlString(string.Format(html, Html.Content(url), ToAttributesString(htmlAttributes)));
-        }
-
-        /// <summary>
-        /// Loads an external script into the page.
-        /// </summary>
-        /// <param name="url">The path to the script.</param>
-        /// <returns>HTML markup which loads the script.</returns>
-        public static IHtmlString Script(this HtmlHelper Html, string url)
-        {
-            url = Html.FixProtocolForHref(url);
-            url = AddVersionation(url);
-
-            string html = "<script type=\"text/javascript\" src=\"{0}\"></script>";
-            return new HtmlString(string.Format(html, Html.Content(url)));
-        }
-
-        /// <summary>
-        /// Loads an external style sheet into the page.
-        /// </summary>
-        /// <param name="url">The path to the style sheet.</param>
-        /// <param name="media">The media type to which the style sheet applies.</param>
-        /// <returns>HTML markup which loads the style sheet.</returns>
-        public static IHtmlString Stylesheet(this HtmlHelper Html, string url, string media = null)
-        {
-            url = Html.FixProtocolForHref(url);
-            url = AddVersionation(url);
-
-            if (!string.IsNullOrEmpty(media))
-                media = "media=\"" + media + "\"";
-
-            string html = "<link type=\"text/css\" rel=\"stylesheet\" href=\"{0}\" {1}/>";
-            return new HtmlString(string.Format(html, Html.Content(url), media));
-        }
-
-        private static string AddVersionation(string url)
-        {
-            var versionNumber = Version();
-            if (versionNumber != null && url.Contains("?"))
-                return string.Format("{0}&v={1}", url, versionNumber);
-            else if (versionNumber != null)
-                return string.Format("{0}?v={1}", url, versionNumber);
-            else
-                return url;
         }
 
         /// <summary>
