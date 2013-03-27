@@ -7,6 +7,7 @@ using InjectCC.Web.ViewModels.Medication;
 using InjectCC.Model;
 using WebMatrix.WebData;
 using InjectCC.Web.Filters;
+using System.IO;
 
 namespace InjectCC.Web.Controllers
 {
@@ -49,9 +50,12 @@ namespace InjectCC.Web.Controllers
 
                 var medications = db.Medications.Where(m => m.UserId == WebSecurity.CurrentUserId).ToList();
                 var model = NewModel.FromEntity(medication, locations, medications);
+                model.ReferenceImages = (from f in Directory.GetFiles(Server.MapPath(_referenceImagePath), "*.jpg")
+                                         select Url.Content(Path.Combine(_referenceImagePath, Path.GetFileName(f)))).ToList();
                 return View(model);
             }
         }
+        private const string _referenceImagePath = "~/Content/reference-images/";
 
         [HttpPost, ValidateAntiForgeryToken]
         public ActionResult New(NewModel model)
@@ -83,6 +87,9 @@ namespace InjectCC.Web.Controllers
             {
                 model.Medications = db.Medications.Where(m => m.UserId == WebSecurity.CurrentUserId).ToList();
             }
+
+            model.ReferenceImages = (from f in Directory.GetFiles(Server.MapPath(_referenceImagePath), "*.jpg")
+                                     select Url.Content(Path.Combine(_referenceImagePath, Path.GetFileName(f)))).ToList();
             return View(model);
         }
 
@@ -99,6 +106,8 @@ namespace InjectCC.Web.Controllers
                                 select l;
 
                 var model = EditModel.FromEntity(medication, locations.ToList(), allMedications.ToList());
+                model.ReferenceImages = (from f in Directory.GetFiles(Server.MapPath(_referenceImagePath), "*.jpg")
+                                         select Url.Content(Path.Combine(_referenceImagePath, Path.GetFileName(f)))).ToList();
                 return View(model);
             }
         }
@@ -110,15 +119,20 @@ namespace InjectCC.Web.Controllers
             {
                 using (var db = new Context())
                 {
-
                     var medication = db.Medications.Single(m => m.MedicationId == model.MedicationId);
                     medication.Name = model.Name;
                     medication.Description = model.Description;
-                    db.Medications.Add(medication);
 
-                    foreach (var location in model.Locations)
+                    var locations = (from l in db.Locations
+                                    where l.MedicationId == model.MedicationId
+                                    select l).ToList();
+                    foreach (var location in model.Locations.Where(l => l.LocationId == default(int)))
                     {
                         db.Locations.Add(location);
+                    }
+                    foreach (var location in locations.Where(l => !model.Locations.Any(vml => vml.LocationId == l.LocationId)))
+                    {
+                        db.Locations.Remove(location);
                     }
 
                     db.SaveChanges();
@@ -131,7 +145,8 @@ namespace InjectCC.Web.Controllers
             {
                 model.Medications = db.Medications.Where(m => m.UserId == WebSecurity.CurrentUserId).ToList();
             }
-
+            model.ReferenceImages = (from f in Directory.GetFiles(Server.MapPath(_referenceImagePath), "*.jpg")
+                                     select Url.Content(Path.Combine(_referenceImagePath, Path.GetFileName(f)))).ToList();
             return View(model);
         }
     }

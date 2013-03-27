@@ -31,9 +31,14 @@
             <select id="ReferenceImageSelector">
             @foreach (var image in Model.ReferenceImages)
             {
-                
+                <option value="@image">@Path.GetFileNameWithoutExtension(image)</option>
             }
             </select>
+        </div>
+    </div>
+    <div class="control-group">
+        <div class="controls">
+            <canvas id="ReferenceCanvas" class="injection-diagram img-polaroid" width="300px" height="250px"></canvas>
         </div>
     </div>
     <div class="control-group">
@@ -45,19 +50,20 @@
     <div class="control-group">
         <div class="controls">
             <ul id="LocationList">
-                @foreach (var location in Model.Locations)
+                @foreach (var location in Model.Locations.OrderBy(l => l.Ordinal))
                 {
                     <li>
                         <div class="well well-small">
                             <button type="button" class="close">×</button>
                             <b>@location.Name</b>
                             <small>Next injection - @TimeSpan.FromMinutes(location.MinutesUntilNextInjection).ToFuzzyEnglish()</small>
-                            <input type="hidden" name="Locations[@location.Ordinal].Name" value="@location.Name" />
-                            <input type="hidden" name="Locations[@location.Ordinal].Ordinal" value="@location.Ordinal" />
-                            <input type="hidden" name="Locations[@location.Ordinal].InjectionPointX" value="@location.InjectionPointX" />
-                            <input type="hidden" name="Locations[@location.Ordinal].InjectionPointY" value="@location.InjectionPointY" />
-                            <input type="hidden" name="Locations[@location.Ordinal].ReferenceImageUrl" value="@location.ReferenceImageUrl" />
-                            <input type="hidden" name="Locations[@location.Ordinal].MinutesUntilNextInjection" value="@location.MinutesUntilNextInjection" />
+                            <input type="hidden" name="Locations[{ordinal}].LocationId" value="@location.LocationId" />
+                            <input type="hidden" name="Locations[{ordinal}].Name" value="@location.Name" />
+                            <input type="hidden" name="Locations[{ordinal}].Ordinal" value="@location.Ordinal" />
+                            <input type="hidden" name="Locations[{ordinal}].InjectionPointX" value="@location.InjectionPointX" />
+                            <input type="hidden" name="Locations[{ordinal}].InjectionPointY" value="@location.InjectionPointY" />
+                            <input type="hidden" name="Locations[{ordinal}].ReferenceImageUrl" value="@location.ReferenceImageUrl" />
+                            <input type="hidden" name="Locations[{ordinal}].MinutesUntilNextInjection" value="@location.MinutesUntilNextInjection" />
                         </div>
                     </li>
                 }

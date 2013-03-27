@@ -6,9 +6,6 @@ namespace InjectCC.Web.ViewModels.Medication
 {
     public class EditModel : MedicationModel, ISettingsModel
     {
-        [Required]
-        public int MedicationId { get; set; }
-
         /// <summary>
         /// From ISettingsModel.
         /// </summary>

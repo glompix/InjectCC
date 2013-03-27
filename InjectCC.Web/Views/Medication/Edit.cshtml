@@ -17,20 +17,18 @@
 
 @{ ViewBag.ModelVerb = "Update"; }
 
-<div class="row">
-    <div class="tabbable tabs-left">
-        @Html.Partial("_SettingsMenu")
-        <div class="container-fluid tab-content">
-            <div class="row-fluid">
-                <form action="" method="post">
-                    @Html.RenderAlerts()
-                    @Html.AntiForgeryToken()
+<div class="tabbable tabs-left">
+    @Html.Partial("_SettingsMenu")
+    <div class="container-fluid tab-content">
+        <div class="row-fluid">
+            <form action="" method="post">
+                @Html.RenderAlerts()
+                @Html.AntiForgeryToken()
 
-                    @Html.HiddenFor(m => m.MedicationId)
+                @Html.HiddenFor(m => m.MedicationId)
 
-                    @Html.Partial("_Form")
-                </form>
-            </div>
+                @Html.Partial("_Form")
+            </form>
         </div>
     </div>
 </div>

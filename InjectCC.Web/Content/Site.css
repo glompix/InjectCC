@@ -8,14 +8,6 @@ body
 /* Injection styles
 -----------------------------------------------------------*/
 
-.injection-diagram-big
-{
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center middle;
-    height: 200px;
-}
-
 .well h3
 {
     display: block;

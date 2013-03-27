@@ -63,11 +63,19 @@ namespace InjectCC.Model
         [Required, MaxLength(250)]
         public string ReferenceImageUrl { get; set; }
 
-        [Required, Range(0, 1000)]
-        public int InjectionPointX { get; set; }
+        /// <summary>
+        /// With respect to the reference image, the x component of the location.
+        /// Should be normalized to range [0, 1].
+        /// </summary>
+        [Required, Range(0, 1)]
+        public double InjectionPointX { get; set; }
 
-        [Required, Range(0, 1000)]
-        public int InjectionPointY { get; set; }
+        /// <summary>
+        /// With respect to the reference image, the y component of the location.
+        /// Should be normalized to range [0, 1].
+        /// </summary>
+        [Required, Range(0, 1)]
+        public double InjectionPointY { get; set; }
 
         /// <summary>
         /// The location set to which this Location belongs.

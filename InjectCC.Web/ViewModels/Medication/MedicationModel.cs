@@ -6,6 +6,8 @@ namespace InjectCC.Web.ViewModels.Medication
 {
     public abstract class MedicationModel
     {
+        public int MedicationId { get; set; }
+
         [Required, MaxLength(100)]
         public string Name { get; set; }
 
@@ -18,9 +20,9 @@ namespace InjectCC.Web.ViewModels.Medication
         public IList<string> ReferenceImages { get; set; }
 
         /// <param name="medication">The medication being created.</param>
-        /// <param name="medications">All medications owned by the current user. (Inherited from ISettingsModel)</param>
         protected void LoadEntity(Model.Medication medication, IList<Location> locations)
         {
+            MedicationId = medication.MedicationId;
             Name = medication.Name;
             Description = medication.Description;
             Locations = locations;
