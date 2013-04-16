@@ -11,7 +11,10 @@ namespace InjectCC.Web
             bundles.Add(new ScriptBundle("~/bundles/common").Include(
                 "~/Scripts/jquery-{version}.js",
                 "~/Scripts/bootstrap.js",
-                "~/Scripts/modernizr-*"));
+                "~/Scripts/modernizr-*",
+                "~/Scripts/underscore.js",
+                "~/Scripts/backbone.js",
+                "~/Scripts/injectcc.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
                         "~/Scripts/jquery-{version}.js"));

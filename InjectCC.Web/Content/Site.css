@@ -5,34 +5,15 @@ body
     padding-bottom: 40px;
 }
 
+.no-bullet { list-style: none; margin-left: 0; }
+
 /* Injection styles
 -----------------------------------------------------------*/
 
-.well h3
-{
-    display: block;
-    width: 100%;
-    padding: 0;
-    margin-top: 0;
-    margin-bottom: 20px;
-    font-size: 21px;
-    line-height: 40px;
-    color: #333333;
-    border: 0;
-    border-bottom: 1px solid #e5e5e5;
-    font-weight: bold;
-}
-
-.clear-well
-{
-    background: transparent !important;
-    border: none !important;
-}
-
+.injection-site { cursor: move; }
 
 /* Marketing styles
 -----------------------------------------------------------*/
-
 
 /* Main marketing message and sign up button */
 .jumbotron 
@@ -60,6 +41,23 @@ body
 {
     margin-top: 28px;
 }
+
+.well h3
+{
+    display: block;
+    width: 100%;
+    padding: 0;
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 21px;
+    line-height: 40px;
+    color: #333333;
+    border: 0;
+    border-bottom: 1px solid #e5e5e5;
+    font-weight: bold;
+}
+
+.clear-well { background: transparent !important; border: none !important; }
 
 
 

@@ -49,23 +49,10 @@
     </div>
     <div class="control-group">
         <div class="controls">
-            <ul id="LocationList">
+            <ul class="no-bullet">
                 @foreach (var location in Model.Locations.OrderBy(l => l.Ordinal))
                 {
-                    <li>
-                        <div class="well well-small">
-                            <button type="button" class="close">×</button>
-                            <b>@location.Name</b>
-                            <small>Next injection - @TimeSpan.FromMinutes(location.MinutesUntilNextInjection).ToFuzzyEnglish()</small>
-                            <input type="hidden" name="Locations[{ordinal}].LocationId" value="@location.LocationId" />
-                            <input type="hidden" name="Locations[{ordinal}].Name" value="@location.Name" />
-                            <input type="hidden" name="Locations[{ordinal}].Ordinal" value="@location.Ordinal" />
-                            <input type="hidden" name="Locations[{ordinal}].InjectionPointX" value="@location.InjectionPointX" />
-                            <input type="hidden" name="Locations[{ordinal}].InjectionPointY" value="@location.InjectionPointY" />
-                            <input type="hidden" name="Locations[{ordinal}].ReferenceImageUrl" value="@location.ReferenceImageUrl" />
-                            <input type="hidden" name="Locations[{ordinal}].MinutesUntilNextInjection" value="@location.MinutesUntilNextInjection" />
-                        </div>
-                    </li>
+                    @Html.Partial("_LocationCompact", location)
                 }
             </ul>
         </div>
@@ -95,3 +82,6 @@
     </div>
 </fieldset>
 
+<script type="text/template" id="_LocationCompact">
+    @Html.Partial("_LocationCompact", new ViewDataDictionary())
+</script>

@@ -1,0 +1,37 @@
+﻿@model InjectCC.Model.Location
+
+@if (Model == null)
+{
+    @* For templating in Javascript *@
+    <li class="injection-site">
+        <div class="well well-small">
+            <button type="button" class="close remove-site">×</button>
+            <strong><%= name %></strong>
+            <small>Next injection - <%= timeValue %>  <%= timeUnit %></small>
+        </div>
+        <input type="hidden" name="Locations[{ordinal}].Name" value="<%= name %>" />
+        <input type="hidden" name="Locations[{ordinal}].Ordinal" value="<%= ordinal %>" />
+        <input type="hidden" name="Locations[{ordinal}].InjectionPointX" value="<%= injectionPointX %>" />
+        <input type="hidden" name="Locations[{ordinal}].InjectionPointY" value="<%= injectionPointY %>" />
+        <input type="hidden" name="Locations[{ordinal}].ReferenceImageUrl" value="<%= referenceImageUrl %>" />
+        <input type="hidden" name="Locations[{ordinal}].MinutesUntilNextInjection" value="<%= minutesUntilNextInjection %>" />
+    </li>
+}
+else
+{
+    @* For rendering from server side *@
+    <li class="injection-site">
+        <div class="well well-small">
+            <button type="button" class="close remove-site">×</button>
+            <strong>@Model.Name</strong>
+            <small>Next injection - @TimeSpan.FromMinutes(Model.MinutesUntilNextInjection).ToFuzzyEnglish()</small>
+        </div>
+        <input type="hidden" name="Locations[{ordinal}].LocationId" value="@Model.LocationId" />
+        <input type="hidden" name="Locations[{ordinal}].Name" value="@Model.Name" />
+        <input type="hidden" name="Locations[{ordinal}].Ordinal" value="@Model.Ordinal" />
+        <input type="hidden" name="Locations[{ordinal}].InjectionPointX" value="@Model.InjectionPointX" />
+        <input type="hidden" name="Locations[{ordinal}].InjectionPointY" value="@Model.InjectionPointY" />
+        <input type="hidden" name="Locations[{ordinal}].ReferenceImageUrl" value="@Model.ReferenceImageUrl" />
+        <input type="hidden" name="Locations[{ordinal}].MinutesUntilNextInjection" value="@Model.MinutesUntilNextInjection" />
+    </li>
+}

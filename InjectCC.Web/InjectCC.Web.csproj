@@ -261,10 +261,13 @@
     <Content Include="Content\themes\base\minified\jquery.ui.tooltip.min.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
+    <Content Include="Scripts\backbone.js" />
+    <Content Include="Scripts\backbone.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\bootstrap.validate.js" />
-    <Content Include="Scripts\inject.cc.medication.js" />
+    <Content Include="Scripts\injectcc.js" />
+    <Content Include="Scripts\Models\injectcc.medication.js" />
     <Content Include="Scripts\jquery-1.9.1-vsdoc.js" />
     <Content Include="Scripts\jquery-1.9.1.js" />
     <Content Include="Scripts\jquery-1.9.1.min.js" />
@@ -280,6 +283,8 @@
     <Content Include="Scripts\knockout-2.1.0.debug.js" />
     <Content Include="Scripts\knockout-2.1.0.js" />
     <Content Include="Scripts\modernizr-2.5.3.js" />
+    <Content Include="Scripts\underscore.js" />
+    <Content Include="Scripts\underscore.min.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -328,6 +333,7 @@
     <Content Include="Views\Medication\_Form.cshtml" />
     <Content Include="Views\Medication\Edit.cshtml" />
     <Content Include="Views\Injection\Calendar.cshtml" />
+    <Content Include="Views\Medication\_LocationCompact.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\InjectCC.Model\InjectCC.Model.csproj">

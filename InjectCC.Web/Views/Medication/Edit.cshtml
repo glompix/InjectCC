@@ -1,18 +1,19 @@
 ﻿@model InjectCC.Web.ViewModels.Medication.EditModel
 
 @section scripts {
-    @Scripts.Render("~/bundles/jqueryval", "~/bundles/jqueryui", "~/Scripts/inject.cc.medication.js")
-}
+    @Scripts.Render("~/bundles/jqueryval", "~/bundles/jqueryui", "~/Scripts/Models/injectcc.medication.js")
 
-@section styles {
-    <style type="text/css">
-        #LocationList { list-style-type: none; margin: 0; padding: 0; }
-        #LocationList li { cursor: move; }
-    </style>
+    <script type="text/javascript">
+        $(function () {
+            var medication = new injectcc.models.Medication({
+                id: 0
+            });
+        });
+    </script>
 }
 
 @section head {
-    <title>inject.cc - New Medication</title>
+    <title>inject.cc - @Model.Name</title>
 }
 
 @{ ViewBag.ModelVerb = "Update"; }

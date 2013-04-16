@@ -5,7 +5,19 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InjectCC.Model", "InjectCC.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InjectCC.Web", "InjectCC.Web\InjectCC.Web.csproj", "{F9DB0EF6-F5CB-450C-ACF2-F117D17D6610}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InjectCC.Web.Test", "InjectCC.Web.Test\InjectCC.Web.Test.csproj", "{7C276134-0C88-4FA0-8C2D-300A6C9D8CBF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F228D359-44EA-4A5E-913B-A528C8A3E5DF}"
+	ProjectSection(SolutionItems) = preProject
+		InjectCC.vsmdi = InjectCC.vsmdi
+		Local.testsettings = Local.testsettings
+		TraceAndTestImpact.testsettings = TraceAndTestImpact.testsettings
+	EndProjectSection
+EndProject
 Global
+	GlobalSection(TestCaseManagementSettings) = postSolution
+		CategoryFile = InjectCC.vsmdi
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -19,6 +31,10 @@ Global
 		{F9DB0EF6-F5CB-450C-ACF2-F117D17D6610}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F9DB0EF6-F5CB-450C-ACF2-F117D17D6610}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F9DB0EF6-F5CB-450C-ACF2-F117D17D6610}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C276134-0C88-4FA0-8C2D-300A6C9D8CBF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C276134-0C88-4FA0-8C2D-300A6C9D8CBF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C276134-0C88-4FA0-8C2D-300A6C9D8CBF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C276134-0C88-4FA0-8C2D-300A6C9D8CBF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
