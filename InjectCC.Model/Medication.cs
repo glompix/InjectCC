@@ -24,10 +24,13 @@ namespace InjectCC.Model
         /// </summary>
         public Medication(Medication copyFrom)
         {
-            Name = copyFrom.Name;
-            Description = copyFrom.Description;
-            UserId = copyFrom.UserId;
-            User = copyFrom.User;
+            if (copyFrom != null)
+            {
+                Name = copyFrom.Name;
+                Description = copyFrom.Description;
+                UserId = copyFrom.UserId;
+                User = copyFrom.User;
+            }
         }
 
         [Key]

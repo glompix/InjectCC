@@ -6,7 +6,12 @@ using System.Data.Entity;
 
 namespace InjectCC.Model
 {
-    public class Context : DbContext
+    interface IUnitOfWork
+    {
+        int SaveChanges();
+    }
+
+    public class Context : DbContext, IUnitOfWork
     {
         public DbSet<Location> Locations { get; set; }
         public DbSet<LocationModifier> LocationModifiers { get; set; }
@@ -18,6 +23,6 @@ namespace InjectCC.Model
         {
             modelBuilder.Entity<Injection>().HasRequired(i => i.Location).WithMany().WillCascadeOnDelete(false);
             base.OnModelCreating(modelBuilder);
-        }  
+        }
     }
 }

@@ -8,6 +8,7 @@ using InjectCC.Model;
 using WebMatrix.WebData;
 using InjectCC.Web.Filters;
 using System.IO;
+using InjectCC.Model.Repositories;
 
 namespace InjectCC.Web.Controllers
 {
@@ -15,15 +16,24 @@ namespace InjectCC.Web.Controllers
     [InitializeSimpleMembership]
     public class MedicationController : InjectCcController
     {
-        //
-        // GET: /Medication/
+        private MedicationRepository _repository;
+        public MedicationController(MedicationRepository repository)
+        {
+            _repository = repository;
+        }
+
+        public MedicationController()
+        {
+            // TODO: Think I see why an IoC container makes sense now.
+            _repository = new MedicationRepository(new Context());
+        }
 
         public ActionResult New(int? copyFromId = null)
         {
             using (var db = new Context())
             {
                 Medication medication;
-                IList<Location> locations;
+                List<Location> locations;
                 if (copyFromId.HasValue)
                 {
                     var copyFromMedication = (from m in db.Medications
@@ -62,30 +72,19 @@ namespace InjectCC.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                using (var db = new Context())
+                var medication = new Medication
                 {
-                    var medication = new Medication
-                    {
-                        UserId = WebSecurity.CurrentUserId,
-                        Name = model.Name,
-                        Description = model.Description
-                    };
-                    db.Medications.Add(medication);
-
-                    foreach (var location in model.Locations)
-                    {
-                        db.Locations.Add(location);
-                    }
-
-                    db.SaveChanges();
-
-                    return RedirectToAction("Edit", new { id = medication.MedicationId });
-                }
+                    UserId = WebSecurity.CurrentUserId,
+                    Name = model.Name,
+                    Description = model.Description,
+                    Locations = model.Locations
+                };
+                _repository.Create(medication);
             }
 
             using (var db = new Context())
             {
-                model.Medications = db.Medications.Where(m => m.UserId == WebSecurity.CurrentUserId).ToList();
+                model.Medications = _repository.ListAllForUser(WebSecurity.CurrentUserId);
             }
 
             model.ReferenceImages = (from f in Directory.GetFiles(Server.MapPath(_referenceImagePath), "*.jpg")
@@ -97,9 +96,7 @@ namespace InjectCC.Web.Controllers
         {
             using (var db = new Context())
             {
-                var allMedications = from m in db.Medications
-                                     where m.UserId == WebSecurity.CurrentUserId
-                                     select m;
+                var allMedications = _repository.ListAllForUser(WebSecurity.CurrentUserId);
                 var medication = allMedications.Single(m => m.MedicationId == id);
                 var locations = from l in db.Locations
                                 where l.MedicationId == id

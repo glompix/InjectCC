@@ -15,12 +15,10 @@ namespace InjectCC.Web.ViewModels.Medication
         /// </summary>
         public IList<Model.Medication> Medications { get; set; }
 
-        public static NewModel FromEntity(Model.Medication medication, IList<Location> locations, IList<Model.Medication> medications)
+        public static NewModel FromEntity(Model.Medication medication, List<Location> locations, List<Model.Medication> medications)
         {
-            var model = new NewModel
-            {
-                Medications = medications
-            };
+            var model = new NewModel();
+            model.Medications = medications;
             model.LoadEntity(medication, locations);
             return model;
         }
