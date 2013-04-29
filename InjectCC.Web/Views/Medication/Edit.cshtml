@@ -1,7 +1,7 @@
 ﻿@model InjectCC.Web.ViewModels.Medication.EditModel
 
 @section scripts {
-    @Scripts.Render("~/bundles/jqueryval", "~/bundles/jqueryui", "~/Scripts/Models/injectcc.medication.js")
+    @Scripts.Render("~/bundles/medication")
 
     <script type="text/javascript">
         $(function () {
@@ -14,6 +14,9 @@
 
 @section head {
     <title>inject.cc - @Model.Name</title>
+    <style type="text/css">
+        @Html.ReferenceImageClasses()
+    </style>
 }
 
 @{ ViewBag.ModelVerb = "Update"; }

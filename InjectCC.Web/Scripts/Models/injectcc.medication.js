@@ -1,5 +1,12 @@
 ﻿(function () {
     'use strict';
+    
+    // These are basically private statics, works but figure out better org
+    var _paper;
+    var _selectedPoint;
+    var _injectionPoints = [];
+    var $canvas;
+    var $imageSelector;
 
     injectcc.models.Medication = Backbone.Model.extend({
         defaults: {
@@ -7,14 +14,27 @@
         },
         initialize: function() {
             // constructor code
+            $canvas = $('#ReferenceCanvas');
+            $imageSelector = $('#ReferenceImageSelector');
+            _paper = new Raphael($canvas[0], $canvas.width(), $canvas.height());
+            
+            // Draw selected injection site diagram when changed, as well as on load.
+            $imageSelector.change(function () {
+                drawSelectedImage();
+            });
+            drawSelectedImage();
+
+            // Sortable injection sites.
             $('.injection-site').parent()
                 .sortable()
                 .disableSelection();
 
+            // Enable injection site delete button.
             $(document).on('click', '.injection-site .remove-site', function () {
                 $(this).parents('.injection-site').remove();
             });
 
+            // Validation
             var locationValidator = $('#LocationForm').validate({
                 messages: {
                     timeUntilNext: {
@@ -28,48 +48,38 @@
                 }
             });
 
-            var _selectedX = undefined;
-            var _selectedY = undefined;
-            var _highlightedX = undefined;
-            var _highlightedY = undefined;
-            var refreshCanvas = function () {
-                var context = $('#ReferenceCanvas')[0].getContext('2d');
-                drawSelectedImage(context);
-                // selected locations
-                if (_selectedX !== undefined && _selectedY !== undefined) {
-                    drawDot(context, _selectedX, _selectedY, 5, '#222222', true);
+            $canvas.click(function (e) {
+                if (_selectedPoint) {
+                    _selectedPoint.remove();
                 }
-                // highlighted locations
-                if (_highlightedX !== undefined && _highlightedY !== undefined) {
-                    drawDot(context, _highlightedX, _highlightedY, 5, '#cc1111', true);
-                }
-                // all defined locations
-                $('.injection-site').each(function () {
-                    var location = $(this);
-                    var refImage = $(this).find('[name$="ReferenceImageUrl"]').val();
 
-                    // Don't draw dot if defined on different ref image.
-                    if (refImage === $('#ReferenceImageSelector').val()) {
-                        var x = location.find('[name$=InjectionPointX]').val();
-                        var y = location.find('[name$=InjectionPointY]').val();
-                        drawDot(context, x, y, 5, '#cc1111', false);
-                    }
-                });
-            };
-
-            $('#ReferenceCanvas').click(function (e) {
-                _selectedX = e.offsetX / $(this).width();
-                _selectedY = e.offsetY / $(this).height();
-
-                refreshCanvas();
+                var x = e.offsetX / $(this).width();
+                var y = e.offsetY / $(this).height();
+                _selectedPoint = generatePoint(x, y, 5);
+                var node = $(_selectedPoint.node);
+                node.attr('class', 'canvas-point-selected')
             });
 
-            $('#ReferenceImageSelector').change(function () {
-                _selectedX = undefined;
-                _selectedY = undefined;
-                _image = undefined;
-                refreshCanvas();
-            });
+            // all defined locations
+            $('.injection-site').each(function () {
+                var location = $(this);
+                var refImage = location.find('[name$="ReferenceImageUrl"]').val();
+
+                // Don't draw dot if defined on different ref image.
+                if (refImage === $imageSelector.val()) {
+                    var x = location.find('[name$=InjectionPointX]').val();
+                    var y = location.find('[name$=InjectionPointY]').val();
+                    var name = location.find('[name$=Name]').val();
+
+                    var point = generatePoint(x, y, 5);
+                    var node = $(point.node);
+                    node.attr('title', name);
+                    node.attr('class', 'canvas-point');
+                    node.tooltip({ 'container': 'body' });
+                    node.click(injectionSite_clicked);
+                    _injectionPoints.push(point);
+                }
+            });            
 
             $('#AddLocationButton').click(function () {
                 if (!$('#LocationForm').valid()) {
@@ -84,8 +94,8 @@
                     timeValue: timeValue,
                     timeUnit: timeUnit,
                     minutesUntilNextInjection: getMinutes(timeValue, timeUnit),
-                    injectionPointX: _selectedX,
-                    injectionPointY: _selectedY,
+                    injectionPointX: _selectedPoint.attr('cx'),
+                    injectionPointY: _selectedPoint.attr('cy'),
                     referenceImageUrl: $('#ReferenceImageSelector').val(),
                     ordinal: $('.injection-site').length
                 };
@@ -96,8 +106,6 @@
                 $('.injection-site').parent().append(newListItem);
                 $('#LocationNameTextBox').val('');
                 $(this).parents('form').removeClass('error');
-                _selectedX = undefined;
-                _selectedY = undefined;
             });
 
             $('form').submit(function () {
@@ -109,43 +117,31 @@
                     });
                 });
             });
-
-            $('.injection-site').hover(function () {
-                var location = $(this);
-                _highlightedX = location.find('[name$=".InjectionPointX"]').val();
-                _highlightedY = location.find('[name$=".InjectionPointY"]').val();
-                refreshCanvas();
-            }, function () {
-                _highlightedX = undefined;
-                _highlightedY = undefined;
-                refreshCanvas();
-            });
-
-            refreshCanvas();
         },
     });
 
-    function drawImage(image, context) {
-        var canvas = $('#ReferenceCanvas')[0];
+    function injectionSite_clicked() {
+        var point;
+        for (var i = 0; i < _injectionPoints.length; i++) {
+            if (_injectionPoints[i].attr('data-id') === $(this).attr('data-id')) {
+                point = _injectionPoints[i];
+                break;
+            }
+        }
 
-        var x, y, width, height;
-        if (image.height < image.width) {
-            width = canvas.width;
-            height = canvas.width * (image.height / image.width);
-            x = 0;
-            y = (width - height) / -2.0;
-        }
-        else {
-            width = canvas.height * (image.width / image.height);
-            height = canvas.height;
-            x = (height - width) / -2.0;
-            y = 0;
-        }
-        if (context === undefined) {
-            context = canvas.getContext('2d');
-        }
-        context.drawImage(image, x, y, width, height);
+        if (point)
+            console.log(point);
+        else
+            console.log('whoops');        
     }
+
+    function drawSelectedImage() {
+        $canvas.removeClass(function (index, css) {
+            return (css.match(/\breference-image-\S+/g) || []).join(' ');
+        });
+        var imageClass = 'reference-image-' + $.trim($imageSelector.text());
+        $canvas.addClass(imageClass);
+    };
 
     function getMinutes(timeValue, timeUnit) {
         var minutesUntilNextInjection = timeValue;
@@ -167,43 +163,20 @@
         return minutesUntilNextInjection;
     }
 
-    function drawDot(context, x, y, size, color, filled) {
+    function generatePoint(x, y, size, color) {
         if (size === undefined) {
             size = 5.0;
         }
         if (color === undefined) {
             color = '#111111';
         }
-        if (filled === undefined) {
-            filled = true;
-        }
 
-        var offset = size / 2.0;
-        context.beginPath();
-        context.arc(x * $('#ReferenceCanvas').width() - offset, y * $('#ReferenceCanvas').height() - offset, size, 0, Math.PI * 2, true);
-        context.closePath();
-        if (filled) {
-            context.fillStyle = color;
-            context.fill();
-        }
-        else {
-            context.lineWidth = offset;
-            context.strokeStyle = color;
-            context.stroke();
-        }
-    }
+        var realX = $canvas.width() * x;
+        var realY = $canvas.height() * y;
 
-    var _image;
-    function drawSelectedImage(imageSrc, context) {
-        if (_image === undefined) {
-            _image = new Image();
-            _image.onload = function () {
-                drawImage(_image);
-            };
-            _image.src = $('#ReferenceImageSelector').val();
-        }
-        else {
-            drawImage(_image);
-        }
+        var circle = _paper.circle(realX, realY, size);
+        // circle.attr('fill', color);
+        circle.attr('stroke', '#000000');
+        return circle;
     }
 })();

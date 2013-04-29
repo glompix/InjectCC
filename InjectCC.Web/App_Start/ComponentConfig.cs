@@ -1,10 +1,12 @@
 ﻿using System;
-using Autofac;
 
-public class ComponentConfig
+namespace InjectCC.Web
 {
-    public static void Register()
+    public class ComponentConfig
     {
-        // TODO, if needed.
+        public static void Register()
+        {
+            // TODO, if needed.
+        }
     }
 }

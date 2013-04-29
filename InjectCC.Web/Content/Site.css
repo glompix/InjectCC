@@ -11,6 +11,17 @@ body
 -----------------------------------------------------------*/
 
 .injection-site { cursor: move; }
+.injection-diagram 
+{ 
+    height: 250px; 
+    background-size: 100%;
+    background-position-x: center;
+    background-position-y: center;
+    cursor: crosshair;
+}
+
+.canvas-point { cursor: pointer; fill: #666; }
+.canvas-point-selected { fill: #cc2222; }
 
 /* Marketing styles
 -----------------------------------------------------------*/
