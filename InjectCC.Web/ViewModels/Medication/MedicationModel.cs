@@ -14,7 +14,6 @@ namespace InjectCC.Web.ViewModels.Medication
         [MaxLength(1000)]
         public string Description { get; set; }
 
-        [Required]
         public List<Location> Locations { get; set; }
 
         public List<string> ReferenceImages { get; set; }

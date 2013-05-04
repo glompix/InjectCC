@@ -28,7 +28,7 @@ namespace InjectCC.Model.Repositories
         {
             _context.Medications.Add(medication);
 
-            foreach (var location in medication.Locations)
+            foreach (var location in medication.Locations ?? new List<Location>())
             {
                 _context.Locations.Add(location);
             }

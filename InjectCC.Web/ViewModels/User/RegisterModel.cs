@@ -6,7 +6,7 @@ using System.Web.Mvc;
 
 namespace InjectCC.Web.ViewModels.User
 {
-    public class RegisterModel
+    public class RegisterModel : LoginModel
     {
         [Required]
         [Display(Name = "Email")]

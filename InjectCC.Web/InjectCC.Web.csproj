@@ -334,7 +334,9 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Properties\PublishProfiles\injectcc - FTP %282%29.pubxml" />
     <None Include="Properties\PublishProfiles\injectcc - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\injectcc - Web Deploy %282%29.pubxml" />
     <None Include="Properties\PublishProfiles\injectcc - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-1.9.1.min.map" />
     <Content Include="Views\User\Settings.cshtml" />

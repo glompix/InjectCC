@@ -83,9 +83,11 @@ namespace InjectCC.Web.Controllers
                     Locations = model.Locations
                 };
                 _repository.Create(medication);
+                _context.SaveChanges();
+                return RedirectToAction("Index", "Injection");
             }
 
-            _context.SaveChanges();
+            model.Locations = model.Locations ?? new List<Location>();
 
             using (var db = new Context())
             {
