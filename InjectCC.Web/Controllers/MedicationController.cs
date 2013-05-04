@@ -12,20 +12,23 @@ using InjectCC.Model.Repositories;
 
 namespace InjectCC.Web.Controllers
 {
-    [Authorize]
     [InitializeSimpleMembership]
+    [Authorize]
     public class MedicationController : InjectCcController
     {
         private MedicationRepository _repository;
+        private Context _context;
         public MedicationController(MedicationRepository repository)
         {
+            _context = new Context();
             _repository = repository;
         }
 
         public MedicationController()
         {
             // TODO: Think I see why an IoC container makes sense now.
-            _repository = new MedicationRepository(new Context());
+            _context = new Context();
+            _repository = new MedicationRepository(_context);
         }
 
         public ActionResult New(int? copyFromId = null)
@@ -39,13 +42,13 @@ namespace InjectCC.Web.Controllers
                     var copyFromMedication = (from m in db.Medications
                                              where m.MedicationId == copyFromId.Value
                                              select m).Single();
-
                     medication = new Medication(copyFromMedication);
 
                     var copyFromLocations = from l in db.Locations
                                             where l.MedicationId == copyFromId.Value
                                             select l;
                     locations = new List<Location>();
+
                     foreach (var copyLoc in copyFromLocations)
                     {
                         locations.Add(new Location(copyLoc));
@@ -57,9 +60,9 @@ namespace InjectCC.Web.Controllers
                     locations = new List<Location>();
                 }
 
-
-                var medications = db.Medications.Where(m => m.UserId == WebSecurity.CurrentUserId).ToList();
-                var model = NewModel.FromEntity(medication, locations, medications);
+                var editableMedications = db.Medications.Where(m => m.UserId == WebSecurity.CurrentUserId).ToList();
+                var copyableMedications = db.Medications.Where(m => m.UserId == 0).ToList();
+                var model = NewModel.FromEntity(medication, locations, editableMedications, copyableMedications);
                 model.ReferenceImages = (from f in Directory.GetFiles(Server.MapPath(_referenceImagePath), "*.jpg")
                                          select Url.Content(Path.Combine(_referenceImagePath, Path.GetFileName(f)))).ToList();
                 return View(model);
@@ -82,9 +85,12 @@ namespace InjectCC.Web.Controllers
                 _repository.Create(medication);
             }
 
+            _context.SaveChanges();
+
             using (var db = new Context())
             {
-                model.Medications = _repository.ListAllForUser(WebSecurity.CurrentUserId);
+                model.EditableMedications = db.Medications.Where(m => m.UserId == WebSecurity.CurrentUserId).ToList();
+                model.CopyableMedications = db.Medications.Where(m => m.UserId == 0).ToList();
             }
 
             model.ReferenceImages = (from f in Directory.GetFiles(Server.MapPath(_referenceImagePath), "*.jpg")
@@ -125,6 +131,7 @@ namespace InjectCC.Web.Controllers
                                     select l).ToList();
                     foreach (var location in model.Locations.Where(l => l.LocationId == default(int)))
                     {
+                        location.MedicationId = medication.MedicationId;
                         db.Locations.Add(location);
                     }
                     foreach (var location in locations.Where(l => !model.Locations.Any(vml => vml.LocationId == l.LocationId)))
@@ -140,7 +147,7 @@ namespace InjectCC.Web.Controllers
 
             using (var db = new Context())
             {
-                model.Medications = db.Medications.Where(m => m.UserId == WebSecurity.CurrentUserId).ToList();
+                model.EditableMedications = db.Medications.Where(m => m.UserId == WebSecurity.CurrentUserId).ToList();
             }
             model.ReferenceImages = (from f in Directory.GetFiles(Server.MapPath(_referenceImagePath), "*.jpg")
                                      select Url.Content(Path.Combine(_referenceImagePath, Path.GetFileName(f)))).ToList();

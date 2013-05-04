@@ -5,7 +5,7 @@ using System.Text;
 
 namespace InjectCC.Model
 {
-    internal static class Utilities
+    public static class Utilities
     {
         public static Guid NewSequentialGUID()
         {

@@ -1,56 +1,76 @@
 ﻿@model InjectCC.Web.ViewModels.Injection.IndexModel
 
+@section scripts {
+    @Scripts.Render("~/bundles/injection")
+
+    <script type="text/javascript">
+        $(function () {
+            injectcc.injection.init();
+        });
+    </script>
+}
+
+@section head {
+    <title>inject.cc - Record Injection</title>
+    <style type="text/css">
+        @Html.ReferenceImageClasses(Model.Locations.Select(l => l.ReferenceImageUrl).Distinct())
+    </style>
+}
+
 <div class="row">
     <div class="span8">
-        <form class="form-horizontal">
-            <div class="control-group">
-                <label class="control-label" for="LocationDropDown">Location</label>
-                <div class="controls">
-                    <select name="Location">
-                        @foreach (var location in Model.Locations.OrderBy(m => m.Ordinal))
-                        {
-                            <option value="@location.LocationId">@location.Name</option>
-                        }
-                    </select>
-                    <div>
-                        @foreach (var locationModifier in Model.LocationModifiers.OrderBy(m => m.Ordinal))
-                        {
-                            <label class="radio inline">
-                                <input type="radio" name="LocationModifier" value="@locationModifier.LocationModifierId" checked="checked" />
-                                @locationModifier.Name
-                            </label>
-                        }
+        <form action="@Url.Action("Create")" method="post" class="form-horizontal">
+            <fieldset>
+                <legend>New Injection</legend>
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(m => m.NextInjection.MedicationId)
+                @Html.HiddenFor(m => m.NextInjection.LocationId)
+
+                <div class="control-group">
+                    <label class="control-label">Reference Image</label>
+                    <div class="controls">
+                        <select id="ReferenceImageSelector">
+                            @foreach (var image in Model.Locations.Select(l => l.ReferenceImageUrl).Distinct())
+                            {
+                                <option value="@image">@Path.GetFileNameWithoutExtension(image)</option>
+                            }
+                        </select>
                     </div>
                 </div>
-            </div>
-            <div class="control-group">
-                <label class="control-label" for="LocationDropDown">Date</label>
-                <div class="controls">
-                    <div class="input-append">
-                        @Html.TextBoxFor(m => m.NextInjection.Date.Date, new { @class = "input-small" })
-                        <span class="add-on">
-                            <i class="icon-calendar"></i>
-                        </span>
-                    </div>
-                    <div class="input-append">
-                        @Html.TextBoxFor(m => m.NextInjection.Date.TimeOfDay, new { @class = "input-small" })
-                        <span class="add-on">
-                            <i class="icon-time"></i>
-                        </span>
+                <div class="control-group">
+                    <label class="control-label" for="LocationDropDown">Date</label>
+                    <div class="controls">
+                        <div class="input-append">
+                            @Html.TextBoxFor(m => m.NextInjection.Date, "{0:d}", new { @class = "input-small" })
+                            <span class="add-on">
+                                <i class="icon-calendar"></i>
+                            </span>
+                        </div>
+                        @*<div class="input-append">
+                            @Html.TextBoxFor(m => m.NextInjection.Date.TimeOfDay, @"{0:hh\:mm\:ss}", new { @class = "input-small" })
+                            <span class="add-on">
+                                <i class="icon-time"></i>
+                            </span>
+                        </div>*@
                     </div>
                 </div>
-            </div>
-            <div class="form-actions">
-                <button type="submit" class="btn btn-primary">Record Injection</button>
-                <button type="button" class="btn">Delay</button>
-            </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Record Injection</button>
+                    <button type="button" class="btn">Delay</button>
+                </div>
+            </fieldset>
         </form>
     </div>
     <div class="span4">
-        @Html.Image("~/Content/images/injection-diagrams/betaseron-08.jpg", attributes: new { @class = "img-polaroid" })
+        <div id="ReferenceCanvas" class="injection-diagram img-polaroid"></div>
     </div>
+    <ul class="hidden">
+        @foreach (var location in Model.Locations.OrderBy(l => l.Ordinal))
+        {
+            @Html.Partial("_LocationCompact", location)
+        }
+    </ul>
 </div>
-
 <div class="row">
     <div class="span3">
         Last 30 days

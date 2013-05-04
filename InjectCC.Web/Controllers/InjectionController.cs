@@ -37,7 +37,11 @@ namespace InjectCC.Web.Controllers
             Injection nextInjection;
             if (latestInjection == null)
             {
-                nextInjection = new Injection();
+                nextInjection = new Injection
+                {
+                    Date = DateTime.Now,
+                    MedicationId = medication.MedicationId
+                };
             }
             else
             {
@@ -58,50 +62,29 @@ namespace InjectCC.Web.Controllers
             return View(model);
         }
 
-        public ActionResult History()
-        {
-            return View();
-        }
-        
-        //
-        // POST: /Injection/Create
-
         [HttpPost]
-        public ActionResult Create(Injection injection)
+        public ActionResult Create(IndexModel model)
         {
             if (ModelState.IsValid)
             {
-                db.Injections.Add(injection);
+                model.NextInjection.InjectionId = Utilities.NewSequentialGUID();
+                model.NextInjection.UserId = WebSecurity.CurrentUserId;
+                db.Injections.Add(model.NextInjection);
                 db.SaveChanges();
                 return RedirectToAction("Index");  
             }
-            return View(injection);
+            model.Last30DaysRating = 80;
+            model.Last90DaysRating = 90;
+
+            var medication = db.Medications.FirstOrDefault(l => l.UserId == WebSecurity.CurrentUserId && (model.NextInjection.MedicationId == l.MedicationId));
+            if (medication == null)
+            {
+                return RedirectErrorToAction("You haven't set up any medications yet.", "New", "Medication");
+            }
+            model.Locations = medication.Locations.ToList();
+            return View("Index", model);
         }
         
-        //
-        // GET: /Injection/Edit/5
- 
-        public ActionResult Edit(Guid id)
-        {
-            Injection injection = db.Injections.Find(id);
-            return View(injection);
-        }
-
-        //
-        // POST: /Injection/Edit/5
-
-        [HttpPost]
-        public ActionResult Edit(Injection injection)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Entry(injection).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(injection);
-        }
-
         //
         // GET: /Injection/Delete/5
  
@@ -121,6 +104,14 @@ namespace InjectCC.Web.Controllers
             db.Injections.Remove(injection);
             db.SaveChanges();
             return RedirectToAction("Index");
+        }
+
+        public ActionResult History()
+        {
+            var injections = from i in db.Injections
+                             where i.UserId == WebSecurity.CurrentUserId
+                             select i;
+            return View(new HistoryModel { Injections = injections.ToList() });
         }
 
         protected override void Dispose(bool disposing)

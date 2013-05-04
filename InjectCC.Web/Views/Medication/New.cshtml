@@ -2,12 +2,18 @@
 
 @section scripts {
     @Scripts.Render("~/bundles/medication")
+
+    <script type="text/javascript">
+        $(function () {
+            injectcc.medication.init();
+        });
+    </script>
 }
 
 @section head {
     <title>inject.cc - New Medication</title>
     <style type="text/css">
-        @Html.ReferenceImageClasses()
+        @Html.ReferenceImageClasses(Model.ReferenceImages)
     </style>
 }
 
@@ -16,9 +22,23 @@
 <div class="tabbable tabs-left">
     @Html.Partial("_SettingsMenu")
     <div class="container-fluid tab-content">
+        @Html.RenderAlerts()
+        <div class="well copy-form">
+            <h3>Copy an existing medication</h3>
+            <p class="muted">You can copy an existing medication.  Do so here.  Provide better help text later.</p>
+            <form action="" method="get" class="form-inline">
+                <select name="copyFromId">
+                    @foreach (var med in Model.CopyableMedications)
+                    {
+                        <option value="@med.MedicationId">@med.Name</option>
+                    }
+                </select>
+                <button class="btn" type="submit">Copy</button>
+                <a class="btn" data-dismiss="copy-form">No thanks</a>
+            </form>
+        </div>
         <div class="row-fluid">
             <form action="" method="post">
-                @Html.RenderAlerts()
                 @Html.AntiForgeryToken()
 
                 @Html.Partial("_Form")

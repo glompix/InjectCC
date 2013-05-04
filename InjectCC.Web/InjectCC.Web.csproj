@@ -178,6 +178,7 @@
     </Compile>
     <Compile Include="Helpers\MedicationHelpers.cs" />
     <Compile Include="Helpers\SiteHelpers.cs" />
+    <Compile Include="ViewModels\Injection\HistoryModel.cs" />
     <Compile Include="ViewModels\Injection\IndexModel.cs" />
     <Compile Include="ViewModels\ISettingsModel.cs" />
     <Compile Include="ViewModels\Medication\EditModel.cs" />
@@ -193,6 +194,8 @@
     <Compile Include="ViewModels\ViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\bootstrap-datepicker.css" />
+    <Content Include="Content\bootstrap-datepicker.min.css" />
     <Content Include="Content\bootstrap-responsive.css" />
     <Content Include="Content\bootstrap-responsive.min.css" />
     <Content Include="Content\bootstrap.css" />
@@ -264,11 +267,12 @@
     <Content Include="Content\themes\base\minified\jquery.ui.tooltip.min.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
-    <Content Include="Scripts\backbone.js" />
-    <Content Include="Scripts\backbone.min.js" />
+    <Content Include="Scripts\bootstrap-datepicker.js" />
+    <Content Include="Scripts\bootstrap-datepicker.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\bootstrap.validate.js" />
+    <Content Include="Scripts\Models\injectcc.injection.js" />
     <Content Include="Scripts\Models\injectcc.js" />
     <Content Include="Scripts\Models\injectcc.medication.js" />
     <Content Include="Scripts\jquery-1.9.1-vsdoc.js" />
@@ -338,7 +342,7 @@
     <Content Include="Views\Medication\_Form.cshtml" />
     <Content Include="Views\Medication\Edit.cshtml" />
     <Content Include="Views\Injection\Calendar.cshtml" />
-    <Content Include="Views\Medication\_LocationCompact.cshtml" />
+    <Content Include="Views\Shared\_LocationCompact.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\InjectCC.Model\InjectCC.Model.csproj">

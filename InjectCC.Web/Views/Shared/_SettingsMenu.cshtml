@@ -3,7 +3,7 @@
 @{
     var links = new Dictionary<string, string>();
     links.Add("Account", Url.Action("Settings", "User"));
-    foreach (var medication in Model.Medications)
+    foreach (var medication in Model.EditableMedications)
     {
         links.Add(medication.Name, Url.Action("Edit", "Medication", new { id = medication.MedicationId }));
     }

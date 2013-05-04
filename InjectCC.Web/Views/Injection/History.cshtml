@@ -1,2 +1,14 @@
-﻿<h2>History</h2>
+﻿@model InjectCC.Web.ViewModels.Injection.HistoryModel
 
+<h2>History</h2>
+
+<ol>
+    @foreach (var injection in Model.Injections)
+    {
+        <li>
+            <strong>@injection.Location.Name</strong>
+            @injection.Date
+            @injection.Medication.Name
+        </li>
+    }
+</ol>

@@ -1,4 +1,4 @@
-﻿injectcc.medication = (function () {
+﻿injectcc.injection = (function () {
     'use strict';
 
     // These are basically private statics, works but figure out better org maybe
@@ -14,7 +14,7 @@
     // Public interface that is returned to consumer.  Just need init for this module.
     var _this = {
         init: init
-    }
+    };
 
     function init() {
         // constructor code
@@ -28,105 +28,21 @@
         });
         drawSelectedImage();
 
-        // Sortable injection sites.
-        $('.injection-site').parent()
-            .sortable()
-            .disableSelection();
-
-        // Enable injection site delete button.
-        $(document).on('click', '.injection-site .remove-site', function () {
-            var $location = $(this).parents('.injection-site');
-            var ordinal = $location.find('[name$=Ordinal]').val();
-            var $point = _$canvas.find(_injectionPointPrefix + '-' + ordinal);
-            if ($point) {
-                $point.remove();
-            }
-
-            $location.remove();
-        });
-
-        // Validation
-        var locationValidator = $('#LocationForm').validate({
-            messages: {
-                timeUntilNext: {
-                    required: true,
-                    number: true,
-                    min: 0
-                },
-                locationName: {
-                    required: true
-                }
-            }
-        });
-
-        _$canvas.click(function (e) {
-            var x = e.offsetX / $(this).width();
-            var y = e.offsetY / $(this).height();
-            markSelectedPoint(x, y);
-        });
+        $('[name="Injection.Date.Date"]').datepicker();
 
         // all defined locations
         $('.injection-site').each(function () {
             var location = $(this);
             markExistingPoint(location);
         });
-
-        $('#AddLocationButton').click(function () {
-            if (!$('#LocationForm').valid()) {
-                return;
-            }
-
-            // Synthesize a location object and render it to DOM.
-            var timeValue = $('#ValueUntilNextInjectionField').val();
-            var timeUnit = $('#UnitUntilNextInjectionField').val();
-            var location = {
-                name: $('#LocationNameField').val(),
-                timeValue: timeValue,
-                timeUnit: timeUnit,
-                minutesUntilNextInjection: getMinutes(timeValue, timeUnit),
-                injectionPointX: _selectedPoint.attr('cx') / _$canvas.width(),
-                injectionPointY: _selectedPoint.attr('cy') / _$canvas.height(),
-                referenceImageUrl: $('#ReferenceImageSelector').val(),
-                ordinal: $('.injection-site').length
-            };
-            var locationCompactTemplate = _.template($('#_LocationCompact').html());
-            var newListItem = locationCompactTemplate(location);
-            $('.injection-sites').append(newListItem);
-            var $location = $('.injection-sites :last-child');
-
-            // Mark the point on the canvas and get rid of the selection marker.
-            markSelectedPoint();
-            markExistingPoint($location);
-
-            // Clear out form.
-            $('#LocationNameTextBox').val('');
-            $(this).parents('form').removeClass('error');
-        });
-
-        $('form').submit(function () {
-            $('.injection-site').each(function (i) {
-                var ordinal = i;
-                $(this).find('[name^="Location"]').each(function () {
-                    var name = $(this).attr('name').replace(/{ordinal}/, i);
-                    $(this).attr('name', name);
-                });
-            });
-        });
     }
 
-    function injectionSite_clicked() {
-        var point;
-        for (var i = 0; i < _injectionPoints.length; i++) {
-            if (_injectionPoints[i].attr('data-id') === $(this).attr('data-id')) {
-                point = _injectionPoints[i];
-                break;
-            }
-        }
-
-        if (point)
-            console.log(point);
-        else
-            console.log('whoops');
+    function selectPoint($point) {
+        console.log($point);
+        $point.addClass('canvas-point-selected');
+        $point.siblings('circle').removeClass('canvas-point-selected');
+        var id = $point.attr('data-id');
+        $('[name$=LocationId]').val(id);
     }
 
     /// <summary>
@@ -154,13 +70,17 @@
             var y = $location.find('[name$=InjectionPointY]').val();
             var name = $location.find('[name$=Name]').val();
             var ordinal = $location.find('[name$=Ordinal]').val();
+            var id = $location.find('[name$=Id]').val();
 
             var point = generatePoint(x, y, 5);
             var $node = $(point.node);
             $node.attr('title', name);
             $node.attr('class', 'canvas-point canvas-point-' + ordinal);
+            $node.attr('data-id', id);
             $node.tooltip({ 'container': 'body' });
-            $node.click(injectionSite_clicked);
+            $node.click(function () {
+                selectPoint($(this));
+            });
             _injectionPoints.push(point);
         }
     }

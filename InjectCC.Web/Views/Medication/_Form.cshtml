@@ -49,7 +49,7 @@
     </div>
     <div class="control-group">
         <div class="controls">
-            <ul class="no-bullet">
+            <ul class="no-bullet injection-sites">
                 @foreach (var location in Model.Locations.OrderBy(l => l.Ordinal))
                 {
                     @Html.Partial("_LocationCompact", location)
@@ -78,6 +78,10 @@
     <div class="control-group">
         <div class="controls">
             <button class="btn" type="submit">@ViewBag.ModelVerb Medication</button>
+            @if (Model.MedicationId != default(int))
+            {
+                <button class="btn btn-danger" type="submit">Delete Medication</button>
+            }
         </div>
     </div>
 </fieldset>

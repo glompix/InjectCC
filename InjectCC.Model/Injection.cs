@@ -7,13 +7,8 @@ namespace InjectCC.Model
 {
     public class Injection
     {
-        public Injection()
-        {
-            InjectionId = Utilities.NewSequentialGUID();
-        }
-
         [Key]
-        public Guid InjectionId { get; private set; }
+        public Guid InjectionId { get; set; }
         
         [Required]
         public DateTime Date { get; set; }
@@ -28,6 +23,9 @@ namespace InjectCC.Model
         [Required]
         public int MedicationId { get; set; }
         public virtual Medication Medication { get; set; }
+
+        public int UserId { get; set; }
+        public virtual User User { get; set; }
         
         public Injection CalculateNext()
         {

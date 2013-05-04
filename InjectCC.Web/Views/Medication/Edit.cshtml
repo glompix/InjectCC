@@ -5,9 +5,7 @@
 
     <script type="text/javascript">
         $(function () {
-            var medication = new injectcc.models.Medication({
-                id: 0
-            });
+            injectcc.medication.init();
         });
     </script>
 }
@@ -15,7 +13,7 @@
 @section head {
     <title>inject.cc - @Model.Name</title>
     <style type="text/css">
-        @Html.ReferenceImageClasses()
+        @Html.ReferenceImageClasses(Model.ReferenceImages)
     </style>
 }
 

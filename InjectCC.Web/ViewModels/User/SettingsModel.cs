@@ -34,7 +34,7 @@ namespace InjectCC.Web.ViewModels.User
 
         public DateTime RegistrationDate { get; set; }
 
-        public IList<Model.Medication> Medications { get; set; }
+        public IList<Model.Medication> EditableMedications { get; set; }
 
         public static SettingsModel FromEntities(Model.User user, List<Model.Medication> medications)
         {
@@ -44,7 +44,7 @@ namespace InjectCC.Web.ViewModels.User
                 Email = user.Email,
                 Timestamp = user.Timestamp,
                 RegistrationDate = user.RegistrationDate,
-                Medications = medications
+                EditableMedications = medications
             };
         }
     }

@@ -27,14 +27,18 @@ namespace InjectCC.Web
                 "~/Scripts/backbone.js",
                 "~/Scripts/Models/injectcc.js"));
 
-            bundles.Add(new ScriptBundle("~/bundles/jquery").Include("~/Scripts/jquery-{version}.js"));
-            bundles.Add(new ScriptBundle("~/bundles/jqueryui").Include(_jqueryUI));
-            bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(_jqueryValidation));
-
             bundles.Add(new ScriptBundle("~/bundles/medication").Include(
                 _jqueryUI.Union(_jqueryValidation).Union(new string[] {
                     "~/Scripts/raphael*",
                     "~/Scripts/Models/injectcc.medication.js"
+                }).ToArray()
+            ));
+
+            bundles.Add(new ScriptBundle("~/bundles/injection").Include(
+                _jqueryUI.Union(_jqueryValidation).Union(new string[] {
+                    "~/Scripts/raphael*",
+                    "~/Scripts/bootstrap-datepicker*",
+                    "~/Scripts/Models/injectcc.injection.js"
                 }).ToArray()
             ));
 
@@ -45,6 +49,10 @@ namespace InjectCC.Web
 
             bundles.Add(new StyleBundle("~/Content/css").Include("~/Content/site.css"));
 
+            bundles.Add(new StyleBundle("~/Content/injection").Include(
+                "~/Content/bootstrap-datepicker*"));
+
+            /*
             bundles.Add(new StyleBundle("~/Content/themes/base/css").Include(
                 "~/Content/themes/base/jquery.ui.core.css",
                 "~/Content/themes/base/jquery.ui.resizable.css",
@@ -58,6 +66,7 @@ namespace InjectCC.Web
                 "~/Content/themes/base/jquery.ui.datepicker.css",
                 "~/Content/themes/base/jquery.ui.progressbar.css",
                 "~/Content/themes/base/jquery.ui.theme.css"));
+             */
         }
     }
 }
