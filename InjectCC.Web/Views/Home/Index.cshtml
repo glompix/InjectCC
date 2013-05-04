@@ -1,7 +1,29 @@
-﻿<div class="jumbotron">
+﻿@section head
+{
+    <title>inject.cc - Injection Tracker</title>
+}
+
+@section scripts
+{
+    <script type="text/javascript">
+        $(function () {
+            $('.phone-login-toggle').click(function () {
+                var $loginCompact = $(this).siblings('.login-compact');
+                if ($loginCompact.is(':visible')) {
+                    $loginCompact.attr('style', '');
+                }
+                else {
+                    $loginCompact.attr('style', 'display: block;');
+                }
+            });
+        });
+    </script>
+}
+
+<div class="jumbotron">
     <h2>Track rotating injections painlessly.</h2>
     <p class="lead">Inject.cc is a tool for patients of injectable medications.  Stick to your schedule and rotation, whatever that may be.</p>
-    @Html.ActionLink("Sign up today", "Register", "User", null, new { @class = "btn btn-large btn-success" });
+    @Html.ActionLink("Sign up today", "Register", "User", null, new { @class = "btn btn-large btn-success" })
 </div>
 
 <hr>

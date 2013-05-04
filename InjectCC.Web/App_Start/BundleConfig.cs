@@ -21,7 +21,7 @@ namespace InjectCC.Web
         {
             bundles.Add(new ScriptBundle("~/bundles/common").Include(
                 "~/Scripts/jquery-{version}.js",
-                "~/Scripts/bootstrap.js",
+                "~/Scripts/bootstrap*",
                 "~/Scripts/modernizr-*",
                 "~/Scripts/underscore.js",
                 "~/Scripts/backbone.js",
@@ -47,7 +47,11 @@ namespace InjectCC.Web
             bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
                 "~/Scripts/modernizr-*"));
 
-            bundles.Add(new StyleBundle("~/Content/css").Include("~/Content/site.css"));
+            bundles.Add(new StyleBundle("~/Content/css").Include(
+                "~/Content/bootstrap.css", 
+                "~/Content/bootstrap-responsive.css",
+                "~/Content/site.css"
+            ));
 
             bundles.Add(new StyleBundle("~/Content/injection").Include(
                 "~/Content/bootstrap-datepicker*"));

@@ -5,16 +5,17 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
 
-        @Styles.Render("~/Content/css", "~/Content/bootstrap")
+        @Styles.Render("~/Content/css")
         @RenderSection("styles", required: false)
         @RenderSection("head", required: false)
     </head>
     <body>
         <div class="container">
             <div class="masthead">
+                <a href="@Url.Action("Index", "Home")" class="muted"><h3>inject.cc</h3></a>
                 @if (Html.ViewContext.HttpContext.User.Identity.IsAuthenticated)
                 {
-                    <div class="pull-right hidden-phone">
+                    <div class="pull-right">
                         <ul class="nav nav-pills">
                             @Html.NavActionLink("Injections", "Index", "Injection")
                             @Html.NavActionLink("History", "History", "Injection")
@@ -22,25 +23,17 @@
                             @Html.NavActionLink("Sign out", "Logout", "User")
                         </ul>
                     </div>
-                    <div class="visible-phone">
-                        <a href="@Url.Action("Index", "Home")" class="muted"><h3>inject.cc</h3></a>
-                        <ul class="nav nav-pills nav-stacked">
-                            @Html.NavActionLink("Injections", "Index", "Injection")
-                            @Html.NavActionLink("History", "Index1", "Injection")
-                            @Html.NavActionLink("Settings", "Settings", "User")
-                            @Html.NavActionLink("Sign out", "Logout", "User")
-                        </ul>
-                    </div>
                 }
                 else
                 {
-                    <a href="@Url.Action("Index", "Home")" class="visible-phone muted"><h3>inject.cc</h3></a>
-                    @Html.Partial("_LoginForm");
+                    <text>
+                        <button class="phone-login-toggle btn">Login</button>
+                        @Html.Partial("_LoginForm")
+                    </text>
                 }
-                <a href="@Url.Action("Index", "Home")" class="hidden-phone muted"><h3>inject.cc</h3></a>
+                <div class="clearfix"></div>
+                <hr />
             </div>
-
-            <hr />
 
             @RenderBody()
             

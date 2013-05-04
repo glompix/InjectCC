@@ -10,7 +10,20 @@
     links.Add("New Medication", Url.Action("New", "Medication"));
 }
 
-<ul class="nav nav-tabs">
+<ul class="nav nav-tabs hidden-phone">
+    @foreach (var link in links)
+    {
+        if (Request.RawUrl.Contains(link.Value))
+        {
+            <li class="active"><a href="@link.Value">@link.Key</a></li>
+        }
+        else
+        {
+            <li><a href="@link.Value">@link.Key</a></li>
+        }
+    }
+</ul>
+<ul class="nav nav-pills visible-phone">
     @foreach (var link in links)
     {
         if (Request.RawUrl.Contains(link.Value))

@@ -22,10 +22,4 @@ namespace InjectCC.Model
         [Timestamp]
         public Byte[] Timestamp { get; set; }
     }
-
-    /*private User _userStub = new User
-        {
-            Email = "glompix@gmail.com",
-            RegistrationDate = DateTime.Now
-        };*/
 }
