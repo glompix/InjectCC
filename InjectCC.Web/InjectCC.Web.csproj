@@ -159,6 +159,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_Start\AppConfig.cs" />
     <Compile Include="App_Start\AuthConfig.cs" />
     <Compile Include="App_Start\BootstrapBundleConfig.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
@@ -333,6 +334,8 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Properties\PublishProfiles\injectcc - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\injectcc - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-1.9.1.min.map" />
     <Content Include="Views\User\Settings.cshtml" />
     <Content Include="Views\Injection\Index.cshtml" />
