@@ -38,7 +38,7 @@ namespace InjectCC.Web.Filters
                         }
                     }
 
-                    WebSecurity.InitializeDatabaseConnection("DefaultConnection", "Users", "UserId", "Email", autoCreateTables: true);
+                    WebSecurity.InitializeDatabaseConnection("InjectCC.Model.Context", "Users", "UserId", "Email", autoCreateTables: true);
                 }
                 catch (Exception ex)
                 {
