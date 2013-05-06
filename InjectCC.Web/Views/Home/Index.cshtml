@@ -11,9 +11,11 @@
                 var $loginCompact = $(this).siblings('.login-compact');
                 if ($loginCompact.is(':visible')) {
                     $loginCompact.attr('style', '');
+                    $(this).text('Sign in');
                 }
                 else {
                     $loginCompact.attr('style', 'display: block;');
+                    $(this).text('Cancel');
                 }
             });
         });

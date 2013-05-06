@@ -1,45 +1,50 @@
 ﻿@model InjectCC.Web.ViewModels.User.LoginModel
 
-@{
-    ViewBag.Title = "Log in";
-}
-
-<section id="loginForm">
-    @using (Html.BeginForm(new { ReturnUrl = ViewBag.ReturnUrl })) {
-        @Html.AntiForgeryToken()
-        @Html.ValidationSummary(true)
-
-        <fieldset>
-            <legend>Log in with your inject.cc account.</legend>
-            <ol>
-                <li>
-                    @Html.LabelFor(m => m.Email)
-                    @Html.TextBoxFor(m => m.Email)
-                    @Html.ValidationMessageFor(m => m.Email)
-                </li>
-                <li>
-                    @Html.LabelFor(m => m.Password)
-                    @Html.PasswordFor(m => m.Password)
-                    @Html.ValidationMessageFor(m => m.Password)
-                </li>
-                <li>
-                    @Html.CheckBoxFor(m => m.RememberMe)
-                    @Html.LabelFor(m => m.RememberMe, new { @class = "checkbox" })
-                </li>
-            </ol>
-            <input type="submit" value="Log in" />
-        </fieldset>
-        <p>
-            @Html.ActionLink("Register", "Register") if you don't have an account.
-        </p>
-    }
-</section>
-
-<section class="social" id="socialLoginForm">
-    <h2>Use another service to log in.</h2>
-    @Html.Action("ExternalLoginsList", new { ReturnUrl = ViewBag.ReturnUrl })
-</section>
-
 @section scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }
+
+@section head
+{
+    <title>inject.cc - Sign in</title>
+}
+
+<form action="@Url.Action("Login", "User")" method="post" class="form-horizontal">
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="ReturnUrl" value="@ViewBag.ReturnUrl" />
+    <fieldset>
+        <legend>Log in with your inject.cc account.</legend>
+        <p class="muted">
+            @Html.ActionLink("Register", "Register") if you don't have an account.
+        </p>
+
+        @Html.ValidationSummary(true)
+        <div class="control-group">
+            @Html.LabelFor(m => m.Email, new { @class = "control-label" })
+            <div class="controls">
+                @Html.TextBoxFor(m => m.Email)
+                @Html.ValidationMessageFor(m => m.Email)
+            </div>
+        </div>
+        <div class="control-group">
+            @Html.LabelFor(m => m.Password, new { @class = "control-label" })
+            <div class="controls">
+                @Html.PasswordFor(m => m.Password)
+                @Html.ValidationMessageFor(m => m.Password)
+            </div>
+        </div>
+        <div class="control-group">
+            <div class="controls">
+                <label class="checkbox">
+                    @Html.CheckBoxFor(m => m.RememberMe)
+                    Remember Me
+                </label>
+            </div>
+        </div>
+        <div class="form-actions">
+            <input type="submit" value="Sign in" class="btn" />
+        </div>
+    </fieldset>
+</form>
+
+@Html.Action("ExternalLoginsList", new { ReturnUrl = ViewBag.ReturnUrl })

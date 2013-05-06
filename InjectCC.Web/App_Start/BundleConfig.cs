@@ -30,6 +30,7 @@ namespace InjectCC.Web
             bundles.Add(new ScriptBundle("~/bundles/medication").Include(
                 _jqueryUI.Union(_jqueryValidation).Union(new string[] {
                     "~/Scripts/raphael*",
+                    "~/Scripts/Modules/sitepicker.js",
                     "~/Scripts/Models/injectcc.medication.js"
                 }).ToArray()
             ));
@@ -38,6 +39,7 @@ namespace InjectCC.Web
                 _jqueryUI.Union(_jqueryValidation).Union(new string[] {
                     "~/Scripts/raphael*",
                     "~/Scripts/bootstrap-datepicker*",
+                    "~/Scripts/Modules/sitepicker.js",
                     "~/Scripts/Models/injectcc.injection.js"
                 }).ToArray()
             ));

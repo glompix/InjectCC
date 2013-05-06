@@ -27,17 +27,6 @@
                 @Html.HiddenFor(m => m.NextInjection.LocationId)
 
                 <div class="control-group">
-                    <label class="control-label">Reference Image</label>
-                    <div class="controls">
-                        <select id="ReferenceImageSelector">
-                            @foreach (var image in Model.Locations.Select(l => l.ReferenceImageUrl).Distinct())
-                            {
-                                <option value="@image">@Path.GetFileNameWithoutExtension(image)</option>
-                            }
-                        </select>
-                    </div>
-                </div>
-                <div class="control-group">
                     <label class="control-label" for="LocationDropDown">Date</label>
                     <div class="controls">
                         <div class="input-append">
@@ -62,7 +51,10 @@
         </form>
     </div>
     <div class="span4">
-        <div id="ReferenceCanvas" class="injection-diagram img-polaroid"></div>
+        @foreach (var image in Model.Locations.Select(l => l.ReferenceImageUrl).Distinct())
+        {
+            <img src="@image" class="injection-diagram img-polaroid"></img>
+        }
     </div>
     <ul class="hidden">
         @foreach (var location in Model.Locations.OrderBy(l => l.Ordinal))

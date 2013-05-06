@@ -1,6 +1,6 @@
 ﻿@model InjectCC.Web.ViewModels.Medication.MedicationModel
 
-<fieldset class="span6 form-horizontal" id="LocationForm">
+<fieldset class="span7 form-horizontal" id="LocationForm">
     <legend>Injection Sites</legend>
     <p>
         <small class="muted">
@@ -15,7 +15,7 @@
         </div>
     </div>
     <div class="control-group">
-        <label class="control-label">Next Injection in:</label>
+        <label class="control-label">Next Injection in</label>
         <div class="controls">
             <input type="text" class="input-mini" name="timeUntilNext" id="ValueUntilNextInjectionField" />
             <select class="input-small" id="UnitUntilNextInjectionField">
@@ -26,41 +26,20 @@
         </div>
     </div>
     <div class="control-group">
-        <label class="control-label">Reference Image</label>
         <div class="controls">
-            <select id="ReferenceImageSelector">
-            @foreach (var image in Model.ReferenceImages)
+            @foreach (var image in Model.Locations.Select(l => l.ReferenceImageUrl).Distinct())
             {
-                <option value="@image">@Path.GetFileNameWithoutExtension(image)</option>
+                <div class="injection-diagram img-polaroid" style="background-image: url('@image')">
+                </div>
             }
-            </select>
         </div>
     </div>
-    <div class="control-group">
-        <div class="controls">
-            <div id="ReferenceCanvas" class="injection-diagram img-polaroid"></div>
-        </div>
+    <div class="form-actions">
+        <button class="btn" type="button" id="AddLocationButton"><i class="icon-plus-sign"></i> Add Location</button>
+        <button class="btn" type="button" id="DeleteLocationButton"><i class="icon-minus-sign"></i> Remove Location</button>
     </div>
-    <div class="control-group">
-        <label class="control-label"></label>
-        <div class="controls">
-            <button class="btn" type="button" id="AddLocationButton"><i class="icon-plus-sign"></i> Add Location</button>
-        </div>
-    </div>
-    <div class="control-group">
-        <div class="controls">
-            <ul class="no-bullet injection-sites">
-                @foreach (var location in Model.Locations.OrderBy(l => l.Ordinal))
-                {
-                    @Html.Partial("_LocationCompact", location)
-                }
-            </ul>
-        </div>
-    </div>
-</fieldset>
-<fieldset class="span5 form-horizontal">
-    <legend>Medication Info</legend>
 
+    <legend>Medication Info</legend>
     <div class="control-group">
         @Html.LabelFor(model => model.Name, new { @class = "control-label", @for = "NameTextBox" })
         <div class="controls">
@@ -75,15 +54,23 @@
             @Html.ValidationMessageFor(model => model.Description)
         </div>
     </div>
-    <div class="control-group">
-        <div class="controls">
-            <button class="btn" type="submit">@ViewBag.ModelVerb Medication</button>
-            @if (Model.MedicationId != default(int))
-            {
-                <button class="btn btn-danger" type="submit">Delete Medication</button>
-            }
-        </div>
+    <div class="form-actions">
+        <button class="btn" type="submit">@ViewBag.ModelVerb Medication</button>
+        @if (Model.MedicationId != default(int))
+        {
+            <button class="btn btn-danger" type="submit">Delete Medication</button>
+        }
     </div>
+</fieldset>
+<fieldset class="span4 form-horizontal">
+    <legend>Injection Order</legend>
+
+    <ul class="no-bullet injection-sites">
+        @foreach (var location in Model.Locations.OrderBy(l => l.Ordinal))
+        {
+            @Html.Partial("_LocationCompact", location)
+        }
+    </ul>
 </fieldset>
 
 <script type="text/template" id="_LocationCompact">
