@@ -12,7 +12,8 @@
     function init() {
         // constructor code
         $('.injection-diagram').sitepicker({
-            'locations': $('.injection-site')
+            'locations': $('.injection-site'),
+            'enabled': false
         });
 
         // Sortable injection sites.

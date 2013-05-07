@@ -7,6 +7,7 @@ body
 
 .no-bullet { list-style: none; margin-left: 0; }
 .clearfix { height: 0; }
+.datepicker[readonly] { cursor: pointer; }
 
 .login-compact .dropdown-menu .checkbox
 {
@@ -14,8 +15,10 @@ body
 }
 
 .masthead h3 { display: inline; }
-.masthead .login-compact { float: right; }
-.masthead .phone-login-toggle { display: none; float: right; margin: 5px 0; }
+.login-compact { float: right; }
+.phone-login-toggle { display: none; float: right; margin: 5px 0; }
+.phone-menu-toggle { display: none; float: right; margin: 5px 0; }
+.main-menu { float: right; }
 
 @media (min-width: 481px) and (max-width: 979px) 
 {
@@ -24,27 +27,65 @@ body
 }
 @media (max-width: 767px) 
 {
-    .masthead .login-compact { margin: 10px 0; display: none; float: left; clear: both; }
-    .masthead .phone-login-toggle { display: inline-block; }
+    .login-compact { margin: 10px 0; display: none; float: left; clear: both; }
+    .main-menu { margin: 10px 0; display: none; float: left; clear: both; }
+    .phone-login-toggle { display: inline-block; }
+    .phone-menu-toggle { display: inline-block; }
     hr { margin: 10px 0; }
+    
+    .main-menu
+    {
+        background: #222;
+        position: fixed;
+        margin: 0;
+        top: 0;
+        right: 0;
+        height: 100%;
+        width: 60%;
+        z-index: 1000;
+    }
+    .main-menu li
+    {
+        float: none;
+        background: #222 linear-gradient(to bottom, rgba(255,255,255,.05) 0%,rgba(255,255,255,.15) 100%);
+        padding: 15px;
+        border-bottom: 2px solid #333;
+    }
+    .main-menu li h3,
+    .main-menu li a
+    {
+        color: #f0f0f0;
+        font-size: 130%;
+        line-height: 130%;
+        padding: 0; margin: 0;
+    }
+    .main-menu li:hover { background: #222 linear-gradient(to bottom, rgba(255,255,255,0) 0%,rgba(255,255,255,.1) 100%); }
+    .main-menu li a:hover { background: none; }
+    body.phone-menu-visible
+    {
+        position: fixed; 
+        right: 60%;
+    }
+    .injection-diagram { margin-bottom: 20px; }
 }
 
 /* Injection styles
 -----------------------------------------------------------*/
 
 .injection-site { cursor: move; }
-.injection-diagram 
+.injection-diagram
 { 
-    height: 250px; 
     background-size: 100%;
     background-position-x: center;
     background-position-y: center;
     cursor: crosshair;
 }
+.injection-diagram.readonly { cursor: default; }
 
-.canvas-point { cursor: pointer; fill: #666; }
+.canvas-point { fill: #666; }
 .canvas-point-selected { fill: #cc2222; }
-.canvas-point:hover { fill: #22cc22; }
+.enabled .canvas-point { cursor: pointer; }
+.enabled .canvas-point:hover { fill: #22cc22; }
 
 /* Marketing styles
 -----------------------------------------------------------*/

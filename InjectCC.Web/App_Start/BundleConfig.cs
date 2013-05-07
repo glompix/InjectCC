@@ -50,8 +50,9 @@ namespace InjectCC.Web
                 "~/Scripts/modernizr-*"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
-                "~/Content/bootstrap.css", 
-                "~/Content/bootstrap-responsive.css",
+                "~/Content/bootstrap.min.css", 
+                "~/Content/bootstrap-responsive.min.css",
+                "~/Content/bootstrap-datepicker.min.css",
                 "~/Content/site.css"
             ));
 

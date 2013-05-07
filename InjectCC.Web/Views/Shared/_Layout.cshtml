@@ -15,14 +15,18 @@
                 <a href="@Url.Action("Index", "Home")" class="muted"><h3>inject.cc</h3></a>
                 @if (Html.ViewContext.HttpContext.User.Identity.IsAuthenticated)
                 {
-                    <div class="pull-right">
-                        <ul class="nav nav-pills">
-                            @Html.NavActionLink("Injections", "Index", "Injection")
-                            @Html.NavActionLink("History", "History", "Injection")
-                            @Html.NavActionLink("Settings", "Settings", "User")
-                            @Html.NavActionLink("Sign out", "Logout", "User")
-                        </ul>
-                    </div>
+                    <text>
+                        <button class="phone-menu-toggle btn"><i class="icon-align-justify"></i></button>
+                        <div class="main-menu">
+                            <ul class="nav nav-pills">
+                                <li class="visible-phone"><h3>inject.cc</h3></li>
+                                @Html.NavActionLink("Injections", "Index", "Injection")
+                                @Html.NavActionLink("History", "History", "Injection")
+                                @Html.NavActionLink("Settings", "Settings", "User")
+                                @Html.NavActionLink("Sign out", "Logout", "User")
+                            </ul>
+                        </div>
+                    </text>
                 }
                 else
                 {
@@ -48,5 +52,10 @@
         
         @Scripts.Render("~/bundles/common")
         @RenderSection("scripts", required: false)
+        <script type="text/javascript">
+            $(function () {
+                injectcc.init();
+            });
+        </script>
     </body>
 </html>

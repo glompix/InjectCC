@@ -32,8 +32,9 @@ namespace InjectCC.Model
             var next = new Injection();
             next.MedicationId = this.MedicationId;
             next.Date = this.Date + TimeSpan.FromMinutes(Location.MinutesUntilNextInjection);
-            next.Location = this.Medication.Locations.FirstOrDefault(l => l.Ordinal > this.Location.Ordinal)
-                ?? this.Medication.Locations.First();
+            next.Location = this.Medication.Locations.OrderBy(l => l.Ordinal).FirstOrDefault(l => l.Ordinal > this.Location.Ordinal)
+                ?? this.Medication.Locations.OrderBy(l => l.Ordinal).First();
+            next.LocationId = next.Location.LocationId;
             return next;
         }
     }
