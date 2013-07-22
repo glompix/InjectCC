@@ -26,22 +26,22 @@ namespace InjectCC.Web
                 "~/Scripts/underscore.js",
                 "~/Scripts/backbone.js",
                 "~/Scripts/Models/injectcc.js"));
+            
+            bundles.Add(new ScriptBundle("~/bundles/account").Include(
+                _jqueryUI.Union(_jqueryValidation).ToArray()
+            ));
 
             bundles.Add(new ScriptBundle("~/bundles/medication").Include(
-                _jqueryUI.Union(_jqueryValidation).Union(new string[] {
-                    "~/Scripts/raphael*",
-                    "~/Scripts/Modules/sitepicker.js",
-                    "~/Scripts/Models/injectcc.medication.js"
-                }).ToArray()
+                "~/Scripts/raphael*",
+                "~/Scripts/Modules/sitepicker.js",
+                "~/Scripts/Models/injectcc.medication.js"
             ));
 
             bundles.Add(new ScriptBundle("~/bundles/injection").Include(
-                _jqueryUI.Union(_jqueryValidation).Union(new string[] {
-                    "~/Scripts/raphael*",
-                    "~/Scripts/bootstrap-datepicker*",
-                    "~/Scripts/Modules/sitepicker.js",
-                    "~/Scripts/Models/injectcc.injection.js"
-                }).ToArray()
+                "~/Scripts/raphael*",
+                "~/Scripts/bootstrap-datepicker*",
+                "~/Scripts/Modules/sitepicker.js",
+                "~/Scripts/Models/injectcc.injection.js"
             ));
 
             // Use the development version of Modernizr to develop with and learn from. Then, when you're
@@ -50,9 +50,8 @@ namespace InjectCC.Web
                 "~/Scripts/modernizr-*"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
-                "~/Content/bootstrap.min.css", 
-                "~/Content/bootstrap-responsive.min.css",
-                "~/Content/bootstrap-datepicker.min.css",
+                "~/Content/bootstrap.css",
+                "~/Content/bootstrap-responsive.css",
                 "~/Content/site.css"
             ));
 
