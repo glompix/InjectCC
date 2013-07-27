@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using InjectCC.Model;
+using InjectCC.Model.Domain;
 
 namespace InjectCC.Web.ViewModels.Medication
 {
@@ -19,7 +20,7 @@ namespace InjectCC.Web.ViewModels.Medication
         public List<string> ReferenceImages { get; set; }
 
         /// <param name="medication">The medication being created.</param>
-        protected void LoadEntity(Model.Medication medication, List<Location> locations)
+        protected void LoadEntity(Model.Domain.Medication medication, List<Location> locations)
         {
             MedicationId = medication.MedicationId;
             Name = medication.Name;

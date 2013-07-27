@@ -5,7 +5,7 @@ using System.Text;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
-namespace InjectCC.Model
+namespace InjectCC.Model.Domain
 {
     /// <summary>
     /// 

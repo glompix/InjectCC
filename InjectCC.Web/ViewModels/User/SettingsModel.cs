@@ -34,9 +34,9 @@ namespace InjectCC.Web.ViewModels.User
 
         public DateTime RegistrationDate { get; set; }
 
-        public IList<Model.Medication> EditableMedications { get; set; }
+        public IList<Model.Domain.Medication> EditableMedications { get; set; }
 
-        public static SettingsModel FromEntities(Model.User user, List<Model.Medication> medications)
+        public static SettingsModel FromEntities(Model.Domain.User user, List<Model.Domain.Medication> medications)
         {
             return new SettingsModel
             {

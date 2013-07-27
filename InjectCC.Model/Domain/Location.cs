@@ -5,7 +5,7 @@ using System.Text;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace InjectCC.Model
+namespace InjectCC.Model.Domain
 {
     /// <summary>
     /// Indicates a location on the body at which to inject medication.  Must

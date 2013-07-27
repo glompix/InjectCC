@@ -52,19 +52,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Repositories\BaseRepository.cs" />
+    <Compile Include="Repositories\InjectionRepository.cs" />
+    <Compile Include="Repositories\LocationRepository.cs" />
+    <Compile Include="Repositories\MedicationRepository.cs" />
     <Compile Include="Migrations\201305040518061_Initial.cs" />
     <Compile Include="Migrations\201305040518061_Initial.Designer.cs">
       <DependentUpon>201305040518061_Initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="_Context.cs" />
-    <Compile Include="Injection.cs" />
-    <Compile Include="Location.cs" />
-    <Compile Include="LocationModifier.cs" />
-    <Compile Include="Medication.cs" />
+    <Compile Include="EntityFramework\Context.cs" />
+    <Compile Include="Domain\Injection.cs" />
+    <Compile Include="Domain\Location.cs" />
+    <Compile Include="Domain\LocationModifier.cs" />
+    <Compile Include="Domain\Medication.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repositories\MedicationRepository.cs" />
-    <Compile Include="User.cs" />
+    <Compile Include="Domain\User.cs" />
     <Compile Include="Utilities.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -76,6 +79,7 @@
       <DependentUpon>201305040518061_Initial.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

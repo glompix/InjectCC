@@ -2,18 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using InjectCC.Model.Domain;
+using InjectCC.Model.Repositories;
 
-namespace InjectCC.Model.Repositories
+namespace InjectCC.Model.EntityFramework
 {
-    public interface IMedicationRepository
-    {
-        void Create(Medication medication);
-        Medication Find(int id);
-        IList<Medication> ListAllForUser(int userId);
-    }
-
     // Going to be pretty basic crud
-    public class MedicationRepository : IMedicationRepository
+    public class MedicationRepository
     {
         protected Context _context;
         public MedicationRepository(Context context)
@@ -42,6 +37,11 @@ namespace InjectCC.Model.Repositories
         public IList<Medication> ListAllForUser(int userId)
         {
             return _context.Medications.Where(m => m.UserId == userId).ToList();
+        }
+
+        public Medication GetFirstForUser(int userId)
+        {
+            return _context.Medications.FirstOrDefault(m => m.UserId == userId);
         }
     }
 }

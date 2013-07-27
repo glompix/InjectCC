@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using InjectCC.Model;
 using System.Collections.Generic;
+using InjectCC.Model.Domain;
 
 namespace InjectCC.Web.ViewModels.Medication
 {
@@ -9,9 +10,9 @@ namespace InjectCC.Web.ViewModels.Medication
         /// <summary>
         /// From ISettingsModel.
         /// </summary>
-        public IList<Model.Medication> EditableMedications { get; set; }
+        public IList<Model.Domain.Medication> EditableMedications { get; set; }
 
-        public static EditModel FromEntity(Model.Medication medication, List<Location> locations, List<Model.Medication> medications)
+        public static EditModel FromEntity(Model.Domain.Medication medication, List<Location> locations, List<Model.Domain.Medication> medications)
         {
             var model = new EditModel();
             model.EditableMedications = medications;

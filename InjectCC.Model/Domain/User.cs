@@ -5,7 +5,7 @@ using System.Text;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace InjectCC.Model
+namespace InjectCC.Model.Domain
 {
     public class User
     {

@@ -5,6 +5,7 @@ using System.Threading;
 using System.Web.Mvc;
 using WebMatrix.WebData;
 using InjectCC.Model;
+using InjectCC.Model.EntityFramework;
 
 namespace InjectCC.Web.Filters
 {

@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Data.Entity;
+using InjectCC.Model.Domain;
 
-namespace InjectCC.Model
+namespace InjectCC.Model.EntityFramework
 {
     interface IUnitOfWork
     {
@@ -13,11 +14,11 @@ namespace InjectCC.Model
 
     public class Context : DbContext, IUnitOfWork
     {
-        public DbSet<Location> Locations { get; set; }
-        public DbSet<LocationModifier> LocationModifiers { get; set; }
-        public DbSet<Injection> Injections { get; set; }
-        public DbSet<Medication> Medications { get; set; }
-        public DbSet<User> Users { get; set; }
+        internal DbSet<Location> Locations { get; set; }
+        internal DbSet<LocationModifier> LocationModifiers { get; set; }
+        internal DbSet<Injection> Injections { get; set; }
+        internal DbSet<Medication> Medications { get; set; }
+        internal DbSet<User> Users { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

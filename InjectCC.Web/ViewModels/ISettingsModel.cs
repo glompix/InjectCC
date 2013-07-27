@@ -10,6 +10,6 @@ namespace InjectCC.Web.ViewModels
     /// </summary>
     public interface ISettingsModel
     {
-        IList<Model.Medication> EditableMedications { get; set; }
+        IList<Model.Domain.Medication> EditableMedications { get; set; }
     }
 }

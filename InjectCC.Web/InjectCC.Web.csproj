@@ -167,7 +167,7 @@
     <Compile Include="App_Start\PathConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Controllers\ControllerExtensions.cs" />
+    <Compile Include="Controllers\InjectCcController.cs" />
     <Compile Include="Controllers\MedicationController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\HomeController.cs" />

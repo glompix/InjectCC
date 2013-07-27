@@ -5,6 +5,6 @@ namespace InjectCC.Web.ViewModels.Injection
 {
     public class HistoryModel
     {
-        public IEnumerable<Model.Injection> Injections { get; set; }
+        public IEnumerable<Model.Domain.Injection> Injections { get; set; }
     }
 }

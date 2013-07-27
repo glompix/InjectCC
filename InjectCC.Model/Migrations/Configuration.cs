@@ -1,18 +1,18 @@
-namespace InjectCC.Model.Migrations
-{
-    using System;
-    using System.Data.Entity;
-    using System.Data.Entity.Migrations;
-    using System.Linq;
+using System;
+using System.Data.Entity;
+using System.Data.Entity.Migrations;
+using System.Linq;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<InjectCC.Model.Context>
+namespace InjectCC.Model.EntityFramework.Migrations
+{
+    internal sealed class Configuration : DbMigrationsConfiguration<Context>
     {
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
         }
 
-        protected override void Seed(InjectCC.Model.Context context)
+        protected override void Seed(Context context)
         {
             //  This method will be called after migrating to the latest version.
 

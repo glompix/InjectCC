@@ -9,30 +9,30 @@ using InjectCC.Model;
 using InjectCC.Web.ViewModels.Injection;
 using InjectCC.Web.Filters;
 using WebMatrix.WebData;
+using InjectCC.Model.Domain;
+using InjectCC.Model.EntityFramework;
 
 namespace InjectCC.Web.Controllers
 { 
     [Authorize]
-    [InitializeSimpleMembership]
     public class InjectionController : InjectCcController
     {
         private Context db = new Context();
 
         public ActionResult Index(int? medicationId = null)
         {
-            var medication = (from l in db.Medications
-                               where l.UserId == WebSecurity.CurrentUserId && (medicationId == null || medicationId == l.MedicationId)
-                               select l).FirstOrDefault();
+            var repository = new MedicationRepository(db);
+            Medication medication;
+            if (medicationId.HasValue)
+                medication = repository.Find(medicationId.Value);
+            else
+                medication = repository.GetFirstForUser(WebSecurity.CurrentUserId);
 
             if (medication == null)
-            {
                 return RedirectErrorToAction("You haven't set up any medications yet.", "New", "Medication");
-            }
 
-            var latestInjection = (from i in db.Injections
-                                   where i.MedicationId == medication.MedicationId
-                                   orderby i.Date descending
-                                   select i).FirstOrDefault();
+            var injRepository = new InjectionRepository(db);
+            var latestInjection = injRepository.GetLatestFor(medication);
 
             Injection nextInjection;
             if (latestInjection == null)
@@ -40,7 +40,8 @@ namespace InjectCC.Web.Controllers
                 nextInjection = new Injection
                 {
                     Date = DateTime.Now,
-                    MedicationId = medication.MedicationId
+                    MedicationId = medication.MedicationId,
+                    Location = medication.Locations.First()
                 };
             }
             else
@@ -48,15 +49,10 @@ namespace InjectCC.Web.Controllers
                 nextInjection = latestInjection.CalculateNext();
             }
 
-            var locations = db.Locations.Where(l => l.MedicationId == medication.MedicationId).ToList();
-            var locationModifiers = new List<LocationModifier>();
             var model = new IndexModel
             {
-                NextInjection = nextInjection,
-                Locations = locations,
-                LocationModifiers = locationModifiers,
-                Last30DaysRating = 80, // TODO
-                Last90DaysRating = 90
+                Injection = nextInjection,
+                Locations = medication.Locations
             };
 
             return View(model);
@@ -67,16 +63,14 @@ namespace InjectCC.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                model.NextInjection.InjectionId = Utilities.NewSequentialGUID();
-                model.NextInjection.UserId = WebSecurity.CurrentUserId;
-                db.Injections.Add(model.NextInjection);
-                db.SaveChanges();
+                model.Injection.InjectionId = Utilities.NewSequentialGUID();
+                model.Injection.UserId = WebSecurity.CurrentUserId;
+                var repository = new InjectionRepository(db);
+                repository.Add(model.Injection);
                 return RedirectToAction("Index");  
             }
-            model.Last30DaysRating = 80;
-            model.Last90DaysRating = 90;
 
-            var medication = db.Medications.FirstOrDefault(l => l.UserId == WebSecurity.CurrentUserId && (model.NextInjection.MedicationId == l.MedicationId));
+            var medication = db.Medications.FirstOrDefault(l => l.UserId == WebSecurity.CurrentUserId && (model.Injection.MedicationId == l.MedicationId));
             if (medication == null)
             {
                 return RedirectErrorToAction("You haven't set up any medications yet.", "New", "Medication");
@@ -90,7 +84,8 @@ namespace InjectCC.Web.Controllers
  
         public ActionResult Delete(Guid id)
         {
-            Injection injection = db.Injections.Find(id);
+            var repository = new InjectionRepository(db);
+            Injection injection = repository.GetById(id);
             return View(injection);
         }
 
@@ -99,9 +94,11 @@ namespace InjectCC.Web.Controllers
 
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(Guid id)
-        {            
-            Injection injection = db.Injections.Find(id);
-            db.Injections.Remove(injection);
+        {
+            var repository = new InjectionRepository(db);
+            Injection injection = repository.GetById(id);
+            repository.Remove(injection();
+            .
             db.SaveChanges();
             return RedirectToAction("Index");
         }

@@ -9,10 +9,11 @@ using WebMatrix.WebData;
 using InjectCC.Web.Filters;
 using System.IO;
 using InjectCC.Model.Repositories;
+using InjectCC.Model.Domain;
+using InjectCC.Model.EntityFramework;
 
 namespace InjectCC.Web.Controllers
 {
-    [InitializeSimpleMembership]
     [Authorize]
     public class MedicationController : InjectCcController
     {

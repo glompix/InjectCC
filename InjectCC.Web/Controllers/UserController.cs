@@ -11,12 +11,13 @@ using WebMatrix.WebData;
 using InjectCC.Web.Filters;
 using InjectCC.Web.ViewModels;
 using InjectCC.Web.ViewModels.User;
+using InjectCC.Model.Domain;
 using InjectCC.Model;
+using InjectCC.Model.EntityFramework;
 
 namespace InjectCC.Web.Controllers
 {
     [Authorize]
-    [InitializeSimpleMembership]
     public class UserController : InjectionController
     {
         //

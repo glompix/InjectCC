@@ -1,8 +1,8 @@
-namespace InjectCC.Model.Migrations
-{
-    using System;
-    using System.Data.Entity.Migrations;
-    
+using System;
+using System.Data.Entity.Migrations;
+
+namespace InjectCC.Model.EntityFramework.Migrations
+{    
     public partial class Initial : DbMigration
     {
         public override void Up()

@@ -5,7 +5,7 @@ using System.Text;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace InjectCC.Model
+namespace InjectCC.Model.Domain
 {
     /// <summary>
     /// Identifies a set of locations to be rotated through.
