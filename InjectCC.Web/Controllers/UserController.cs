@@ -14,6 +14,7 @@ using InjectCC.Web.ViewModels.User;
 using InjectCC.Model.Domain;
 using InjectCC.Model;
 using InjectCC.Model.EntityFramework;
+using InjectCC.Model.Repositories;
 
 namespace InjectCC.Web.Controllers
 {
@@ -24,14 +25,17 @@ namespace InjectCC.Web.Controllers
         // GET: /User/Settings
         public ActionResult Settings()
         {
-            using (var db = new Context())
+            SettingsModel model;
+            using (var tx = new UnitOfWork())
             {
-                var user = db.Users.Single(u => u.UserId == WebSecurity.CurrentUserId);
-                var medications = db.Medications.Where(m => m.UserId == WebSecurity.CurrentUserId).ToList();
-                var model = SettingsModel.FromEntities(user, medications);
-                ViewBag.HasLocalPassword = OAuthWebSecurity.HasLocalAccount(WebSecurity.GetUserId(User.Identity.Name));
-                return View(model);
+                var repository = new UserRepository(tx);
+                var user = repository.GetById(WebSecurity.CurrentUserId);
+                var medications = repository.GetMedicationsFor(user);
+                model = SettingsModel.FromEntities(user, medications);
             }
+
+            ViewBag.HasLocalPassword = OAuthWebSecurity.HasLocalAccount(WebSecurity.GetUserId(User.Identity.Name));
+            return View(model);
         }
 
         [HttpPost]
@@ -329,26 +333,25 @@ namespace InjectCC.Web.Controllers
             if (ModelState.IsValid)
             {
                 // Insert a new user into the database
-                using (var db = new Context())
+                using (var tx = new UnitOfWork())
                 {
-                    User user = db.Users.FirstOrDefault(u => u.Email.ToLower() == model.Email.ToLower());
+                    var repository = new UserRepository(tx);
+                    User user = repository.GetByEmail(model.Email);
                     // Check if user already exists
                     if (user == null)
                     {
                         // Insert name into the profile table
-                        db.Users.Add(new User { Email = model.Email, RegistrationDate = DateTime.Now });
-                        db.SaveChanges();
-
-                        OAuthWebSecurity.CreateOrUpdateAccount(provider, providerUserId, model.Email);
-                        OAuthWebSecurity.Login(provider, providerUserId, createPersistentCookie: false);
-
-                        return RedirectToLocal(returnUrl);
+                        repository.Add(new User { Email = model.Email, RegistrationDate = DateTime.Now });
                     }
                     else
                     {
                         ModelState.AddModelError("UserName", "User name already exists. Please enter a different user name.");
                     }
                 }
+
+                OAuthWebSecurity.CreateOrUpdateAccount(provider, providerUserId, model.Email);
+                OAuthWebSecurity.Login(provider, providerUserId, createPersistentCookie: false);
+                return RedirectToLocal(returnUrl);
             }
 
             ViewBag.ProviderDisplayName = OAuthWebSecurity.GetOAuthClientData(provider).DisplayName;

@@ -17,22 +17,24 @@ namespace InjectCC.Web.Controllers
     [Authorize]
     public class InjectionController : InjectCcController
     {
-        private Context db = new Context();
-
         public ActionResult Index(int? medicationId = null)
         {
-            var repository = new MedicationRepository(db);
             Medication medication;
-            if (medicationId.HasValue)
-                medication = repository.Find(medicationId.Value);
-            else
-                medication = repository.GetFirstForUser(WebSecurity.CurrentUserId);
+            Injection latestInjection;
+            using (var tx = new UnitOfWork())
+            {
+                var repository = new MedicationRepository(tx);
+                if (medicationId.HasValue)
+                    medication = repository.Find(medicationId.Value);
+                else
+                    medication = repository.GetFirstForUser(WebSecurity.CurrentUserId);
 
-            if (medication == null)
-                return RedirectErrorToAction("You haven't set up any medications yet.", "New", "Medication");
+                if (medication == null)
+                    return RedirectErrorToAction("You haven't set up any medications yet.", "New", "Medication");
 
-            var injRepository = new InjectionRepository(db);
-            var latestInjection = injRepository.GetLatestFor(medication);
+                var injRepository = new InjectionRepository(tx);
+                latestInjection = injRepository.GetLatestFor(medication);
+            }
 
             Injection nextInjection;
             if (latestInjection == null)
@@ -63,19 +65,28 @@ namespace InjectCC.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                model.Injection.InjectionId = Utilities.NewSequentialGUID();
-                model.Injection.UserId = WebSecurity.CurrentUserId;
-                var repository = new InjectionRepository(db);
-                repository.Add(model.Injection);
-                return RedirectToAction("Index");  
+                using (var tx = new UnitOfWork())
+                {
+                    model.Injection.InjectionId = Utilities.NewSequentialGUID();
+                    model.Injection.UserId = WebSecurity.CurrentUserId;
+                    var repository = new InjectionRepository(tx);
+                    repository.Add(model.Injection);
+                }
+
+                return RedirectToAction("Index");
             }
 
-            var medication = db.Medications.FirstOrDefault(l => l.UserId == WebSecurity.CurrentUserId && (model.Injection.MedicationId == l.MedicationId));
-            if (medication == null)
+            using (var tx = new UnitOfWork())
             {
-                return RedirectErrorToAction("You haven't set up any medications yet.", "New", "Medication");
+                var repository = new MedicationRepository(tx);
+                var medication = repository.Find(model.Injection.MedicationId);
+                if (medication == null)
+                {
+                    return RedirectErrorToAction("You haven't set up any medications yet.", "New", "Medication");
+                }
+                model.Locations = medication.Locations.ToList();
             }
-            model.Locations = medication.Locations.ToList();
+
             return View("Index", model);
         }
         
@@ -84,8 +95,12 @@ namespace InjectCC.Web.Controllers
  
         public ActionResult Delete(Guid id)
         {
-            var repository = new InjectionRepository(db);
-            Injection injection = repository.GetById(id);
+            Injection injection;
+            using (var tx = new UnitOfWork())
+            {
+                var repository = new InjectionRepository(tx);
+                injection = repository.GetById(id);
+            }
             return View(injection);
         }
 
@@ -95,26 +110,24 @@ namespace InjectCC.Web.Controllers
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(Guid id)
         {
-            var repository = new InjectionRepository(db);
-            Injection injection = repository.GetById(id);
-            repository.Remove(injection();
-            .
-            db.SaveChanges();
+            using (var tx = new UnitOfWork())
+            {
+                var repository = new InjectionRepository(tx);
+                Injection injection = repository.GetById(id);
+                repository.Remove(injection);
+            }  
             return RedirectToAction("Index");
         }
 
         public ActionResult History()
         {
-            var injections = from i in db.Injections
-                             where i.UserId == WebSecurity.CurrentUserId
-                             select i;
-            return View(new HistoryModel { Injections = injections.ToList() });
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            db.Dispose();
-            base.Dispose(disposing);
+            IList<Injection> injections;
+            using (var tx = new UnitOfWork())
+            {
+                var repository = new InjectionRepository(tx);
+                injections = repository.GetAllForUser(WebSecurity.CurrentUserId);
+            }
+            return View(new HistoryModel { Injections = injections });
         }
     }
 }

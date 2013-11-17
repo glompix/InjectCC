@@ -4,6 +4,11 @@ namespace InjectCC.Web.ViewModels.User
 {
     public class LoginModel
     {
+        public LoginModel()
+        {
+            RememberMe = true;
+        }
+
         [Required]
         [Display(Name = "Email")]
         public string Email { get; set; }

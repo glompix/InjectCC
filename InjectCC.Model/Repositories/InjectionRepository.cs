@@ -8,16 +8,16 @@ using InjectCC.Model.Repositories;
 
 namespace InjectCC.Model.EntityFramework
 {
-    public class InjectionRepository : BaseRepository
+    public class InjectionRepository : CrudRepository<Injection>
     {
-        public InjectionRepository(Context context)
+        public InjectionRepository(UnitOfWork context)
             : base(context)
         {
         }
 
         public Injection GetLatestFor(Medication medication)
         {
-            var latestInjection = (from i in _context.Injections
+            var latestInjection = (from i in Context.Injections
                                    where i.MedicationId == medication.MedicationId
                                    orderby i.Date descending
                                    select i).FirstOrDefault();
@@ -27,7 +27,15 @@ namespace InjectCC.Model.EntityFramework
 
         public Injection GetById(Guid id)
         {
-            return _context.Injections.SingleOrDefault(i => i.InjectionId == id);
+            return Context.Injections.SingleOrDefault(i => i.InjectionId == id);
+        }
+
+        public IList<Injection> GetAllForUser(int userId)
+        {
+            var injections = from i in Context.Injections
+                             where i.UserId == userId
+                             select i;
+            return injections.ToList();
         }
     }
 }

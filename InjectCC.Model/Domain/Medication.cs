@@ -54,7 +54,7 @@ namespace InjectCC.Model.Domain
         [Required]
         public int UserId { get; set; }
 
-        public virtual List<Location> Locations { get; set; }
-        public virtual List<LocationModifier> LocationModifiers { get; set; }
+        public virtual IList<Location> Locations { get; set; }
+        public virtual IList<LocationModifier> LocationModifiers { get; set; }
     }
 }

@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using System.ComponentModel.DataAnnotations;
 using InjectCC.Model;
 using InjectCC.Model.Domain;
+using MedicationClass = InjectCC.Model.Domain.Medication;
 
 namespace InjectCC.Web.ViewModels.Medication
 {
@@ -14,17 +15,17 @@ namespace InjectCC.Web.ViewModels.Medication
         /// <summary>
         /// Represents a list of medications that the user owns and may edit.
         /// </summary>
-        public IList<Model.Domain.Medication> EditableMedications { get; set; }
+        public IList<MedicationClass> EditableMedications { get; set; }
 
         /// <summary>
         /// Represents a list of medications that the user may copy from.
         /// </summary>
-        public IList<Model.Domain.Medication> CopyableMedications { get; set; }
+        public IList<MedicationClass> CopyableMedications { get; set; }
 
-        public static NewModel FromEntity(Model.Domain.Medication medication, 
-            List<Location> locations, 
-            List<Model.Domain.Medication> editableMedications, 
-            List<Model.Domain.Medication> copyableMedications)
+        public static NewModel FromEntity(MedicationClass medication, 
+            IList<Location> locations, 
+            IList<MedicationClass> editableMedications, 
+            IList<MedicationClass> copyableMedications)
         {
             var model = new NewModel();
             model.EditableMedications = editableMedications;

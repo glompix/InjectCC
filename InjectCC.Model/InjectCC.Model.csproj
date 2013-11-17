@@ -53,6 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Repositories\BaseRepository.cs" />
+    <Compile Include="Repositories\CrudRepository.cs" />
     <Compile Include="Repositories\InjectionRepository.cs" />
     <Compile Include="Repositories\LocationRepository.cs" />
     <Compile Include="Repositories\MedicationRepository.cs" />
@@ -68,6 +69,8 @@
     <Compile Include="Domain\Medication.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Domain\User.cs" />
+    <Compile Include="Repositories\UserRepository.cs" />
+    <Compile Include="UnitOfWork.cs" />
     <Compile Include="Utilities.cs" />
   </ItemGroup>
   <ItemGroup>

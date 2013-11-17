@@ -8,40 +8,36 @@ using InjectCC.Model.Repositories;
 namespace InjectCC.Model.EntityFramework
 {
     // Going to be pretty basic crud
-    public class MedicationRepository
+    public class MedicationRepository : CrudRepository<Medication>
     {
-        protected Context _context;
-        public MedicationRepository(Context context)
+        public MedicationRepository(UnitOfWork context)
+            : base(context)
         {
-            if (context == null)
-                throw new ArgumentNullException("context");
-
-            _context = context;
         }
 
-        public void Create(Medication medication)
+        public override void Add(Medication medication)
         {
-            _context.Medications.Add(medication);
+            Context.Medications.Add(medication);
 
             foreach (var location in medication.Locations ?? new List<Location>())
             {
-                _context.Locations.Add(location);
+                Context.Locations.Add(location);
             }
         }
 
         public Medication Find(int id)
         {
-            return _context.Medications.SingleOrDefault(m => m.MedicationId == id);
+            return Context.Medications.SingleOrDefault(m => m.MedicationId == id);
         }
 
         public IList<Medication> ListAllForUser(int userId)
         {
-            return _context.Medications.Where(m => m.UserId == userId).ToList();
+            return Context.Medications.Where(m => m.UserId == userId).ToList();
         }
 
         public Medication GetFirstForUser(int userId)
         {
-            return _context.Medications.FirstOrDefault(m => m.UserId == userId);
+            return Context.Medications.FirstOrDefault(m => m.UserId == userId);
         }
     }
 }

@@ -7,7 +7,7 @@ using InjectCC.Model.Domain;
 
 namespace InjectCC.Model.EntityFramework
 {
-    interface IUnitOfWork
+    public interface IUnitOfWork
     {
         int SaveChanges();
     }

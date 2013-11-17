@@ -7,17 +7,16 @@ using InjectCC.Model.Domain;
 
 namespace InjectCC.Model.Repositories
 {
-    public class LocationRepository
+    public class LocationRepository : CrudRepository<Location>
     {
-        private Context _context;
-        public LocationRepository(Context context)
+        public LocationRepository(UnitOfWork context)
+            : base(context)
         {
-            _context = context;
         }
 
         public IList<Location> GetLocationsFor(Medication medication)
         {
-            return _context.Locations.Where(l => l.Medication == medication).ToList();
+            return Context.Locations.Where(l => l.Medication == medication).ToList();
         }
     }
 }

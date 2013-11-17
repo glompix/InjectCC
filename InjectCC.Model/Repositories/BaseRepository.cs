@@ -8,10 +8,15 @@ namespace InjectCC.Model.Repositories
 {
     public abstract class BaseRepository
     {
-        protected Context _context;
-        protected BaseRepository(Context context)
+        protected Context Context { get { return _tx.Context; } }
+
+        private UnitOfWork _tx;
+        protected BaseRepository(UnitOfWork tx)
         {
-            _context = context;
+            if (tx == null)
+                throw new ArgumentNullException("context");
+
+            _tx = tx;
         }
     }
 }

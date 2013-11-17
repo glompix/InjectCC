@@ -15,12 +15,12 @@ namespace InjectCC.Web.ViewModels.Medication
         [MaxLength(1000)]
         public string Description { get; set; }
 
-        public List<Location> Locations { get; set; }
+        public IList<Location> Locations { get; set; }
 
-        public List<string> ReferenceImages { get; set; }
+        public IList<string> ReferenceImages { get; set; }
 
         /// <param name="medication">The medication being created.</param>
-        protected void LoadEntity(Model.Domain.Medication medication, List<Location> locations)
+        protected void LoadEntity(Model.Domain.Medication medication, IList<Location> locations)
         {
             MedicationId = medication.MedicationId;
             Name = medication.Name;
