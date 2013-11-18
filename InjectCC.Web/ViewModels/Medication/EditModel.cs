@@ -16,7 +16,7 @@ namespace InjectCC.Web.ViewModels.Medication
         {
             var model = new EditModel();
             model.EditableMedications = medications;
-            model.LoadEntity(medication, locations);
+            model.LoadEntity(medication);
             return model;
         }
     }

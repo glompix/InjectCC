@@ -32,7 +32,7 @@
                 {
                     <text>
                         <button class="phone-login-toggle btn">Sign in</button>
-                        @Html.Partial("_LoginForm")
+                        @Html.Partial("_LoginForm", new InjectCC.Web.ViewModels.User.LoginModel())
                     </text>
                 }
                 <div class="clearfix"></div>

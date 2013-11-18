@@ -20,36 +20,23 @@ namespace InjectCC.Web.Controllers
         public ActionResult Index(int? medicationId = null)
         {
             Medication medication;
-            Injection latestInjection;
-            using (var tx = new UnitOfWork())
-            {
-                var repository = new MedicationRepository(tx);
-                if (medicationId.HasValue)
-                    medication = repository.Find(medicationId.Value);
-                else
-                    medication = repository.GetFirstForUser(WebSecurity.CurrentUserId);
+            var meds = new MedicationRepository();
+            if (medicationId.HasValue)
+                medication = meds.Find(medicationId.Value);
+            else
+                medication = meds.GetFirstForUser(WebSecurity.CurrentUserId);
 
-                if (medication == null)
-                    return RedirectErrorToAction("You haven't set up any medications yet.", "New", "Medication");
+            if (medication == null)
+                return RedirectErrorToAction("You haven't set up any medications yet.", "New", "Medication");
 
-                var injRepository = new InjectionRepository(tx);
-                latestInjection = injRepository.GetLatestFor(medication);
-            }
+            var injRepository = new InjectionRepository();
+            var latestInjection = injRepository.GetLatestFor(medication);
 
             Injection nextInjection;
             if (latestInjection == null)
-            {
-                nextInjection = new Injection
-                {
-                    Date = DateTime.Now,
-                    MedicationId = medication.MedicationId,
-                    Location = medication.Locations.First()
-                };
-            }
+                nextInjection = medication.CalculateFirst();
             else
-            {
                 nextInjection = latestInjection.CalculateNext();
-            }
 
             var model = new IndexModel
             {
@@ -76,17 +63,14 @@ namespace InjectCC.Web.Controllers
                 return RedirectToAction("Index");
             }
 
-            using (var tx = new UnitOfWork())
+            var repository = new MedicationRepository();
+            var medication = repository.Find(model.Injection.MedicationId);
+            if (medication == null)
             {
-                var repository = new MedicationRepository(tx);
-                var medication = repository.Find(model.Injection.MedicationId);
-                if (medication == null)
-                {
-                    return RedirectErrorToAction("You haven't set up any medications yet.", "New", "Medication");
-                }
-                model.Locations = medication.Locations.ToList();
+                return RedirectErrorToAction("You haven't set up any medications yet.", "New", "Medication");
             }
-
+            model.Locations = medication.Locations.ToList();
+        
             return View("Index", model);
         }
         

@@ -8,13 +8,8 @@ using InjectCC.Model.Repositories;
 
 namespace InjectCC.Model.EntityFramework
 {
-    public class InjectionRepository : CrudRepository<Injection>
+    public class InjectionRepository : Repository
     {
-        public InjectionRepository(UnitOfWork context)
-            : base(context)
-        {
-        }
-
         public Injection GetLatestFor(Medication medication)
         {
             var latestInjection = (from i in Context.Injections

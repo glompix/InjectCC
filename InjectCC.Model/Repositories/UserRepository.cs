@@ -7,13 +7,8 @@ using System.Text;
 
 namespace InjectCC.Model.Repositories
 {
-    public class UserRepository : CrudRepository<User>
+    public class UserRepository : Repository
     {
-        public UserRepository(UnitOfWork context)
-            : base(context)
-        {
-        }
-
         public User GetById(int id)
         {
             return Context.Users.FirstOrDefault(u => u.UserId == id);

@@ -25,15 +25,11 @@ namespace InjectCC.Web.Controllers
         // GET: /User/Settings
         public ActionResult Settings()
         {
-            SettingsModel model;
-            using (var tx = new UnitOfWork())
-            {
-                var repository = new UserRepository(tx);
-                var user = repository.GetById(WebSecurity.CurrentUserId);
-                var medications = repository.GetMedicationsFor(user);
-                model = SettingsModel.FromEntities(user, medications);
-            }
-
+            var repository = new UserRepository();
+            var user = repository.GetById(WebSecurity.CurrentUserId);
+            var medications = repository.GetMedicationsFor(user);
+            var model = SettingsModel.FromEntities(user, medications);
+        
             ViewBag.HasLocalPassword = OAuthWebSecurity.HasLocalAccount(WebSecurity.GetUserId(User.Identity.Name));
             return View(model);
         }
@@ -96,7 +92,7 @@ namespace InjectCC.Web.Controllers
         public ActionResult Login(string returnUrl)
         {
             ViewBag.ReturnUrl = returnUrl;
-            return View();
+            return View(new LoginModel());
         }
 
         //

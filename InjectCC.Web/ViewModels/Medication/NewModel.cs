@@ -22,15 +22,14 @@ namespace InjectCC.Web.ViewModels.Medication
         /// </summary>
         public IList<MedicationClass> CopyableMedications { get; set; }
 
-        public static NewModel FromEntity(MedicationClass medication, 
-            IList<Location> locations, 
+        public static NewModel FromEntity(MedicationClass medication,  
             IList<MedicationClass> editableMedications, 
             IList<MedicationClass> copyableMedications)
         {
             var model = new NewModel();
             model.EditableMedications = editableMedications;
             model.CopyableMedications = copyableMedications;
-            model.LoadEntity(medication, locations);
+            model.LoadEntity(medication);
             return model;
         }
     }

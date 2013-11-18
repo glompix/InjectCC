@@ -8,14 +8,9 @@ using InjectCC.Model.Repositories;
 namespace InjectCC.Model.EntityFramework
 {
     // Going to be pretty basic crud
-    public class MedicationRepository : CrudRepository<Medication>
+    public class MedicationRepository : Repository
     {
-        public MedicationRepository(UnitOfWork context)
-            : base(context)
-        {
-        }
-
-        public override void Add(Medication medication)
+        public void Add(Medication medication)
         {
             Context.Medications.Add(medication);
 

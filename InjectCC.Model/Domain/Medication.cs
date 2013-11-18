@@ -17,20 +17,34 @@ namespace InjectCC.Model.Domain
         /// </summary>
         public Medication()
         {
+            Locations = new List<Location>();
+            LocationModifiers = new List<LocationModifier>();
         }
 
         /// <summary>
         /// Copy constructor.
         /// </summary>
-        public Medication(Medication copyFrom)
+        public Medication(Medication sourceMed)
+            : this()
         {
-            if (copyFrom != null)
+            if (sourceMed != null)
             {
-                Name = copyFrom.Name;
-                Description = copyFrom.Description;
-                UserId = copyFrom.UserId;
-                User = copyFrom.User;
+                Name = sourceMed.Name;
+                Description = sourceMed.Description;
+                UserId = sourceMed.UserId;
+                User = sourceMed.User;
+                foreach (var sourceLoc in sourceMed.Locations)
+                {
+                    var location = new Location(sourceLoc);
+                    this.AddLocation(location);
+                }
             }
+        }
+
+        private void AddLocation(Location location)
+        {
+            location.Medication = this;
+            this.Locations.Add(location);
         }
 
         [Key]
@@ -54,7 +68,22 @@ namespace InjectCC.Model.Domain
         [Required]
         public int UserId { get; set; }
 
-        public virtual IList<Location> Locations { get; set; }
-        public virtual IList<LocationModifier> LocationModifiers { get; set; }
+        public virtual IList<Location> Locations { get; private set; }
+        public virtual IList<LocationModifier> LocationModifiers { get; private set; }
+
+        public Injection CalculateFirst()
+        {
+            var injection = new Injection();
+            injection.MedicationId = this.MedicationId;
+            injection.Date = DateTime.Now;
+            injection.Location = this.Locations.OrderBy(l => l.Ordinal).First();
+            injection.LocationId = injection.Location.LocationId;
+            return injection;
+        }
+
+        public void AddLocation(Location location)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
