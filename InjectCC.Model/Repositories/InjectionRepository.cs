@@ -32,5 +32,15 @@ namespace InjectCC.Model.EntityFramework
                              select i;
             return injections.ToList();
         }
+
+        public void Add(Injection injection)
+        {
+            Context.Injections.Add(injection);
+        }
+
+        public void Remove(Injection injection)
+        {
+            Context.Injections.Remove(injection);
+        }
     }
 }

@@ -23,5 +23,10 @@ namespace InjectCC.Model.Repositories
         {
             return Context.Users.SingleOrDefault(u => u.Email.Equals(email, StringComparison.InvariantCultureIgnoreCase));
         }
+
+        public void Add(User user)
+        {
+            Context.Users.Add(user);
+        }
     }
 }

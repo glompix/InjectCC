@@ -14,11 +14,11 @@ namespace InjectCC.Model.EntityFramework
 
     public class Context : DbContext, IUnitOfWork
     {
-        internal DbSet<Location> Locations { get; set; }
-        internal DbSet<LocationModifier> LocationModifiers { get; set; }
-        internal DbSet<Injection> Injections { get; set; }
-        internal DbSet<Medication> Medications { get; set; }
-        internal DbSet<User> Users { get; set; }
+        public virtual DbSet<Location> Locations { get; set; }
+        public virtual DbSet<LocationModifier> LocationModifiers { get; set; }
+        public virtual DbSet<Injection> Injections { get; set; }
+        public virtual DbSet<Medication> Medications { get; set; }
+        public virtual DbSet<User> Users { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

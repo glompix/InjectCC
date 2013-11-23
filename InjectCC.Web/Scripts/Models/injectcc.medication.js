@@ -11,6 +11,7 @@
 
     function init() {
         // constructor code
+        console.log('Initializing sitepicker...');
         $('.injection-diagram').sitepicker({
             'locations': $('.injection-site'),
             'enabled': false

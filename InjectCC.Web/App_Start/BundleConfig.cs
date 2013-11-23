@@ -34,7 +34,9 @@ namespace InjectCC.Web
             bundles.Add(new ScriptBundle("~/bundles/medication").Include(
                 "~/Scripts/raphael*",
                 "~/Scripts/Modules/sitepicker.js",
-                "~/Scripts/Models/injectcc.medication.js"
+                "~/Scripts/Models/injectcc.medication.js",
+                "~/Scripts/jquery-ui-{version}.js",
+                "~/Scripts/jquery.validate.js"
             ));
 
             bundles.Add(new ScriptBundle("~/bundles/injection").Include(

@@ -41,10 +41,16 @@ namespace InjectCC.Model.Domain
             }
         }
 
-        private void AddLocation(Location location)
+        public void AddLocation(Location location)
         {
             location.Medication = this;
             this.Locations.Add(location);
+        }
+
+        public void RemoveLocation(Location location)
+        {
+            location.Medication = null;
+            this.Locations.Remove(location);
         }
 
         [Key]
@@ -81,9 +87,5 @@ namespace InjectCC.Model.Domain
             return injection;
         }
 
-        public void AddLocation(Location location)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

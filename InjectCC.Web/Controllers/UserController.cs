@@ -329,20 +329,17 @@ namespace InjectCC.Web.Controllers
             if (ModelState.IsValid)
             {
                 // Insert a new user into the database
-                using (var tx = new UnitOfWork())
+                var repository = new UserRepository();
+                User user = repository.GetByEmail(model.Email);
+                // Check if user already exists
+                if (user == null)
                 {
-                    var repository = new UserRepository(tx);
-                    User user = repository.GetByEmail(model.Email);
-                    // Check if user already exists
-                    if (user == null)
-                    {
-                        // Insert name into the profile table
-                        repository.Add(new User { Email = model.Email, RegistrationDate = DateTime.Now });
-                    }
-                    else
-                    {
-                        ModelState.AddModelError("UserName", "User name already exists. Please enter a different user name.");
-                    }
+                    // Insert name into the profile table
+                    repository.Add(new User { Email = model.Email, RegistrationDate = DateTime.Now });
+                }
+                else
+                {
+                    ModelState.AddModelError("UserName", "User name already exists. Please enter a different user name.");
                 }
 
                 OAuthWebSecurity.CreateOrUpdateAccount(provider, providerUserId, model.Email);

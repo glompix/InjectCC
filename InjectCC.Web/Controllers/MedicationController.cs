@@ -90,37 +90,26 @@ namespace InjectCC.Web.Controllers
         [HttpPost, ValidateAntiForgeryToken]
         public ActionResult Edit(EditModel model)
         {
+            var repository = new MedicationRepository();
             if (ModelState.IsValid)
             {
-                Medication medication;
-                using (var tx = new UnitOfWork())
-                {
-                    var medRepository = new MedicationRepository(tx);
-                    medication = medRepository.Find(model.MedicationId);
-                    medication.Name = model.Name;
-                    medication.Description = model.Description;
+                var medication = repository.Find(model.MedicationId);
+                medication.Name = model.Name;
+                medication.Description = model.Description;
 
-                    var locRepository = new LocationRepository(tx);
-                    var locations = locRepository.GetLocationsFor(medication);
                     foreach (var location in model.Locations.Where(l => l.LocationId == default(int)))
                     {
-                        location.MedicationId = medication.MedicationId;
-                        locRepository.Add(location);
+                        medication.AddLocation(location);
                     }
-                    foreach (var location in locations.Where(l => !model.Locations.Any(vml => vml.LocationId == l.LocationId)))
+                    foreach (var location in medication.Locations.Where(l => !model.Locations.Any(vml => vml.LocationId == l.LocationId)))
                     {
-                        locRepository.Remove(location);
+                        medication.RemoveLocation(location);
                     }
-                }
 
                 return RedirectToAction("Edit", new { id = medication.MedicationId });
             }
 
-            using (var tx = new UnitOfWork())
-            {
-                var repository = new MedicationRepository(tx);
-                model.EditableMedications = repository.ListAllForUser(WebSecurity.CurrentUserId);
-            }
+            model.EditableMedications = repository.ListAllForUser(WebSecurity.CurrentUserId);
             model.ReferenceImages = (from f in Directory.GetFiles(Server.MapPath(_referenceImagePath), "*.jpg")
                                      select Url.Content(Path.Combine(_referenceImagePath, Path.GetFileName(f)))).ToList();
             return View(model);

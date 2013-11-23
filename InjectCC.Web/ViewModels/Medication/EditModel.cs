@@ -12,7 +12,7 @@ namespace InjectCC.Web.ViewModels.Medication
         /// </summary>
         public IList<Model.Domain.Medication> EditableMedications { get; set; }
 
-        public static EditModel FromEntity(Model.Domain.Medication medication, List<Location> locations, List<Model.Domain.Medication> medications)
+        public static EditModel FromEntity(Model.Domain.Medication medication, List<Model.Domain.Medication> medications)
         {
             var model = new EditModel();
             model.EditableMedications = medications;

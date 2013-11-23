@@ -27,7 +27,7 @@
     </div>
     <div class="control-group">
         <div class="controls">
-            @foreach (var image in Model.Locations.Select(l => l.ReferenceImageUrl).Distinct())
+            @foreach (var image in Model.ReferenceImages)
             {
                 <div class="injection-diagram img-polaroid" style="background-image: url('@image')">
                 </div>
