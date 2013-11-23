@@ -1,47 +1,53 @@
 ﻿@model InjectCC.Web.ViewModels.Medication.NewModel
 
-@section scripts {
-    @Scripts.Render("~/bundles/medication")
-
-    <script type="text/javascript">
-        $(function () {
-            injectcc.medication.init();
-        });
-    </script>
-}
-
 @section head {
     <title>inject.cc - New Medication</title>
-    <style type="text/css">
-        @Html.ReferenceImageClasses(Model.ReferenceImages)
-    </style>
 }
-
-@{ ViewBag.ModelVerb = "Create"; }
 
 <div class="tabbable tabs-left">
     @Html.Partial("_SettingsMenu")
     <div class="container-fluid tab-content">
         @Html.RenderAlerts()
-        <div class="well copy-form">
-            <h3>Copy an existing medication</h3>
-            <p class="muted">You can copy an existing medication.  Do so here.  Provide better help text later.</p>
-            <form action="" method="get" class="form-inline">
-                <select name="copyFromId">
-                    @foreach (var med in Model.CopyableMedications)
-                    {
-                        <option value="@med.MedicationId">@med.Name</option>
-                    }
-                </select>
-                <button class="btn" type="submit">Copy</button>
-                <a class="btn" data-dismiss="copy-form">No thanks</a>
-            </form>
-        </div>
         <div class="row-fluid">
-            <form action="" method="post">
+            <form action="" method="post" class="form-horizontal">
                 @Html.AntiForgeryToken()
-
-                @Html.Partial("_Form")
+                <fieldset class="well copy-form">
+                    <h3>Copy an existing medication</h3>
+                    <p class="muted">You can pre-load an injection rotation from a common medication. Select a medication below and give it your own name.</p>
+                    <div class="control-group">
+                        @Html.LabelFor(model => model.CopyFromMedication)
+                    </div>
+                    <select name="copyFromId">
+                        @foreach (var med in Model.CopyableMedications)
+                        {
+                            <option value="@med.MedicationId">@med.Name</option>
+                        }
+                    </select>
+                </fieldset>
+                <fieldset>
+                    <legend>Medication Info</legend>
+                    <div class="control-group">
+                        @Html.LabelFor(model => model.Name, new { @class = "control-label", @for = "NameTextBox" })
+                        <div class="controls">
+                            @Html.EditorFor(model => model.Name)
+                            @Html.ValidationMessageFor(model => model.Name)
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        @Html.LabelFor(model => model.Description, new { @class = "control-label", @for = "DescriptionField" })
+                        <div class="controls">
+                            @Html.TextAreaFor(model => model.Description)
+                            @Html.ValidationMessageFor(model => model.Description)
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button class="btn" type="submit">@ViewBag.ModelVerb Medication</button>
+                        @if (Model.MedicationId != default(int))
+                        {
+                            <button class="btn btn-danger" type="submit">Delete Medication</button>
+                        }
+                    </div>
+                </fieldset>
             </form>
         </div>
     </div>

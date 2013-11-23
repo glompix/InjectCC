@@ -10,7 +10,7 @@ using MedicationClass = InjectCC.Model.Domain.Medication;
 
 namespace InjectCC.Web.ViewModels.Medication
 {
-    public class NewModel : MedicationModel, ISettingsModel
+    public class NewModel : ISettingsModel
     {
         /// <summary>
         /// Represents a list of medications that the user owns and may edit.
@@ -22,15 +22,11 @@ namespace InjectCC.Web.ViewModels.Medication
         /// </summary>
         public IList<MedicationClass> CopyableMedications { get; set; }
 
-        public static NewModel FromEntity(MedicationClass medication,  
-            IList<MedicationClass> editableMedications, 
-            IList<MedicationClass> copyableMedications)
+        public NewModel(IEnumerable<MedicationClass> editableMedications, 
+            IEnumerable<MedicationClass> copyableMedications)
         {
-            var model = new NewModel();
-            model.EditableMedications = editableMedications;
-            model.CopyableMedications = copyableMedications;
-            model.LoadEntity(medication);
-            return model;
+            this.EditableMedications = new List<MedicationClass>();
+            this.CopyableMedications = new List<MedicationClass>();
         }
     }
 }

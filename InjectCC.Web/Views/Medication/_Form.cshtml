@@ -38,29 +38,6 @@
         <button class="btn" type="button" id="AddLocationButton"><i class="icon-plus-sign"></i> Add Location</button>
         <button class="btn" type="button" id="DeleteLocationButton"><i class="icon-minus-sign"></i> Remove Location</button>
     </div>
-
-    <legend>Medication Info</legend>
-    <div class="control-group">
-        @Html.LabelFor(model => model.Name, new { @class = "control-label", @for = "NameTextBox" })
-        <div class="controls">
-            @Html.EditorFor(model => model.Name)
-            @Html.ValidationMessageFor(model => model.Name)
-        </div>
-    </div>
-    <div class="control-group">
-        @Html.LabelFor(model => model.Description, new { @class = "control-label", @for = "DescriptionField" })
-        <div class="controls">
-            @Html.TextAreaFor(model => model.Description)
-            @Html.ValidationMessageFor(model => model.Description)
-        </div>
-    </div>
-    <div class="form-actions">
-        <button class="btn" type="submit">@ViewBag.ModelVerb Medication</button>
-        @if (Model.MedicationId != default(int))
-        {
-            <button class="btn btn-danger" type="submit">Delete Medication</button>
-        }
-    </div>
 </fieldset>
 <fieldset class="span4 form-horizontal">
     <legend>Injection Order</legend>
