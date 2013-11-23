@@ -4,6 +4,7 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
         <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+        <title>inject.cc - Injection Rotation Tracker</title>
 
         @Styles.Render("~/Content/css")
         @RenderSection("styles", required: false)
@@ -12,7 +13,7 @@
     <body>
         <div class="container">
             <div class="masthead">
-                <a href="@Url.Action("Index", "Home")" class="muted"><h3>inject.cc</h3></a>
+                <a href="@Url.Action("Index", "Home")" class="muted site-logo"><h3>inject.cc</h3></a>
                 @if (Html.ViewContext.HttpContext.User.Identity.IsAuthenticated)
                 {
                     <text>
@@ -41,8 +42,6 @@
 
             @RenderBody()
             
-            <div style="clear: both;"></div>
-
             <hr />
 
             <div class="span12">

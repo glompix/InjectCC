@@ -9,25 +9,19 @@ body
 .clearfix { height: 0; }
 .datepicker[readonly] { cursor: pointer; }
 
-.login-compact .dropdown-menu .checkbox
-{
-    padding-left: 20px;
-}
-
 .masthead h3 { display: inline; }
-.login-compact { float: right; }
+.login-compact { float: right; min-width: 420px; white-space: nowrap; }
 .phone-login-toggle { display: none; float: right; margin: 5px 0; }
 .phone-menu-toggle { display: none; float: right; margin: 5px 0; }
 .main-menu { float: right; }
 
 @media (min-width: 481px) and (max-width: 979px) 
 {
-    .masthead .login-compact { margin: 10px 0; }
     
 }
 @media (max-width: 767px) 
 {
-    .login-compact { margin: 10px 0; display: none; float: left; clear: both; }
+    .login-compact { margin: 10px 0; display: none; }
     .main-menu { margin: 10px 0; display: none; float: left; clear: both; }
     .phone-login-toggle { display: inline-block; }
     .phone-menu-toggle { display: inline-block; }
@@ -66,6 +60,13 @@ body
         position: fixed; 
         right: 60%;
     }
+
+    /* Show attached 'cancel login' button instead of floating one. */
+    .phone-login-visible .phone-login-toggle { display: none; }
+    .phone-login-visible .login-compact .phone-login-toggle { display: inline; }
+    .phone-login-visible .site-logo { display: none; }
+    .phone-login-visible .login-compact { display: block; }
+
     .injection-diagram { margin-bottom: 20px; }
 }
 

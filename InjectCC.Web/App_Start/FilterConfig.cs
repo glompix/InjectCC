@@ -10,6 +10,7 @@ namespace InjectCC.Web
         {
             filters.Add(new HandleErrorAttribute());
             filters.Add(new InitializeSimpleMembershipAttribute());
+            filters.Add(new ValidateUserAttribute("Settings", "User"));
         }
     }
 }

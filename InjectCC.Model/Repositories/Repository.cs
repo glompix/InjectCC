@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using InjectCC.Model.EntityFramework;
+using StructureMap;
 
 namespace InjectCC.Model.Repositories
 {
@@ -12,7 +13,7 @@ namespace InjectCC.Model.Repositories
 
         protected Repository()
         {
-            Context = new Context();
+            Context = ObjectFactory.GetInstance<Context>();
         }
     }
 }

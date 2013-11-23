@@ -11,21 +11,34 @@ namespace InjectCC.Web.Test.Controllers
     [TestClass]
     public class MedicationControllerTest
     {
-        private MedicationModel[] TestModels = new MedicationModel[]
-        {
-        };
-
         [TestMethod]
-        public void Test_Medication_NewHasReferenceImages()
+        public void MedicationController_can_prompt_for_new_medication()
         {
-            var controller = new MedicationController();
-            controller.New();
+            throw new NotImplementedException();
         }
 
         [TestMethod]
-        public void Test_Medication_CanCreate()
+        public void MedicationController_can_create_new_medication()
         {
-            
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void MedicationController_can_add_location()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void MedicationController_can_remove_location()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void MedicationController_can_delete_location()
+        {
+            throw new NotImplementedException();
         }
     }
 }

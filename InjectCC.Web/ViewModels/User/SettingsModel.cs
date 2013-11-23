@@ -6,7 +6,7 @@ using System.Web.Mvc;
 
 namespace InjectCC.Web.ViewModels.User
 {
-    public class SettingsModel : ISettingsModel
+    public class SettingsModel : SettingsBaseModel
     {
         [Required]
         public int UserId { get; set; }
@@ -33,19 +33,5 @@ namespace InjectCC.Web.ViewModels.User
         public string ConfirmPassword { get; set; }
 
         public DateTime RegistrationDate { get; set; }
-
-        public IList<Model.Domain.Medication> EditableMedications { get; set; }
-
-        public static SettingsModel FromEntities(Model.Domain.User user, IList<Model.Domain.Medication> medications)
-        {
-            return new SettingsModel
-            {
-                UserId = user.UserId,
-                Email = user.Email,
-                Timestamp = user.Timestamp,
-                RegistrationDate = user.RegistrationDate,
-                EditableMedications = medications
-            };
-        }
     }
 }

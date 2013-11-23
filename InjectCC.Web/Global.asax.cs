@@ -19,6 +19,7 @@ namespace InjectCC.Web
             AreaRegistration.RegisterAllAreas();
 
             ComponentConfig.Register();
+            AutomapperConfig.Register();
             WebApiConfig.Register(GlobalConfiguration.Configuration);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);

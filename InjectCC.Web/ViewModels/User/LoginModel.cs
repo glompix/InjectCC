@@ -2,6 +2,9 @@
 
 namespace InjectCC.Web.ViewModels.User
 {
+    /// <summary>
+    /// The login form.
+    /// </summary>
     public class LoginModel
     {
         public LoginModel()

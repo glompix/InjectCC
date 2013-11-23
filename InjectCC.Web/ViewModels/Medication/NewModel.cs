@@ -7,26 +7,45 @@ using System.ComponentModel.DataAnnotations;
 using InjectCC.Model;
 using InjectCC.Model.Domain;
 using MedicationClass = InjectCC.Model.Domain.Medication;
+using WebMatrix.WebData;
+using InjectCC.Model.EntityFramework;
 
 namespace InjectCC.Web.ViewModels.Medication
 {
-    public class NewModel : ISettingsModel
+    public sealed class NewModel : SettingsBaseModel
     {
-        /// <summary>
-        /// Represents a list of medications that the user owns and may edit.
-        /// </summary>
-        public IList<MedicationClass> EditableMedications { get; set; }
+        private MedicationRepository _medications = new MedicationRepository();
 
         /// <summary>
         /// Represents a list of medications that the user may copy from.
         /// </summary>
-        public IList<MedicationClass> CopyableMedications { get; set; }
-
-        public NewModel(IEnumerable<MedicationClass> editableMedications, 
-            IEnumerable<MedicationClass> copyableMedications)
+        public IList<SelectListItem> CopyableMedications
         {
-            this.EditableMedications = new List<MedicationClass>();
-            this.CopyableMedications = new List<MedicationClass>();
+            get
+            {
+                // Provide a blank option at top of list to indicate "don't copy anything."
+                var copyableOptions = _medications.ListCopyable().Select(m => new SelectListItem {
+                    Text = m.Name,
+                    Value = m.MedicationId.ToString()
+                });
+                copyableOptions = new SelectListItem[] { new SelectListItem() }.Union(copyableOptions);
+                return new List<SelectListItem>(copyableOptions);
+            }
         }
+
+        /// <summary>
+        /// The medication to copy.
+        /// </summary>
+        public int? CopyFromMedicationId { get; private set; }
+
+        /// <summary>
+        /// The name of the medication. (e.g., Betaseron, Avonex...)
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// A short description of the medication. (e.g., "Twice weekly MS disease-modifying drug.")
+        /// </summary>
+        public string Description { get; set; }
     }
 }

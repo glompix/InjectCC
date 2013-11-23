@@ -15,6 +15,7 @@ using InjectCC.Model.Domain;
 using InjectCC.Model;
 using InjectCC.Model.EntityFramework;
 using InjectCC.Model.Repositories;
+using AutoMapper;
 
 namespace InjectCC.Web.Controllers
 {
@@ -25,11 +26,8 @@ namespace InjectCC.Web.Controllers
         // GET: /User/Settings
         public ActionResult Settings()
         {
-            var repository = new UserRepository();
-            var user = repository.GetById(WebSecurity.CurrentUserId);
-            var medications = repository.GetMedicationsFor(user);
-            var model = SettingsModel.FromEntities(user, medications);
-        
+            var user = new UserRepository().GetById(WebSecurity.CurrentUserId);
+            var model = Mapper.Map<SettingsModel>(user);
             ViewBag.HasLocalPassword = OAuthWebSecurity.HasLocalAccount(WebSecurity.GetUserId(User.Identity.Name));
             return View(model);
         }
@@ -56,13 +54,9 @@ namespace InjectCC.Web.Controllers
                     }
 
                     if (changePasswordSucceeded)
-                    {
                         return RedirectToAction("Manage", new { Message = ManageMessageId.ChangePasswordSuccess });
-                    }
                     else
-                    {
                         ModelState.AddModelError("", "The current password is incorrect or the new password is invalid.");
-                    }
                 }
             }
             else

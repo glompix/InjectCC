@@ -3,23 +3,10 @@
 <form action="@Url.Action("Login", "User")" method="post" class="login-compact form-inline">
     @Html.AntiForgeryToken()
     <fieldset>
+        @Html.HiddenFor(m => m.RememberMe)
         @Html.TextBoxFor(m => m.Email, new { @class = "input-medium", placeholder = "your@email.com" })
         @Html.PasswordFor(m => m.Password, new { @class = "input-medium", placeholder = "password" })
         
-        <div class="btn-group">
-            <button type="submit" class="btn">Sign in</button>
-            <button class="btn dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
-            <ul class="dropdown-menu">
-                <li>
-                    <label class="checkbox">
-                        @Html.CheckBoxFor(m => m.RememberMe)
-                        Remember me
-                    </label>
-                </li>
-                <li class="divider"></li>
-                <li><a href="#" tabindex="-1">With Google</a></li>
-                <li><a href="#" tabindex="-1">With Facebook</a></li>
-            </ul>
-        </div>
+        <button type="submit" class="btn">Sign in</button>    
     </fieldset>
 </form>

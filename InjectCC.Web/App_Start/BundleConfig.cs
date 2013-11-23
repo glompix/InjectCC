@@ -54,6 +54,7 @@ namespace InjectCC.Web
             bundles.Add(new StyleBundle("~/Content/css").Include(
                 "~/Content/bootstrap.css",
                 "~/Content/bootstrap-responsive.css",
+                "~/Content/font-awesome.css",
                 "~/Content/site.css"
             ));
 

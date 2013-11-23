@@ -34,5 +34,10 @@ namespace InjectCC.Model.EntityFramework
         {
             return Context.Medications.FirstOrDefault(m => m.UserId == userId);
         }
+
+        public IList<Medication> ListCopyable()
+        {
+            return Context.Medications.ToList();
+        }
     }
 }

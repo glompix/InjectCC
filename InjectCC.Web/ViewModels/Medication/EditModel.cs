@@ -5,7 +5,7 @@ using InjectCC.Model.Domain;
 
 namespace InjectCC.Web.ViewModels.Medication
 {
-    public class EditModel : MedicationModel, ISettingsModel
+    public class EditModel : SettingsBaseModel
     {
         /// <summary>
         /// From ISettingsModel.
@@ -18,6 +18,27 @@ namespace InjectCC.Web.ViewModels.Medication
             model.EditableMedications = medications;
             model.LoadEntity(medication);
             return model;
+        }
+
+        public int MedicationId { get; set; }
+
+        [Required, MaxLength(100)]
+        public string Name { get; set; }
+
+        [MaxLength(1000)]
+        public string Description { get; set; }
+
+        public IList<Location> Locations { get; set; }
+
+        public IList<string> ReferenceImages { get; set; }
+
+        /// <param name="medication">The medication being created.</param>
+        protected void LoadEntity(Model.Domain.Medication medication)
+        {
+            MedicationId = medication.MedicationId;
+            Name = medication.Name;
+            Description = medication.Description;
+            Locations = medication.Locations;
         }
     }
 }

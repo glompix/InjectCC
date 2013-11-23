@@ -1,4 +1,6 @@
-﻿using System;
+﻿using InjectCC.Model.EntityFramework;
+using StructureMap;
+using System;
 
 namespace InjectCC.Web
 {
@@ -6,7 +8,10 @@ namespace InjectCC.Web
     {
         public static void Register()
         {
-            // TODO, if needed.
+            ObjectFactory.Initialize(x =>
+            {
+                x.For<Context>().HybridHttpOrThreadLocalScoped().Use(() => new Context());
+            });
         }
     }
 }

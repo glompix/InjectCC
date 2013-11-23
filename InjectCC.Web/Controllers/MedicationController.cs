@@ -11,73 +11,43 @@ using System.IO;
 using InjectCC.Model.Repositories;
 using InjectCC.Model.Domain;
 using InjectCC.Model.EntityFramework;
+using AutoMapper;
 
 namespace InjectCC.Web.Controllers
 {
     [Authorize]
     public class MedicationController : InjectCcController
     {
-        public ActionResult New(int? copyFromId = null)
-        {
-            var meds = new MedicationRepository();
-            var locs = new LocationRepository();
-
-            Medication sourceMed = null;
-            if (copyFromId.HasValue)
-                sourceMed = meds.Find(copyFromId.Value);
-
-            var medication = new Medication(sourceMed);
-            var editableMedications = meds.ListAllForUser(WebSecurity.CurrentUserId);
-            var copyableMedications = meds.ListAllForUser(0);
-            var model = NewModel.FromEntity(medication, editableMedications, copyableMedications);
-            model.ReferenceImages = (from f in Directory.GetFiles(Server.MapPath(_referenceImagePath), "*.jpg")
-                                        select Url.Content(Path.Combine(_referenceImagePath, Path.GetFileName(f)))).ToList();
-            return View(model);
-        }
         private const string _referenceImagePath = "~/Content/reference-images/";
+        private MedicationRepository _medications;
+
+        public MedicationController()
+        {
+            _medications = new MedicationRepository();
+        }
+
+        public ActionResult New()
+        {
+            return View(new NewModel());
+        }
 
         [HttpPost, ValidateAntiForgeryToken]
         public ActionResult New(NewModel model)
         {
-            var repository = new MedicationRepository();
             if (ModelState.IsValid)
             {
-                using (var tx = new UnitOfWork())
-                {
-                    var medication = new Medication
-                    {
-                        UserId = WebSecurity.CurrentUserId,
-                        Name = model.Name,
-                        Description = model.Description
-                    };
-
-                    foreach (var location in model.Locations)
-                    {
-                        medication.AddLocation(new Location(location));
-                    }
-
-                    repository.Add(medication);
-                }
-                return RedirectToAction("Index", "Injection");
+                var medication = Mapper.Map<Medication>(model);
+                _medications.Add(medication);
+                return RedirectToAction("Edit", "Injection");
             }
 
-            model.Locations = model.Locations ?? new List<Location>();
-
-            using (var tx = new UnitOfWork())
-            {
-                model.EditableMedications = repository.ListAllForUser(WebSecurity.CurrentUserId);
-                model.CopyableMedications = repository.ListAllForUser(0);
-            }
-
-            model.ReferenceImages = (from f in Directory.GetFiles(Server.MapPath(_referenceImagePath), "*.jpg")
-                                     select Url.Content(Path.Combine(_referenceImagePath, Path.GetFileName(f)))).ToList();
             return View(model);
         }
 
         public ActionResult Edit(int id)
         {
-            var repository = new MedicationRepository();
-            var allMedications = repository.ListAllForUser(WebSecurity.CurrentUserId);
+            
+            var allMedications = _medications.ListAllForUser(WebSecurity.CurrentUserId);
             var medication = allMedications.Single(m => m.MedicationId == id);
                 
             var model = EditModel.FromEntity(medication, allMedications.ToList());
