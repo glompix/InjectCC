@@ -4,47 +4,70 @@
     @Scripts.Render("~/bundles/jqueryval")
 }
 
+@section styles {
+    <style type="text/css">
+        .login-compact { display: none; }
+    </style>
+}
+
 @section head
 {
     <title>inject.cc - Sign in</title>
 }
 
-<form action="@Url.Action("Login", "User")" method="post" class="form-horizontal">
-    @Html.AntiForgeryToken()
-    <input type="hidden" name="ReturnUrl" value="@ViewBag.ReturnUrl" />
-    <fieldset>
-        <legend>Log in with your inject.cc account.</legend>
-        <p class="muted">
-            @Html.ActionLink("Register", "Register") if you don't have an account.
-        </p>
+<div class="row">
+    <div class="span6">
+        <form action="@Url.Action("Login", "User")" method="post" class="form-horizontal">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="ReturnUrl" value="@ViewBag.ReturnUrl" />
+            <fieldset>
+                <legend>Log in with your inject.cc account.</legend>
 
-        @Html.ValidationSummary(true)
-        <div class="control-group">
-            @Html.LabelFor(m => m.Email, new { @class = "control-label" })
-            <div class="controls">
-                @Html.TextBoxFor(m => m.Email)
-                @Html.ValidationMessageFor(m => m.Email)
-            </div>
-        </div>
-        <div class="control-group">
-            @Html.LabelFor(m => m.Password, new { @class = "control-label" })
-            <div class="controls">
-                @Html.PasswordFor(m => m.Password)
-                @Html.ValidationMessageFor(m => m.Password)
-            </div>
-        </div>
-        <div class="control-group">
-            <div class="controls">
-                <label class="checkbox">
-                    @Html.CheckBoxFor(m => m.RememberMe)
-                    Remember Me
-                </label>
-            </div>
-        </div>
-        <div class="form-actions">
-            <input type="submit" value="Sign in" class="btn" />
-        </div>
-    </fieldset>
-</form>
+                @Html.ValidationSummary(true)
+                <div class="control-group">
+                    @Html.LabelFor(m => m.Email, new { @class = "control-label" })
+                    <div class="controls">
+                        @Html.TextBoxFor(m => m.Email)
+                        @Html.ValidationMessageFor(m => m.Email)
+                    </div>
+                </div>
+                <div class="control-group">
+                    @Html.LabelFor(m => m.Password, new { @class = "control-label" })
+                    <div class="controls">
+                        @Html.PasswordFor(m => m.Password)
+                        @Html.ValidationMessageFor(m => m.Password)
+                    </div>
+                </div>
+                <div class="control-group">
+                    <div class="controls">
+                        <label class="checkbox">
+                            @Html.CheckBoxFor(m => m.RememberMe)
+                            Remember Me
+                        </label>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <input type="submit" value="Sign in" class="btn" />
+                </div>
+            </fieldset>
+        </form>
+    </div>
 
-@Html.Action("ExternalLoginsList", new { ReturnUrl = ViewBag.ReturnUrl })
+    <div class="span6">
+        <div class="well">
+            <h3>Log in to inject.cc</h3>
+            <hr />
+
+            <h4>Don't have an account?</h4>
+            <p>
+                Before you can use inject.cc, @Html.ActionLink("register an account", "Register").
+            </p>
+
+            <h4>Can't log in?</h4>
+            <p>
+                If you've forgotten your password, you can <a href="#">reset it</a>.
+            </p>
+        </div>
+    </div>
+</div>
+@* Html.Action("ExternalLoginsList", new { ReturnUrl = ViewBag.ReturnUrl }) *@
