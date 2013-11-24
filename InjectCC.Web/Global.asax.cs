@@ -1,4 +1,5 @@
-﻿using System;
+﻿using StackExchange.Profiling;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -18,6 +19,7 @@ namespace InjectCC.Web
         {
             AreaRegistration.RegisterAllAreas();
 
+            MiniProfilerEF.Initialize();
             ComponentConfig.Register();
             AutomapperConfig.Register();
             WebApiConfig.Register(GlobalConfiguration.Configuration);
@@ -25,6 +27,19 @@ namespace InjectCC.Web
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             AuthConfig.RegisterAuth();
+        }
+
+        protected void Application_BeginRequest()
+        {
+            if (Request.IsLocal)
+            {
+                MiniProfiler.Start();
+            }
+        }
+
+        protected void Application_EndRequest()
+        {
+            MiniProfiler.Stop();
         }
     }
 }
