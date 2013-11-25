@@ -36,11 +36,13 @@ namespace InjectCC.Model.EntityFramework
         public void Add(Injection injection)
         {
             Context.Injections.Add(injection);
+            Context.SaveChanges();
         }
 
         public void Remove(Injection injection)
         {
             Context.Injections.Remove(injection);
+            Context.SaveChanges();
         }
     }
 }

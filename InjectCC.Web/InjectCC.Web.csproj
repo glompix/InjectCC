@@ -361,9 +361,7 @@
     <Content Include="Content\fonts\fontawesome-webfont.ttf" />
     <Content Include="Content\fonts\fontawesome-webfont.eot" />
     <Content Include="Content\fonts\FontAwesome.otf" />
-    <None Include="Properties\PublishProfiles\injectcc - FTP %282%29.pubxml" />
     <None Include="Properties\PublishProfiles\injectcc - FTP.pubxml" />
-    <None Include="Properties\PublishProfiles\injectcc - Web Deploy %282%29.pubxml" />
     <None Include="Properties\PublishProfiles\injectcc - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-1.9.1.min.map" />
     <Content Include="Views\User\Settings.cshtml" />

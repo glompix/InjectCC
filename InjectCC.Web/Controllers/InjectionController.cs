@@ -49,7 +49,7 @@ namespace InjectCC.Web.Controllers
             return View(model);
         }
 
-        [HttpPost]
+        [HttpPost, ActionName("Index")]
         public ActionResult Create(IndexModel model)
         {
             if (ModelState.IsValid)
