@@ -2,24 +2,13 @@
 using InjectCC.Model;
 using System.Collections.Generic;
 using InjectCC.Model.Domain;
+using AutoMapper;
+using System.IO;
 
 namespace InjectCC.Web.ViewModels.Medication
 {
     public class EditModel : SettingsBaseModel
     {
-        /// <summary>
-        /// From ISettingsModel.
-        /// </summary>
-        public IList<Model.Domain.Medication> EditableMedications { get; set; }
-
-        public static EditModel FromEntity(Model.Domain.Medication medication, List<Model.Domain.Medication> medications)
-        {
-            var model = new EditModel();
-            model.EditableMedications = medications;
-            model.LoadEntity(medication);
-            return model;
-        }
-
         public int MedicationId { get; set; }
 
         [Required, MaxLength(100)]
@@ -32,13 +21,10 @@ namespace InjectCC.Web.ViewModels.Medication
 
         public IList<string> ReferenceImages { get; set; }
 
-        /// <param name="medication">The medication being created.</param>
-        protected void LoadEntity(Model.Domain.Medication medication)
+        public EditModel(Model.Domain.Medication medication, IEnumerable<string> refImagePaths)
         {
-            MedicationId = medication.MedicationId;
-            Name = medication.Name;
-            Description = medication.Description;
-            Locations = medication.Locations;
+            Mapper.Map(medication, this);
+            ReferenceImages = new List<string>(refImagePaths);
         }
     }
 }

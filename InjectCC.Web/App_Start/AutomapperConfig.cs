@@ -18,6 +18,8 @@ namespace InjectCC.Web
                 .ForMember(m => m.UserId, x => x.ResolveUsing(m => WebSecurity.CurrentUserId));
             Mapper.CreateMap<SettingsModel, User>();
             Mapper.CreateMap<User, SettingsModel>();
+            Mapper.CreateMap<Medication, EditModel>();
+            Mapper.CreateMap<EditModel, Medication>();
         }
     }
 }

@@ -3,7 +3,6 @@
     init: function () {
         // Navigation toggles.
         $('.phone-menu-toggle').click(function () {
-            $('.main-menu').toggle();
             $('body').toggleClass('phone-menu-visible');
         });
         $('.phone-login-toggle').click(function () {

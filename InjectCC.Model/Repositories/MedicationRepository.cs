@@ -13,11 +13,12 @@ namespace InjectCC.Model.EntityFramework
         public void Add(Medication medication)
         {
             Context.Medications.Add(medication);
+            Context.SaveChanges();
+        }
 
-            foreach (var location in medication.Locations ?? new List<Location>())
-            {
-                Context.Locations.Add(location);
-            }
+        public void Update(Medication medication)
+        {
+            Context.SaveChanges();
         }
 
         public Medication Find(int id)
@@ -38,6 +39,11 @@ namespace InjectCC.Model.EntityFramework
         public IList<Medication> ListCopyable()
         {
             return Context.Medications.ToList();
+        }
+
+        public Medication GetById(int id, int userId)
+        {
+            return Context.Medications.FirstOrDefault(m => m.MedicationId == id && m.UserId == userId);
         }
     }
 }

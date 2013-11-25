@@ -22,15 +22,69 @@
 <div class="tabbable tabs-left">
     @Html.Partial("_SettingsMenu")
     <div class="container-fluid tab-content">
-        <div class="row-fluid">
-            <form action="" method="post">
+        <form action="" method="post" class="form-horizontal">
+            <div class="row-fluid">
+                <h3>Editing @Model.Name</h3>
+                <p class="muted">@Model.Description</p>
                 @Html.RenderAlerts()
                 @Html.AntiForgeryToken()
-
                 @Html.HiddenFor(m => m.MedicationId)
+            </div>
+            <div class="row-fluid">
+                <fieldset class="span7" id="LocationForm">
+                    <legend>Injection Sites</legend>
+                    <p>
+                        <small class="muted">
+                            Add injection sites using the form below.  The order of injection sites below determines injection order.
+                        </small>
+                    </p>
+                    <div class="control-group">
+                        <label class="control-label">Location Name</label>
+                        <div class="controls">
+                            <input type="text" class="input-medium" name="locationName" id="LocationNameField" />
+                            @Html.ValidationMessageFor(m => m.Locations)
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Next Injection in</label>
+                        <div class="controls">
+                            <input type="text" class="input-mini" name="timeUntilNext" id="ValueUntilNextInjectionField" />
+                            <select class="input-small" id="UnitUntilNextInjectionField">
+                                <option>days</option>
+                                <option>hours</option>
+                                <option>minutes</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <div class="controls">
+                            @foreach (var image in Model.ReferenceImages)
+                            {
+                                <div class="injection-diagram img-polaroid" style="background-image: url('@image')">
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button class="btn" type="button" id="AddLocationButton"><i class="icon-plus-sign"></i> Add Location</button>
+                        <button class="btn" type="button" id="DeleteLocationButton"><i class="icon-minus-sign"></i> Remove Location</button>
+                    </div>
+                </fieldset>
+                <fieldset class="span5">
+                    <legend>Injection Order</legend>
 
-                @Html.Partial("_Form")
-            </form>
-        </div>
+                    <ul class="no-bullet injection-sites">
+                        @foreach (var location in Model.Locations.OrderBy(l => l.Ordinal))
+                        {
+                            @Html.Partial("_LocationCompact", location)
+                        }
+                    </ul>
+                </fieldset>
+
+                <script type="text/template" id="_LocationCompact">
+                    @Html.Partial("_LocationCompact", new ViewDataDictionary())
+                </script>
+            </div>
+        </form>
     </div>
 </div>

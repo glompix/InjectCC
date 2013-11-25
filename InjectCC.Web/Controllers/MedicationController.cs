@@ -18,7 +18,6 @@ namespace InjectCC.Web.Controllers
     [Authorize]
     public class MedicationController : InjectCcController
     {
-        private const string _referenceImagePath = "~/Content/reference-images/";
         private MedicationRepository _medications;
 
         public MedicationController()
@@ -38,7 +37,7 @@ namespace InjectCC.Web.Controllers
             {
                 var medication = Mapper.Map<Medication>(model);
                 _medications.Add(medication);
-                return RedirectToAction("Edit", "Injection");
+                return RedirectToAction("Edit", "Medication", new { id = medication.MedicationId });
             }
 
             return View(model);
@@ -46,43 +45,40 @@ namespace InjectCC.Web.Controllers
 
         public ActionResult Edit(int id)
         {
-            
-            var allMedications = _medications.ListAllForUser(WebSecurity.CurrentUserId);
-            var medication = allMedications.Single(m => m.MedicationId == id);
-                
-            var model = EditModel.FromEntity(medication, allMedications.ToList());
-
-            model.ReferenceImages = (from f in Directory.GetFiles(Server.MapPath(_referenceImagePath), "*.jpg")
-                                     select Url.Content(Path.Combine(_referenceImagePath, Path.GetFileName(f)))).ToList();
+            var medication = _medications.GetById(id, WebSecurity.CurrentUserId);
+            var refImages = getReferenceImagePaths();
+            var model = new EditModel(medication, refImages);
             return View(model);
         }
  
         [HttpPost, ValidateAntiForgeryToken]
         public ActionResult Edit(EditModel model)
         {
-            var repository = new MedicationRepository();
             if (ModelState.IsValid)
             {
-                var medication = repository.Find(model.MedicationId);
-                medication.Name = model.Name;
-                medication.Description = model.Description;
+                var medication = _medications.Find(model.MedicationId);
+                Mapper.Map(model, medication);
 
-                    foreach (var location in model.Locations.Where(l => l.LocationId == default(int)))
-                    {
-                        medication.AddLocation(location);
-                    }
-                    foreach (var location in medication.Locations.Where(l => !model.Locations.Any(vml => vml.LocationId == l.LocationId)))
-                    {
-                        medication.RemoveLocation(location);
-                    }
+                foreach (var location in model.Locations.Where(l => l.LocationId == default(int)))
+                {
+                    medication.AddLocation(location);
+                }
+                foreach (var location in medication.Locations.Where(l => !model.Locations.Any(vml => vml.LocationId == l.LocationId)))
+                {
+                    medication.RemoveLocation(location);
+                }
 
                 return RedirectToAction("Edit", new { id = medication.MedicationId });
             }
-
-            model.EditableMedications = repository.ListAllForUser(WebSecurity.CurrentUserId);
-            model.ReferenceImages = (from f in Directory.GetFiles(Server.MapPath(_referenceImagePath), "*.jpg")
-                                     select Url.Content(Path.Combine(_referenceImagePath, Path.GetFileName(f)))).ToList();
+            
             return View(model);
+        }
+
+        private const string _referenceImagePath = "~/Content/reference-images/";
+        private IEnumerable<string> getReferenceImagePaths()
+        {
+            return Directory.GetFiles(Server.MapPath(_referenceImagePath), "*.jpg")
+                .Select(f => Url.Content(Path.Combine(_referenceImagePath, Path.GetFileName(f))));
         }
     }
 }

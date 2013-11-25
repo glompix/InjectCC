@@ -36,11 +36,13 @@ namespace InjectCC.Web.ViewModels.Medication
         /// <summary>
         /// The medication to copy.
         /// </summary>
+        [Display(Name="Copy from")]
         public int? CopyFromMedicationId { get; private set; }
 
         /// <summary>
         /// The name of the medication. (e.g., Betaseron, Avonex...)
         /// </summary>
+        [Display(Name="Medication Name")]
         public string Name { get; set; }
 
         /// <summary>

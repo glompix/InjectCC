@@ -11,7 +11,7 @@
 <p class="message-success">@ViewBag.StatusMessage</p>
 <div class="tabbable tabs-left">
     @Html.Partial("_SettingsMenu")
-    <div class="span10">
+    <div class="container-fluid tab-content">
         <form action="@Url.Action("Settings", "User")" method="post">
             @Html.ValidationSummary(true)
             @Html.AntiForgeryToken()
@@ -29,7 +29,7 @@
                 <div class="control-group">
                     <label class="control-label">Registered on</label>
                     <div class="controls">
-                        <span class="uneditable-input">@Model.RegistrationDate.ToString("D")</span>
+                        <span class="control-label">@Model.RegistrationDate.ToString("D")</span>
                     </div>
                 </div>
                 <div class="control-group">

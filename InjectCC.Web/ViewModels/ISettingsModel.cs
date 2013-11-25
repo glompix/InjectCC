@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using InjectCC.Model.Domain;
 using InjectCC.Model.EntityFramework;
+using WebMatrix.WebData;
 
 namespace InjectCC.Web.ViewModels
 {
@@ -21,7 +22,7 @@ namespace InjectCC.Web.ViewModels
         {
             get
             {
-                return _medications.ListAllForUser(0);
+                return _medications.ListAllForUser(WebSecurity.CurrentUserId);
             }
         }
     }

@@ -16,6 +16,8 @@ body
 .phone-menu-toggle { display: none; float: right; margin: 5px 0; }
 .main-menu { float: right; }
 
+.controls .control-label { width: auto; float: none; position: relative; top: 5px; }
+
 @media (min-width: 481px) and (max-width: 979px) 
 {
     
@@ -23,7 +25,6 @@ body
 @media (max-width: 767px) 
 {
     .login-compact { margin: 10px 0; display: none; }
-    .main-menu { margin: 10px 0; display: none; float: left; clear: both; }
     .phone-login-toggle { display: inline-block; }
     .phone-menu-toggle { display: inline-block; }
     hr { margin: 10px 0; }
@@ -34,7 +35,7 @@ body
         position: fixed;
         margin: 0;
         top: 0;
-        right: 0;
+        right: -60%;
         height: 100%;
         width: 60%;
         z-index: 1000;
@@ -60,6 +61,12 @@ body
     {
         position: fixed; 
         right: 60%;
+        transition: right ease-out .4s;
+    }
+    .phone-menu-visible .main-menu
+    {
+        right: 0%;
+        transition: right ease-out .4s;
     }
 
     /* Show attached 'cancel login' button instead of floating one. */

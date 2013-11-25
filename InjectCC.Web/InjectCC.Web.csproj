@@ -371,7 +371,6 @@
     <Content Include="Views\Injection\History.cshtml" />
     <Content Include="Views\Medication\New.cshtml" />
     <Content Include="Views\Shared\_SettingsMenu.cshtml" />
-    <Content Include="Views\Medication\_Form.cshtml" />
     <Content Include="Views\Medication\Edit.cshtml" />
     <Content Include="Views\Injection\Calendar.cshtml" />
     <Content Include="Views\Shared\_LocationCompact.cshtml" />
