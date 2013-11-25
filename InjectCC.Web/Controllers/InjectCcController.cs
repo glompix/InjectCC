@@ -22,6 +22,12 @@ namespace InjectCC.Web.Controllers
             TempData[_tdErrorKey] = errorMessage;
             return RedirectToAction(actionName, controllerName);
         }
+
+        public RedirectToRouteResult RedirectErrorToAction(string errorMessage, string actionName, string controllerName, object routeValues)
+        {
+            TempData[_tdErrorKey] = errorMessage;
+            return RedirectToAction(actionName, controllerName, routeValues);
+        }
     }
 
     public static class Extensions

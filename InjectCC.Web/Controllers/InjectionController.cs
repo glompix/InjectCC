@@ -33,7 +33,9 @@ namespace InjectCC.Web.Controllers
             var latestInjection = injRepository.GetLatestFor(medication);
 
             Injection nextInjection;
-            if (latestInjection == null)
+            if (latestInjection == null && !medication.Locations.Any())
+                return RedirectErrorToAction("You need to add some locations to this medication.", "Edit", "Medication", new { id = medication.MedicationId });
+            else if (latestInjection == null)
                 nextInjection = medication.CalculateFirst();
             else
                 nextInjection = latestInjection.CalculateNext();
