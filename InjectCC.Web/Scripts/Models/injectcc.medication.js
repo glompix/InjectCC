@@ -1,7 +1,6 @@
 ﻿injectcc.medication = (function () {
     'use strict';
 
-    // These are basically private statics, works but figure out better org maybe
     var _$canvas;
 
     // Public interface that is returned to consumer.  Just need init for this module.
@@ -12,9 +11,9 @@
     function init() {
         // constructor code
         console.log('Initializing sitepicker...');
-        $('.injection-diagram').sitepicker({
-            'locations': $('.injection-site'),
-            'enabled': false
+        _$canvas = $('.injection-diagram').sitepicker({
+            locations: '.injection-site',
+            enabled: false,
         });
 
         // Sortable injection sites.
@@ -56,13 +55,14 @@
             // Synthesize a location object and render it to DOM.
             var timeValue = $('#ValueUntilNextInjectionField').val();
             var timeUnit = $('#UnitUntilNextInjectionField').val();
+            var selectedPoint = _$canvas.sitepicker('getMark');
             var location = {
                 name: $('#LocationNameField').val(),
                 timeValue: timeValue,
                 timeUnit: timeUnit,
                 minutesUntilNextInjection: getMinutes(timeValue, timeUnit),
-                injectionPointX: _selectedPoint.attr('cx') / _$canvas.width(),
-                injectionPointY: _selectedPoint.attr('cy') / _$canvas.height(),
+                injectionPointX: selectedPoint.x,
+                injectionPointY: selectedPoint.y,
                 referenceImageUrl: $('#ReferenceImageSelector').val(),
                 ordinal: $('.injection-site').length
             };
@@ -72,8 +72,8 @@
             var $location = $('.injection-sites :last-child');
 
             // Mark the point on the canvas and get rid of the selection marker.
-            markSelectedPoint();
-            markExistingPoint($location);
+            _$canvas.sitepicker('clearMark');
+            _$canvas.sitepicker('refresh');
 
             // Clear out form.
             $('#LocationNameTextBox').val('');

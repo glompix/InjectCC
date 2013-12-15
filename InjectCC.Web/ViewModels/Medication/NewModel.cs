@@ -1,14 +1,8 @@
-﻿using System;
+﻿using InjectCC.Model.EntityFramework;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
 using System.ComponentModel.DataAnnotations;
-using InjectCC.Model;
-using InjectCC.Model.Domain;
-using MedicationClass = InjectCC.Model.Domain.Medication;
-using WebMatrix.WebData;
-using InjectCC.Model.EntityFramework;
+using System.Linq;
+using System.Web.Mvc;
 
 namespace InjectCC.Web.ViewModels.Medication
 {
@@ -42,7 +36,7 @@ namespace InjectCC.Web.ViewModels.Medication
         /// <summary>
         /// The name of the medication. (e.g., Betaseron, Avonex...)
         /// </summary>
-        [Display(Name="Medication Name")]
+        [Display(Name="Medication Name"), Required(ErrorMessage="A name is required.")]
         public string Name { get; set; }
 
         /// <summary>

@@ -201,7 +201,7 @@
     <Compile Include="Helpers\SiteHelpers.cs" />
     <Compile Include="ViewModels\Injection\HistoryModel.cs" />
     <Compile Include="ViewModels\Injection\IndexModel.cs" />
-    <Compile Include="ViewModels\ISettingsModel.cs" />
+    <Compile Include="ViewModels\SettingsBaseModel.cs" />
     <Compile Include="ViewModels\Medication\EditModel.cs" />
     <Compile Include="ViewModels\Medication\NewModel.cs" />
     <Compile Include="ViewModels\User\LocalPasswordModel.cs" />
@@ -211,7 +211,6 @@
     <Compile Include="ViewModels\User\SettingsModel.cs" />
     <Compile Include="ViewModels\User\UserModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ViewModels\ViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-datepicker.css" />

@@ -7,9 +7,7 @@ namespace InjectCC.Web
     public class BundleConfig
     {
         private static string[] _jqueryValidation = new string[] {
-            "~/Scripts/jquery.unobtrusive*",
-            "~/Scripts/jquery.validate*",
-            "~/Scripts/bootstrap.validate*"
+            
         };
 
         private static string[] _jqueryUI = new string[] {
@@ -20,46 +18,46 @@ namespace InjectCC.Web
         public static void RegisterBundles(BundleCollection bundles)
         {
             bundles.Add(new ScriptBundle("~/bundles/common").Include(
-                "~/Scripts/jquery-{version}.js",
-                "~/Scripts/bootstrap*",
-                "~/Scripts/modernizr-*",
+                "~/Scripts/jquery-1.9.1.js",
+                "~/Scripts/bootstrap.js",
                 "~/Scripts/underscore.js",
-                "~/Scripts/backbone.js",
                 "~/Scripts/Models/injectcc.js"));
             
             bundles.Add(new ScriptBundle("~/bundles/account").Include(
-                _jqueryUI.Union(_jqueryValidation).ToArray()
+                "~/Scripts/jquery.validate.js",
+                "~/Scripts/jquery.validate.unobtrusive.js",
+                "~/Scripts/bootstrap.validate.js"
             ));
 
             bundles.Add(new ScriptBundle("~/bundles/medication").Include(
-                "~/Scripts/raphael*",
+                "~/Scripts/raphael.js",
+                "~/Scripts/jquery.validate.js",
+                "~/Scripts/jquery.validate.unobtrusive.js",
+                "~/Scripts/bootstrap.validate.js",
                 "~/Scripts/Modules/sitepicker.js",
                 "~/Scripts/Models/injectcc.medication.js",
-                "~/Scripts/jquery-ui-{version}.js",
-                "~/Scripts/jquery.validate.js"
+                "~/Scripts/jquery-ui-1.10.1.js"
             ));
 
             bundles.Add(new ScriptBundle("~/bundles/injection").Include(
-                "~/Scripts/raphael*",
-                "~/Scripts/bootstrap-datepicker*",
+                "~/Scripts/raphael.js",
+                "~/Scripts/jquery.validate.js",
+                "~/Scripts/jquery.validate.unobtrusive.js",
+                "~/Scripts/bootstrap.validate.js",
+                "~/Scripts/bootstrap-datepicker.js",
                 "~/Scripts/Modules/sitepicker.js",
                 "~/Scripts/Models/injectcc.injection.js"
             ));
-
-            // Use the development version of Modernizr to develop with and learn from. Then, when you're
-            // ready for production, use the build tool at http://modernizr.com to pick only the tests you need.
-            bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
-                "~/Scripts/modernizr-*"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                 "~/Content/bootstrap.css",
                 "~/Content/bootstrap-responsive.css",
                 "~/Content/font-awesome.css",
-                "~/Content/site.css"
+                "~/Content/Site.css"
             ));
 
             bundles.Add(new StyleBundle("~/Content/injection").Include(
-                "~/Content/bootstrap-datepicker*"));
+                "~/Content/bootstrap-datepicker.css"));
         }
     }
 }

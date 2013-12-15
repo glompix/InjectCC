@@ -2,6 +2,9 @@
 * pointpicker.js
 * Displays an overlay on an element on which 2D points can be selected
 * or viewed.
+*
+* To initialize a sitepicker, call $('#picker').sitepicker([ options ]);
+* To get the { x, y } of an existing sitepicker, call $('#picker').sitepicker('getSelectedPoint').
 * 
 * @property object self The module itself
 * @property object $ The jQuery object
@@ -9,147 +12,167 @@
 (function ($) {
     'use strict';
 
+    // No time to refactor this into something reasonable. For now, just global it
+    // up and assume one sitepicker per page. (which is reasonable)
+    var _settings;
+    var _paper;
+    var _$canvas;
+
     jQuery.fn.sitepicker = function (options) {
+        _$canvas = $(this);
 
-        var settings = $.extend({
-            'enabled': true,
-            'readonly': false,
-            'pointRadius': '3%',
-            'locations': $([]),
-            'datasource': $([]),
-            'classPrefix': 'canvas-point',
-            'aspectRatio': 0.75
-        }, options);
+        if (options === 'refresh') {
+            _$canvas.find('.' + _settings.classPrefix).remove();
+            $(_settings.locations).each(function () {
+                var $location = $(this);
+                displayLocation($location);
+            });
+        }
+        else if (options === 'clearMark') {
+            _$canvas.find('.' + _settings.classPrefix + '-marked').remove();
+        }
+        else if (options === 'getMark') {
+            var $point = $(this).find('.' + _settings.classPrefix + '-marked');
+            console.log('marked point', $point);
+            return {
+                x: parseFloat($point.attr('data-rel-x')),
+                y: parseFloat($point.attr('data-rel-y'))
+            };  
+        }
+        else {
+            _settings = $.extend({
+                'enabled': true,
+                'readonly': false,
+                'pointRadius': '3%',
+                'locations': $([]),
+                'datasource': $([]),
+                'classPrefix': 'canvas-point',
+                'aspectRatio': 0.75
+            }, options);
 
-        return this.each(function () {
-            var _$canvas = $(this);
-            var _injectionPoints = [];
-            var _selectedPoint;
-
-            if (!settings.readonly) {
+            if (!_settings.readonly) {
                 _$canvas.click(function (e) {
                     var x = e.offsetX / $(this).width();
                     var y = e.offsetY / $(this).height();
-                    markSelectedPoint(x, y);
+                    markPoint(x, y);
                 });
             }
             else {
                 _$canvas.addClass('readonly');
             }
 
-            // Maintain 4:3 aspect ratio
+            // Maintain aspect ratio
             $(window).resize(function () {
-                _$canvas.height(_$canvas.width() * settings.aspectRatio);
+                _$canvas.height(_$canvas.width() * _settings.aspectRatio);
                 _paper.setSize(_$canvas.width(), _$canvas.height());
-                _$canvas.find('.canvas-point').each(function () {
+                _$canvas.find('.' + _settings.classPrefix).each(function () {
                     var $point = $(this);
                     var relx = parseFloat($point.attr('data-rel-x'));
                     var rely = parseFloat($point.attr('data-rel-y'));
                     $point.attr('cx', relx * _$canvas.width());
                     $point.attr('cy', rely * _$canvas.height());
-                    $point.attr('r', calculateRadius(settings.pointRadius))
+                    $point.attr('r', calculateRadius(_settings.pointRadius))
                 });
             });
-            _$canvas.height(_$canvas.width() * settings.aspectRatio);
-            var _paper = new Raphael(_$canvas[0], _$canvas.width(), _$canvas.height());
 
-            if (settings.enabled) {
+            _$canvas.height(_$canvas.width() * _settings.aspectRatio);
+            _paper = new Raphael(_$canvas[0], _$canvas.width(), _$canvas.height());
+
+            if (_settings.enabled) {
                 _$canvas.addClass('enabled');
             }
 
             // all defined locations
-            settings.locations.each(function () {
-                var location = $(this);
-                markExistingPoint(location);
+            $(_settings.locations).each(function () {
+                var $location = $(this);
+                displayLocation($location);
             });
 
-            console.log(settings.datasource.val());
-            if (settings.datasource.val()) {
-                var $point = _$canvas.find('[data-id="' + settings.datasource.val() + '"]');
-                selectPoint($point);
+            if (_settings.datasource.val()) {
+                var $point = _$canvas.find('[data-id="' + _settings.datasource.val() + '"]');
+                selectLocation($point);
+            }             
+        }
+
+        return _$canvas;
+
+        /// <summary>
+        /// Marks the given [x, y] as the selected point.  If falsey values given, the existing
+        /// point is just cleared.
+        /// </summary>
+        function markPoint(x, y) {
+            _$canvas.find('.' + _settings.classPrefix + '-marked').remove();
+
+            if (x && y) {
+                var markedPoint = generatePoint(x, y, _settings.pointRadius);
+                var node = $(markedPoint.node);
+                node.attr('class', _settings.classPrefix + '-marked');
             }
+        }
 
-            function injectionSite_clicked() {
-                if (settings.enabled) {
-                    selectPoint($(this));
-                }
+        function calculateRadius(size) {
+            if (size === undefined) {
+                size = 5.0;
             }
-
-            function markExistingPoint($location) {
-                var x = $location.find('[name$=InjectionPointX]').val();
-                var y = $location.find('[name$=InjectionPointY]').val();
-                var name = $location.find('[name$=Name]').val();
-                var ordinal = $location.find('[name$=Ordinal]').val();
-                var id = $location.find('[name$=LocationId]').val();
-
-                var point = generatePoint(x, y, settings.pointRadius);
-                var $node = $(point.node);
-                $node.attr('title', name);
-                $node.attr('class', settings.classPrefix + ' ' + settings.classPrefix + '-' + ordinal);
-                $node.attr('data-id', id);
-                $node.tooltip({ 'container': 'body' });
-                $node.click(injectionSite_clicked);
-                _injectionPoints.push(point);
+            else if (typeof (size) === 'string') {
+                var pctRegex = /(\d+)%/g;
+                var pctStr = pctRegex.exec(size)[0];
+                var pct = parseFloat(pctStr);
+                size = _$canvas.height() * (pct / 100.0);
             }
+            return size;
+        }
 
-            function removeClass($point, className) {
-                var oldClass = $point.attr('class') || '';
-                var newClass = $.trim(oldClass.replace(className, ''));
-                $point.attr('class', newClass);
+        function generatePoint(x, y, size, color) {
+            size = calculateRadius(size);
+            console.log('relative', x, y)
+            var realX = x * _$canvas.width();
+            var realY = y * _$canvas.height();
+            console.log('new point at ', realX, realY, size);
+            var circle = _paper.circle(realX, realY, size);
+            circle.attr('stroke', '#000000');
+            $(circle.node).attr('data-rel-x', x);
+            $(circle.node).attr('data-rel-y', y);
+            return circle;
+        }
+
+        function displayLocation($location) {
+            console.log('display', $location);
+            var x = $location.find('[name$=InjectionPointX]').val();
+            var y = $location.find('[name$=InjectionPointY]').val();
+            var name = $location.find('[name$=Name]').val();
+            var ordinal = $location.find('[name$=Ordinal]').val();
+            var id = $location.find('[name$=LocationId]').val();
+
+            var point = generatePoint(x, y, _settings.pointRadius);
+            var $node = $(point.node);
+            $node.attr('title', name);
+            $node.attr('class', _settings.classPrefix + ' ' + _settings.classPrefix + '-' + ordinal);
+            $node.attr('data-id', id);
+            $node.tooltip({ 'container': 'body' });
+            $node.click(injectionSite_clicked);
+        }
+
+        function injectionSite_clicked() {
+            if (_settings.enabled) {
+                selectLocation($(this));
             }
+        }
 
-            function selectPoint($point) {
-                removeClass(_$canvas.find('.canvas-point-selected'), 'canvas-point-selected');
-                $point.attr('class', $point.attr('class') + ' canvas-point-selected');
-                var id = $point.attr('data-id');
-                settings.datasource.val(id);
-            }
+        // I think the reason for this funky class attribute manipulation is because we're working with SVG
+        // elements, not HTML. Can't remember for sure.
+        function removeClass($point, className) {
+            var oldClass = $point.attr('class') || '';
+            var newClass = $.trim(oldClass.replace(className, ''));
+            $point.attr('class', newClass);
+        }
 
-            /// <summary>
-            /// Marks the given [x, y] as the selected point.  If falsey values given, the existing
-            /// point is just cleared.
-            /// </summary>
-            function markSelectedPoint(x, y) {
-                if (_selectedPoint) {
-                    _selectedPoint.remove();
-                }
+        function selectLocation($point) {
+            removeClass(_$canvas.find('.' + _settings.classPrefix + '-selected'), '.' + _settings.classPrefix + '-selected');
+            $point.attr('class', $point.attr('class') + ' ' + _settings.classPrefix + '-selected');
+            var id = $point.attr('data-id');
+            _settings.datasource.val(id);
+        }
 
-                if (x && y) {
-                    _selectedPoint = generatePoint(x, y, settings.pointRadius);
-                    var node = $(_selectedPoint.node);
-                    node.attr('class', settings.classPrefix + '-selected');
-                }
-            }
-
-            function calculateRadius(size) {
-                if (size === undefined) {
-                    size = 5.0;
-                }
-                else if (typeof (size) === 'string') {
-                    var pctRegex = /(\d+)%/g;
-                    var pctStr = pctRegex.exec(size)[0];
-                    var pct = parseFloat(pctStr);
-                    size = _$canvas.height() * (pct / 100.0);
-                }
-                return size;
-            }
-
-            function generatePoint(x, y, size, color) {
-                if (color === undefined) {
-                    color = '#111111';
-                }
-                size = calculateRadius(size);
-
-                var realX = _$canvas.width() * x;
-                var realY = _$canvas.height() * y;
-
-                var circle = _paper.circle(realX, realY, size);
-                circle.attr('stroke', '#000000');
-                $(circle.node).attr('data-rel-x', x);
-                $(circle.node).attr('data-rel-y', y);
-                return circle;
-            }
-
-        });
     };
 })(jQuery);
